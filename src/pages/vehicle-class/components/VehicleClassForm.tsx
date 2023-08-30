@@ -1,10 +1,11 @@
 import { Box, Grid } from '@mui/material'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { Control, FieldErrors } from 'react-hook-form'
 import ErrorBox from 'src/components/ErrorBox'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import { renderMenuItems } from './StatusMenuItems'
+import { VehicleClassFields } from 'src/types/VehicleClass'
 
 const statusData = [
   {
@@ -17,11 +18,8 @@ const statusData = [
   }
 ]
 
-const VehicleClassForm = () => {
-  const {
-    control,
-    formState: { errors }
-  } = useForm()
+const VehicleClassForm = ({control, errors}:{control: Control<VehicleClassFields>, errors: FieldErrors}) => {
+  
 
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>

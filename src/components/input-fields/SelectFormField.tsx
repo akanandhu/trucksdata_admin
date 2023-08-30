@@ -17,7 +17,7 @@ const SelectFormField = ({
   data
 }: {
   id: string
-  control: Control
+  control: Control<any>
   required?: boolean
   handleOnChange?: (e: SelectChangeEvent, i?: number) => void
   i?: number

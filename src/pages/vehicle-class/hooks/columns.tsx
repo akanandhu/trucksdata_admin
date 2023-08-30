@@ -1,9 +1,10 @@
 import { Chip } from '@mui/material'
 import BasicTableActions from 'src/components/BasicTableActions'
+import { VehicleClassFields } from 'src/types/VehicleClass'
 import { capitaliseFirstLetter } from 'src/utils/capitalise-first-letter'
 
 interface Props {
-  handleEdit: (id: string) => void
+  handleEdit: (params: VehicleClassFields) => void
   handleDelete: (id: string) => void
 }
 interface RowType {
@@ -45,10 +46,10 @@ const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
       field: 'actions',
       minWidth: 40,
       headerName: 'Actions',
-      renderCell: (params: { id: string }) => {
-        const { id } = params
+      renderCell: (params: {row: VehicleClassFields}) => {
+        const { id } = params.row
 
-        return <BasicTableActions handleDelete={() => handleDelete(id)} handleEdit={() => handleEdit(id)} />
+        return <BasicTableActions handleDelete={() => handleDelete(id)} handleEdit={() => handleEdit(params.row)} />
       }
     }
   ]

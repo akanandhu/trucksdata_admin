@@ -18,7 +18,7 @@ const TextFormField = ({
   isDisabled
 }: {
   id: string
-  control: Control
+  control: Control<any>
   required?: boolean
   multiline?: boolean
   rows?: number
