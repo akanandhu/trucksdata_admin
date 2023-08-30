@@ -1,18 +1,25 @@
+import { Chip } from '@mui/material'
 import BasicTableActions from 'src/components/BasicTableActions'
+import { capitaliseFirstLetter } from 'src/utils/capitalise-first-letter'
 
 interface Props {
-  handleEdit : (id: string) => void
+  handleEdit: (id: string) => void
   handleDelete: (id: string) => void
 }
+interface RowType {
+  status: 'active' | 'inactive'
+}
+interface ParamsRow {
+  row: RowType
+}
 
-const useGetVehicleClassCols = ({handleEdit, handleDelete}:Props) => {
-
+const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
   const columns = [
     {
       flex: 0.1,
       field: 'id',
       minWidth: 80,
-      headerName: 'ID',
+      headerName: 'Id',
       type: ''
     },
     {
@@ -25,7 +32,13 @@ const useGetVehicleClassCols = ({handleEdit, handleDelete}:Props) => {
       flex: 0.075,
       field: 'status',
       minWidth: 80,
-      headerName: 'Status'
+      headerName: 'Status',
+      renderCell: (params: ParamsRow) => {
+        const { status } = params.row
+        const statusColor = status === 'active' ? 'success' : 'secondary'
+
+        return <Chip label={capitaliseFirstLetter(status)} color={statusColor} />
+      }
     },
     {
       flex: 0.1,
@@ -40,6 +53,6 @@ const useGetVehicleClassCols = ({handleEdit, handleDelete}:Props) => {
     }
   ]
 
-  return {columns}
+  return { columns }
 }
 export default useGetVehicleClassCols

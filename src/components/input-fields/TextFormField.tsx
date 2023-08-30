@@ -50,7 +50,6 @@ const TextFormField = ({
             handleTextChange && handleTextChange(e, i)
           }}
           sx={{
-            // mt: 3.5,
             '& .MuiFormLabel-asterisk': { color: 'red' },
             '& .MuiInputBase-input.Mui-disabled': {
               WebkitTextFillColor: '#000000'

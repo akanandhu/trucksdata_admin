@@ -26,7 +26,7 @@ export const rows = [
     },
     {
         id: 6,
-        status: 'active',
+        status: 'in-active',
         title: 'Three Wheeler'
     },
   ]
