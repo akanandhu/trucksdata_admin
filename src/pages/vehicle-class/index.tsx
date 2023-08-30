@@ -66,7 +66,7 @@ const VehicleClass = () => {
           <DataGrid disableRowSelectionOnClick columns={columns as any} rows={data} />
         </Box>
       </Card>
-      <VehicleClassDrawer open={openDrawer} setOpen={setOpenDrawer} control={control} errors={errors} />
+      <VehicleClassDrawer open={openDrawer} setOpen={setOpenDrawer} control={control} errors={errors} setSelectedData={setSelectedData} />
       <DeleteConfirmModal
         open={deleteConfirm}
         setOpen={setDeleteConfirm}
