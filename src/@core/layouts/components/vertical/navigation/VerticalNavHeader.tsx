@@ -2,7 +2,7 @@
 import Link from 'next/link'
 
 // ** MUI Imports
-import IconButton from '@mui/material/IconButton'
+// import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography, { TypographyProps } from '@mui/material/Typography'
@@ -11,7 +11,7 @@ import Typography, { TypographyProps } from '@mui/material/Typography'
 import { LayoutProps } from 'src/@core/layouts/types'
 
 // ** Custom Icon Import
-import Icon from 'src/@core/components/icon'
+// import Icon from 'src/@core/components/icon'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -56,16 +56,20 @@ const LinkStyled = styled(Link)({
 const VerticalNavHeader = (props: Props) => {
   // ** Props
   const {
-    hidden,
+    // hidden,
     navHover,
     settings,
-    saveSettings,
+
+    // saveSettings,
     collapsedNavWidth,
-    toggleNavVisibility,
+
+    // toggleNavVisibility,
     navigationBorderWidth,
-    menuLockedIcon: userMenuLockedIcon,
+
+    // menuLockedIcon: userMenuLockedIcon,
     navMenuBranding: userNavMenuBranding,
-    menuUnlockedIcon: userMenuUnlockedIcon
+
+    // menuUnlockedIcon: userMenuUnlockedIcon
   } = props
 
   // ** Hooks & Vars
@@ -102,9 +106,9 @@ const VerticalNavHeader = (props: Props) => {
     }
   }
 
-  const MenuLockedIcon = () => userMenuLockedIcon || <Icon icon='tabler:circle-dot' />
+  // const MenuLockedIcon = () => userMenuLockedIcon || <Icon icon='tabler:circle-dot' />
 
-  const MenuUnlockedIcon = () => userMenuUnlockedIcon || <Icon icon='tabler:circle' />
+  // const MenuUnlockedIcon = () => userMenuUnlockedIcon || <Icon icon='tabler:circle' />
 
   return (
     <MenuHeaderWrapper className='nav-header' sx={{ pl: menuHeaderPaddingLeft(), ...conditionalColors() }}>
@@ -112,7 +116,7 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <LinkStyled href='/'>
-          <svg width={32} height={22} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
+          {/* <svg width={32} height={22} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
             <path
               fillRule='evenodd'
               clipRule='evenodd'
@@ -139,14 +143,14 @@ const VerticalNavHeader = (props: Props) => {
               fill={theme.palette.primary.main}
               d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
             />
-          </svg>
+          </svg> */}
           <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2.5 }) }}>
             {themeConfig.templateName}
           </HeaderTitle>
         </LinkStyled>
       )}
 
-      {hidden ? (
+      {/* {hidden ? (
         <IconButton
           disableRipple
           disableFocusRipple
@@ -178,7 +182,7 @@ const VerticalNavHeader = (props: Props) => {
         >
           {navCollapsed ? MenuUnlockedIcon() : MenuLockedIcon()}
         </IconButton>
-      )}
+      )} */}
     </MenuHeaderWrapper>
   )
 }
