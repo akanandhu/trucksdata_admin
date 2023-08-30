@@ -34,6 +34,9 @@ const Home = () => {
       // Redirect user to Home URL
       router.replace(homeRoute)
     }
+    else {
+      router.replace('/home')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
