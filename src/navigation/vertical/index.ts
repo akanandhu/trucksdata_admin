@@ -12,6 +12,11 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Vehicle Class',
       path: '/vehicle-class',
       icon: 'tabler:steering-wheel'
+    },
+    {
+      title: 'Manufacturers',
+      path: '/manufacturers',
+      icon: 'tabler:settings-2'
     }
 
     // {
