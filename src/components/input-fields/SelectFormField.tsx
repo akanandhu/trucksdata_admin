@@ -14,7 +14,8 @@ const SelectFormField = ({
   size,
   isDisabled,
   renderMenuItems,
-  data
+  data,
+  isMultiple
 }: {
   id: string
   control: Control<any>
@@ -27,6 +28,7 @@ const SelectFormField = ({
   isDisabled?: boolean
   renderMenuItems: (obj: any) => void
   data?: any
+  isMultiple?: boolean
 }) => {
   return (
     <FormControl fullWidth>
@@ -43,6 +45,8 @@ const SelectFormField = ({
             disabled={isDisabled}
             label={label ?? ''}
             value={value}
+            multiple={isMultiple ? true : false}
+            defaultValue={isMultiple ? [] : ''}
             onChange={e => {
               onChange(e)
               handleOnChange && handleOnChange(e, i)
