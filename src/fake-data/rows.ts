@@ -42,13 +42,15 @@ export const manufacturersRows = [
         id: 11,
         title: 'Ashok Leyland - Ecomet Star Serires',
         image: 'https://www.truckexpert.in/2021/08/ashokleylandecomet1015he.html',
-        status: 'Active'
+        status: 'Active',
+        vehicle_class: 'Truck'
       },
       {
         id: 12,
         title: 'Ashok Leyland - Boss Series',
         image: 'https://www.truckexpert.in/p/ashok-leyland-trucks.html',
-        status: 'In-active'
+        status: 'In-active',
+        vehicle_class: 'Truck'
       }
     ]
   },

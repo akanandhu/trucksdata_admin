@@ -39,20 +39,25 @@ const renderList = (arr: any[]) => {
   }
 }
 
-const Items = [
-  {
-    property: 'brand',
-    value: 'Brand Name',
-    icon: 'tabler:steering-wheel'
-  },
-  {
-    property: 'Vehicle Class',
-    value: 'Trucks, Tipper',
-    icon: 'tabler:tir'
-  }
-]
+
 
 const AboutBrand = (data: any) => {
+
+  const {logo, title, vehicle_classes} = data?.data
+
+  const Items = [
+    {
+      property: 'brand',
+      value: title,
+      icon: 'tabler:steering-wheel'
+    },
+    {
+      property: 'Vehicle Class',
+      value: vehicle_classes?.join(', '),
+      icon: 'tabler:tir'
+    }
+  ]
+
   const theme = useTheme()
 
   return (
@@ -69,7 +74,7 @@ const AboutBrand = (data: any) => {
             <Box>
               <ProfilePicture
                 theme={theme}
-                src='https://e0.pxfuel.com/wallpapers/788/312/desktop-wallpaper-leyland-logo-png-information-ashok-leyland.jpg'
+                src={logo}
                 alt='brand_logo'
               />
             </Box>

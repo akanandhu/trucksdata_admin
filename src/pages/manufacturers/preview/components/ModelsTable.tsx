@@ -65,26 +65,16 @@ const columns = [
     }
   },
   {
-    flex: 0.1,
+    flex: 0.075,
     minWidth: 105,
     field: 'vehicle_class',
     headerName: 'Vehicle Class',
     renderCell: ({ row }: CellType) => <Typography sx={{ color: 'text.secondary' }}>{row.vehicle_class}</Typography>
   },
+ 
   {
-    flex: 0.1,
-    field: 'year',
-    minWidth: 130,
-    headerName: 'Launch Year',
-    renderCell: ({ row }: CellType) => (
-      <>
-        <Typography>{row?.launch_year}</Typography>
-      </>
-    )
-  },
-  {
-    flex: 0.1,
-    minWidth: 150,
+    flex: 0.035,
+    minWidth: 60,
     field: 'status',
     headerName: 'Status',
     renderCell: ({ row }: CellType) => (
@@ -93,7 +83,7 @@ const columns = [
   },
 
   {
-    flex: 0.1,
+    flex: 0.035,
     minWidth: 100,
     field: 'actions',
     headerName: 'Actions',
@@ -118,7 +108,6 @@ const ModelsTable = ({
   // const [value, setValue] = useState<string>('')
   // const [pageSize, setPageSize] = useState<number>(7)
   const modelData = data?.models
-  console.log(data, 'dd')
  
   const handleAddNewModal = () => {
     handleAddNew()
