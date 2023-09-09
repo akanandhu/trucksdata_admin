@@ -1,8 +1,11 @@
 // ** React Imports
-import { ReactNode, useContext } from 'react'
+import { ReactNode,
+  
+  //  useContext 
+  } from 'react'
 
 // ** Component Imports
-import { AbilityContext } from 'src/layouts/components/acl/Can'
+// import { AbilityContext } from 'src/layouts/components/acl/Can'
 
 // ** Types
 import { NavLink } from 'src/@core/layouts/types'
@@ -14,10 +17,12 @@ interface Props {
 
 const CanViewNavLink = (props: Props) => {
   // ** Props
-  const { children, navLink } = props
+  const { children,
+    //  navLink
+     } = props
 
   // ** Hook
-  const ability = useContext(AbilityContext)
+  // const ability = useContext(AbilityContext)
 
   return <>{children}</>
 }
