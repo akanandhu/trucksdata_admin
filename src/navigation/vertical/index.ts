@@ -17,6 +17,11 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Manufacturers',
       path: '/manufacturers',
       icon: 'tabler:settings-2'
+    },
+    {
+      title: 'Vehicle',
+      path: '/vehicle',
+      icon: 'tabler:tir'
     }
 
     // {

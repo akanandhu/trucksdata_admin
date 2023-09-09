@@ -8,6 +8,7 @@ import useGetManufacturersCols from "./hooks/columns"
 import ManufacturersDrawer from "./components/ManufacturersDrawer"
 import { useForm } from "react-hook-form"
 import { ManufacturersFields } from "src/types/Manufacturers"
+import { useRouter } from "next/router"
 
 const Manufacturers = () => {
   const {
@@ -15,6 +16,7 @@ const Manufacturers = () => {
     formState: { errors }
   } = useForm<ManufacturersFields>()
 
+  const router = useRouter()
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [idToRemove, setIdToRemove] = useState('')
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -23,6 +25,7 @@ const Manufacturers = () => {
     }
     const [data, setData] = useState(manufacturersRows)
     const {columns} = useGetManufacturersCols({handleDelete, handleEdit, handleView})
+
     function handleDelete (id:string) {
       setIdToRemove(id)
       setDeleteConfirm(!deleteConfirm)
@@ -30,8 +33,8 @@ const Manufacturers = () => {
     function handleEdit () {
       console.log('')
     }
-    function handleView () {
-      console.log('')
+    function handleView (id: string) {
+      router.push(`/manufacturers/preview/${id}`)
     }
 
     return(

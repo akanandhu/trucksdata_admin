@@ -19,7 +19,7 @@ const BasicTableActions = ({
     <Box marginY={marginY ?? 0} paddingY={paddingY ?? 0} sx={{ display: 'flex', alignItems: 'center' }}>
       {handleView &&  (
         <Tooltip title='View'>
-          <IconButton size='small' sx={{ color: 'text.secondary' }}>
+          <IconButton onClick={handleView} size='small' sx={{ color: 'text.secondary' }}>
             <Icon icon='tabler:eye' fontSize={'1.35rem'} />
           </IconButton>
         </Tooltip>

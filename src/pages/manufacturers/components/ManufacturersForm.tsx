@@ -20,7 +20,7 @@ const ManufacturersForm = ({handleClose,errors, control}:{handleClose: () => voi
             </Grid>
           <Grid item xs={12}>
             <TextFormField id='title' label='Manufacturer Brand Name' size='medium' required control={control} />
-            {errors && <ErrorBox error={errors?.title} />}
+            {errors?.title && <ErrorBox error={errors?.title} />}
           </Grid>
           <Grid item xs={12}>
            <MultipleSelectFormField id='vehicle_classes' control={control} data={rows}  label='Vehicle Class' renderMenuItems={renderVehicleClassItems}  />
