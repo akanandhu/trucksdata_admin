@@ -4,7 +4,7 @@ import { Control, FieldErrors } from 'react-hook-form'
 import ErrorBox from 'src/components/ErrorBox'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { renderMenuItems } from './StatusMenuItems'
+import { renderMenuItems } from './renderStatusMenuItems'
 import { VehicleClassFields } from 'src/types/VehicleClass'
 import DrawerActions from 'src/components/drawers/DrawerActions'
 

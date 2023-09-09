@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { ParentMenuItem } from 'src/pages/vehicle-class/components/StatusMenuItems'
+import { ParentMenuItem } from 'src/pages/vehicle-class/components/renderStatusMenuItems'
 
 export const renderVehicleClassItems = (obj: any) => {
   return (
