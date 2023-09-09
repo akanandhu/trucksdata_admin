@@ -73,3 +73,53 @@ export const manufacturersRows = [
     ]
   }
 ]
+
+export const AxelConfigRow = [
+  {
+    id: 1,
+    title: '4x2'
+  },
+  {
+    id: 2,
+    title: '6x2'
+  },
+  {
+    id: 3,
+    title: '8x2'
+  }
+]
+
+export const VehicleTypeRow = [
+  {
+    id: 1,
+    title: 'Goods Carrier'
+  },
+  {
+    id: 2,
+    title: 'Passenger Vehicle'
+  },
+  {
+    id: 3,
+    title: 'Caravan'
+  },
+  {
+    id: 4,
+    title: 'Camper'
+  }
+]
+
+export const ChasisTypeRow = [
+  {
+    id: 1,
+    title: 'FES'
+  },
+  {
+    id: 2,
+    title: 'Cowl'
+  },
+  {
+    id: 3,
+    title: 'Cab & Chasis'
+  },
+]
+

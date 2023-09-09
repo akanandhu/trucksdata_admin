@@ -49,6 +49,7 @@ const TextFormField = ({
             onChange(e)
             handleTextChange && handleTextChange(e, i)
           }}
+          onWheel={(e:any) => e.target.blur()}
           sx={{
             '& .MuiFormLabel-asterisk': { color: 'red' },
             '& .MuiInputBase-input.Mui-disabled': {

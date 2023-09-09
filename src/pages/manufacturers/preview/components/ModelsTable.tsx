@@ -1,11 +1,12 @@
 // ** React Imports
-import { useState } from 'react'
+// import { useState } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import { DataGrid } from '@mui/x-data-grid'
-import TextField from '@mui/material/TextField'
+
+// import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 
@@ -110,15 +111,15 @@ const columns = [
   }
 ]
 
-const ModelsTable = ({ id, data, handleAddNew }: { id: any; data: any; handleAddNew: () => void }) => {
+const ModelsTable = ({ 
+  // id,
+   data, handleAddNew }: { id: any; data: any; handleAddNew: () => void }) => {
   // ** State
-  const [value, setValue] = useState<string>('')
-  const [pageSize, setPageSize] = useState<number>(7)
+  // const [value, setValue] = useState<string>('')
+  // const [pageSize, setPageSize] = useState<number>(7)
   const modelData = data?.models
   console.log(data, 'dd')
-  const handleFilter = (val: string) => {
-    setValue(val)
-  }
+ 
   const handleAddNewModal = () => {
     handleAddNew()
   }
@@ -136,10 +137,14 @@ const ModelsTable = ({ id, data, handleAddNew }: { id: any; data: any; handleAdd
         rows={modelData ?? []}
         rowHeight={60}
         columns={columns}
-        pageSize={pageSize}
-        disableSelectionOnClick
-        rowsPerPageOptions={[5, 7, 10]}
-        onPageSizeChange={size => setPageSize(size)}
+
+        // pageSize={pageSize}
+
+        // disableSelectionOnClick
+
+        // rowsPerPageOptions={[5, 7, 10]}
+
+        // onPageSizeChange={size => setPageSize(size)}
       />
     </Card>
   )

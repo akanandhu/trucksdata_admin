@@ -8,3 +8,15 @@ export const Status = [
       id: 2
     }
   ]
+
+
+  export const StatusRow = [
+    {
+      status: 'Active',
+      id: 1
+    },
+    {
+      status: 'In-Active',
+      id: 2
+    }
+  ]

@@ -2,9 +2,9 @@
 import { styled } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 
-const DropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+const DropzoneWrapper:any = styled(Box)<BoxProps>(({ theme }) => ({
   '&.dropzone, & .dropzone': {
-    minHeight: 300,
+    minHeight: 50,
     display: 'flex',
     flexWrap: 'wrap',
     cursor: 'pointer',

@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import { rows } from 'src/fake-data/rows'
-import { Status } from 'src/fake-data/status'
 
 const renderMenuItems = (obj: any) => {
   return (
@@ -16,7 +15,7 @@ const renderMenuItems = (obj: any) => {
 
 
 
-const SearchHeader = () => {
+const ManufacturerSearchHeader = () => {
   const { control, handleSubmit } = useForm()
 
   const onSubmit = (values: any) => {
@@ -39,13 +38,13 @@ const SearchHeader = () => {
           }}
         >
           <Grid item xs={3}>
-            <FormControl fullWidth size='small'>
-              <TextFormField id='name' label='Model Name' placeholder='Model Name' control={control} />
+            <FormControl fullWidth >
+              <TextFormField id='name' label='Brand Title' placeholder='Brand Title' control={control} />
             </FormControl>
           </Grid>
 
           <Grid item xs={3}>
-            <FormControl fullWidth size='small'>
+            <FormControl fullWidth >
               <SelectFormField
                 label='Vehicle Class'
                 data={rows}
@@ -57,19 +56,6 @@ const SearchHeader = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={3}>
-            <FormControl fullWidth size='medium'>
-              <SelectFormField
-                label='Status'
-                data={Status}
-                size={'small'}
-
-                renderMenuItems={renderMenuItems}
-                control={control}
-                id='status'
-              />
-            </FormControl>
-          </Grid>
 
           <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' }}>
             <Button type='submit' variant='contained' sx={{ '& svg': { mr: 2 }, px: 9 }}>
@@ -86,4 +72,4 @@ const SearchHeader = () => {
   )
 }
 
-export default SearchHeader
+export default ManufacturerSearchHeader

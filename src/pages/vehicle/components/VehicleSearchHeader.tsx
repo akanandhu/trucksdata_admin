@@ -3,29 +3,26 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { rows } from 'src/fake-data/rows'
-import { Status } from 'src/fake-data/status'
+import { manufacturersRows, rows } from 'src/fake-data/rows'
 
 const renderMenuItems = (obj: any) => {
-  return (
-    <MenuItem key={obj.id} value={obj.id}>
-      {obj.title}
-    </MenuItem>
-  )
-}
-
-
-
-const SearchHeader = () => {
-  const { control, handleSubmit } = useForm()
-
-  const onSubmit = (values: any) => {
-    console.log(values)
+    return (
+      <MenuItem key={obj.id} value={obj.id}>
+        {obj.title}
+      </MenuItem>
+    )
   }
 
+const VehicleSearchHeader = () => {
+
+    const {control, handleSubmit} = useForm()
+
+    function onSubmit () {
+        console.log('')
+    }
+
   return (
-    <>
-      <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+    <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
         <Box
           sx={{
             py: 4,
@@ -39,13 +36,13 @@ const SearchHeader = () => {
           }}
         >
           <Grid item xs={3}>
-            <FormControl fullWidth size='small'>
-              <TextFormField id='name' label='Model Name' placeholder='Model Name' control={control} />
+            <FormControl fullWidth >
+              <TextFormField id='name' label='Vehicle Name' placeholder='Vehicle Name' control={control} />
             </FormControl>
           </Grid>
 
           <Grid item xs={3}>
-            <FormControl fullWidth size='small'>
+            <FormControl fullWidth >
               <SelectFormField
                 label='Vehicle Class'
                 data={rows}
@@ -58,18 +55,18 @@ const SearchHeader = () => {
           </Grid>
 
           <Grid item xs={3}>
-            <FormControl fullWidth size='medium'>
+            <FormControl fullWidth >
               <SelectFormField
-                label='Status'
-                data={Status}
+                label='Vehicle Brand'
+                data={manufacturersRows}
                 size={'small'}
-
                 renderMenuItems={renderMenuItems}
                 control={control}
-                id='status'
+                id='vehicle_brand'
               />
             </FormControl>
           </Grid>
+
 
           <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' }}>
             <Button type='submit' variant='contained' sx={{ '& svg': { mr: 2 }, px: 9 }}>
@@ -82,8 +79,7 @@ const SearchHeader = () => {
           </Box>
         </Box>
       </form>
-    </>
   )
 }
 
-export default SearchHeader
+export default VehicleSearchHeader

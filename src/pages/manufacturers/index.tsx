@@ -9,6 +9,7 @@ import ManufacturersDrawer from "./components/ManufacturersDrawer"
 import { useForm } from "react-hook-form"
 import { ManufacturersFields } from "src/types/Manufacturers"
 import { useRouter } from "next/router"
+import ManufacturerSearchHeader from "./preview/components/ManufacturerSearchHeader"
 
 const Manufacturers = () => {
   const {
@@ -42,7 +43,10 @@ const Manufacturers = () => {
         <Card>
           <CardHeader title='Manufacturers' />
           <Divider />
-          <TableHeader title='Manufacturers' handleNew={handleAdd} />
+          <ManufacturerSearchHeader />
+          <Divider />
+
+          <TableHeader title='Manufacturers' handleNew={handleAdd} paddingX={7.5} />
           <Box sx={{ height: '100%' }}>
             <DataGrid  disableRowSelectionOnClick columns={columns as any} rows={data} />
           </Box>

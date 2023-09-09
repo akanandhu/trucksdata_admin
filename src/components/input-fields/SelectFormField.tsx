@@ -24,7 +24,7 @@ const SelectFormField = ({
   i?: number
   label?: string
   placeholder?: string
-  size?: 'small' | 'medium'
+  size?: any
   isDisabled?: boolean
   renderMenuItems: (obj: any) => void
   data?: any
@@ -32,7 +32,7 @@ const SelectFormField = ({
 }) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id='input-label'>
+      <InputLabel id='input-label' size={size ?? 'normal'} >
         {label && required ? <RequiredLabel text={label} /> : label ? label : ''}
       </InputLabel>
       <Controller

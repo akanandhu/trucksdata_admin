@@ -1,6 +1,5 @@
 import { Drawer } from '@mui/material'
 import React, { SetStateAction } from 'react'
-import Header from 'src/components/Header';
 import HeaderWithClose from 'src/components/drawers/HeaderWithClose';
 import BrandModel from './BrandModel';
 
