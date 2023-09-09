@@ -12,7 +12,7 @@ import { useTheme } from '@mui/material'
 
 const renderList = (arr: any[]) => {
   if (arr && arr.length) {
-    return arr.map((item, index) => {
+    return arr?.map((item, index) => {
       return (
         <Box
           key={index}
@@ -26,10 +26,10 @@ const renderList = (arr: any[]) => {
           <Icon fontSize='1.25rem' icon={item.icon} />
 
           <Typography sx={{ mx: 2, fontWeight: 500, color: 'text.secondary' }}>
-            {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
+            {`${item.property?.charAt(0)?.toUpperCase() + item.property?.slice(1)}:`}
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>
-            {item.value.charAt(0).toUpperCase() + item.value.slice(1)}
+            {item?.value?.charAt(0)?.toUpperCase() + item.value?.slice(1)}
           </Typography>
         </Box>
       )
@@ -43,7 +43,7 @@ const renderList = (arr: any[]) => {
 
 const AboutBrand = (data: any) => {
 
-  const {logo, title, vehicle_classes} = data?.data
+  const {logo, title, vehicle_classes} = data?.data || {}
 
   const Items = [
     {
