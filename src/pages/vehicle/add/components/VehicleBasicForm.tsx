@@ -2,10 +2,17 @@ import { Grid } from '@mui/material'
 import React, { Fragment } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { AxelConfigRow, ChasisTypeRow, VehicleTypeRow, manufacturersRows, rows } from 'src/fake-data/rows'
+import {
+  AgricultureConfigRow,
+  AxelConfigRow,
+  ChasisTypeRow,
+  VehicleTypeRow,
+  manufacturersRows,
+  rows
+} from 'src/fake-data/rows'
 import { StatusRow } from 'src/fake-data/status'
-import { renderMenuItemsTitle } from 'src/pages/manufacturers/preview/components/renderMenuItemsTitle'
-import { renderMenuItems } from 'src/pages/vehicle-class/components/renderStatusMenuItems'
+import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
+import { renderMenuItems } from 'src/components/renderStatusMenuItems'
 
 const VehicleBasicForm = ({ control }: { control: any }) => {
   return (
@@ -43,6 +50,16 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
           renderMenuItems={renderMenuItemsTitle}
           control={control}
           id='model_name'
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <SelectFormField
+          label='Applications'
+          data={AgricultureConfigRow}
+          size={'medium'}
+          renderMenuItems={renderMenuItemsTitle}
+          control={control}
+          id='axel_config'
         />
       </Grid>
       <Grid item xs={12} sm={6}>

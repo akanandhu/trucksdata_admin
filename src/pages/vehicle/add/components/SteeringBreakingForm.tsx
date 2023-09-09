@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import { steeringTypes } from 'src/fake-data/vehicles'
-import { renderMenuItemsTitle } from 'src/pages/manufacturers/preview/components/renderMenuItemsTitle'
+import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
 
 const SteeringBreakingForm = ({ control }: { control: any }) => {
   return (

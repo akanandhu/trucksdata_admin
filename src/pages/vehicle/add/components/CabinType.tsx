@@ -3,9 +3,9 @@ import React from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import { VariantTypes, cabinTypes } from 'src/fake-data/vehicles'
-import { renderMenuItemsTitle } from 'src/pages/manufacturers/preview/components/renderMenuItemsTitle'
+import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
 
-const CabinForm = ({control}:{control: any}) => {
+const CabinForm = ({ control }: { control: any }) => {
   return (
     <>
       <Grid item xs={12} sm={6}>
@@ -34,12 +34,11 @@ const CabinForm = ({control}:{control: any}) => {
         />
       </Grid>
 
-
       <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='electrical'  label='Electrical' size='medium' />
+        <TextFormField control={control} id='electrical' label='Electrical' size='medium' />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='alternator'  label='Alternator' size='medium' />
+        <TextFormField control={control} id='alternator' label='Alternator' size='medium' />
       </Grid>
     </>
   )

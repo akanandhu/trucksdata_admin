@@ -76,18 +76,28 @@ export const manufacturersRows = [
   }
 ]
 
-export const AxelConfigRow = [
+export const AgricultureConfigRow = [
   {
     id: 1,
-    title: '4x2'
+    title: 'Agriculture',
+    children: [
+      {
+        id: 4,
+        title: 'Rice'
+      },
+      {
+        id: 5,
+        title: 'Sugarcane'
+      }
+    ]
   },
   {
     id: 2,
-    title: '6x2'
+    title: 'Pharmacy'
   },
   {
     id: 3,
-    title: '8x2'
+    title: 'E-commerce'
   }
 ]
 
@@ -122,6 +132,20 @@ export const ChasisTypeRow = [
   {
     id: 3,
     title: 'Cab & Chasis'
-  },
+  }
 ]
 
+export const AxelConfigRow = [
+  {
+    id: 1,
+    title: '4X2'
+  },
+  {
+    id: 2,
+    title: '6X2'
+  },
+  {
+    id: 3,
+    title: '8X2'
+  }
+]
