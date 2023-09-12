@@ -1,9 +1,7 @@
 import { Grid } from '@mui/material'
 import React, { Fragment } from 'react'
-import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { fuelTypes } from 'src/fake-data/vehicles'
-import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
+
 
 const SpecificationForm = ({ control }: { control: any }) => {
   return (
@@ -44,16 +42,7 @@ const SpecificationForm = ({ control }: { control: any }) => {
           size='medium'
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <SelectFormField
-          label='Fuel Type'
-          data={fuelTypes}
-          size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
-          control={control}
-          id='fuel_type'
-        />
-      </Grid>
+      
       <Grid item xs={12} sm={6}>
         <TextFormField control={control} id='engine_control' label='Engine Control' size='medium' />
       </Grid>
