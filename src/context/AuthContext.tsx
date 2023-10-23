@@ -5,13 +5,17 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Axios
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { useLogin } from 'src/api/services/auth/login/post'
+import useCustomToast from 'src/components/toast/toast'
+import { errorMessageParser } from 'src/utils/error-message-parser'
+import { axiosInstance } from 'src/axios/axiosInstance'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -34,16 +38,18 @@ const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const toast = useCustomToast()
 
   // ** Hooks
   const router = useRouter()
+  const login = useLogin()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
       if (storedToken) {
         setLoading(true)
-        await axios
+        await axiosInstance
           .get(authConfig.meEndpoint, {
             headers: {
               Authorization: storedToken
@@ -72,26 +78,27 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.loginEndpoint, params)
-      .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
-        const returnUrl = router.query.returnUrl
-
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
-
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-
-        router.replace(redirectURL as string)
+  const handleLogin = (params: LoginParams) => {
+    login.mutate(params, {
+      onSuccess: (res: AxiosResponse) => handleLoginSuccess(res),
+      onError: err => handleLoginError(err)
+    })
+    function handleLoginSuccess(response: AxiosResponse) {
+      params.rememberMe ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.access_token) : null
+      const returnUrl = router.query.returnUrl
+      axiosInstance.get('user').then(res => {
+        setUser({ ...res.data.user })
       })
+      params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data)) : null
 
-      .catch(err => {
-        if (errorCallback) errorCallback(err)
-      })
+      const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+      router.replace(redirectURL as string)
+    }
+
+    function handleLoginError(err: Error) {
+      toast.error(errorMessageParser(err))
+    }
   }
 
   const handleLogout = () => {

@@ -22,6 +22,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { useGetUser } from 'src/api/services/auth/user/get'
 
 interface Props {
   settings: Settings
@@ -52,6 +53,9 @@ const UserDropdown = (props: Props) => {
   // ** Hooks
   const router = useRouter()
   const { logout } = useAuth()
+  const {data: users } = useGetUser()
+  const userData = users?.data?.user
+  const {name, email} = userData || {}
 
   // ** Vars
   const { direction } = settings
@@ -99,7 +103,7 @@ const UserDropdown = (props: Props) => {
         }}
       >
         <Avatar
-          alt='Pranav'
+          alt={name}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
           src='/'
@@ -123,21 +127,15 @@ const UserDropdown = (props: Props) => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='Pranav' src='/' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar alt={name} src='/' sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>Pranav</Typography>
-              <Typography variant='body2'>Admin</Typography>
+              <Typography sx={{ fontWeight: 500 }}>{name}</Typography>
+              <Typography variant='body2'>{email}</Typography>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:user-check' />
-            My Profile
-          </Box>
-        </MenuItemStyled>
         <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
           <Box sx={styles}>
             <Icon icon='tabler:settings' />

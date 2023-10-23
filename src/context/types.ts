@@ -12,11 +12,16 @@ export type RegisterParams = {
   password: string
 }
 
+export type RolesType = {
+  name: string
+
+}
+
 export type UserDataType = {
   id: number
-  role: string
+  roles: RolesType[]
   email: string
-  fullName: string
+  name: string
   username: string
   password: string
   avatar?: string | null

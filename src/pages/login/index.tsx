@@ -31,9 +31,12 @@ import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
+
 // ** Hooks
-// import { useAuth } from 'src/hooks/useAuth'
+import { useAuth } from 'src/hooks/useAuth'
+
 // import useBgColor from 'src/@core/hooks/useBgColor'
+
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Configs
@@ -44,7 +47,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
-import { useRouter } from 'next/router'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -106,21 +108,18 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   // ** Hooks
-  // const auth = useAuth()
+  const auth = useAuth()
   const theme = useTheme()
 
   // const bgColors = useBgColor()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
-  const router = useRouter()
 
   // ** Vars
   const { skin } = settings
 
   const {
     control,
-
-    // setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -130,15 +129,9 @@ const LoginPage = () => {
   })
 
   const onSubmit = (data: FormData) => {
-    // const { email, password } = data
-    // auth.login({ email, password, rememberMe }, () => {
-    //   setError('email', {
-    //     type: 'manual',
-    //     message: 'Email or Password is invalid'
-    //   })
-    // })
-    console.log(data)
-    router.push('/home')
+    const { email, password } = data
+    auth.login({ email, password, rememberMe })
+    
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
