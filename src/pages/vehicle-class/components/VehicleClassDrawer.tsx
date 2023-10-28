@@ -16,7 +16,7 @@ interface Props {
   apiError: any
 }
 
-const VehicleClassDrawer = ({ open, setOpen, control, errors, setSelectedData, handleSubmit, onSubmit, apiError, selectedData }: Props) => {
+const VehicleClassDrawer = ({ open, setOpen, control, errors, setSelectedData, handleSubmit, onSubmit, apiError }: Props) => {
   const handleClose = () => {
     setOpen(!open)
     setSelectedData({
