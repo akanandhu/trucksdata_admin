@@ -2,7 +2,7 @@ import { Drawer } from '@mui/material'
 import React, { SetStateAction } from 'react'
 import HeaderWithClose from 'src/components/drawers/HeaderWithClose'
 import { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
-import { SpecFields } from 'src/types/SpecFields'
+import { FieldDataTypes, SpecFields } from 'src/types/SpecFields'
 import SpecForm from './SpecForm'
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
   onSubmit: (values: SpecFields) => void
   apiError: any
   options: any
+  data_type: FieldDataTypes
 }
 
 const SpecDrawer = ({
@@ -26,7 +27,8 @@ const SpecDrawer = ({
   handleSubmit,
   onSubmit,
   apiError,
-  options
+  options,
+  data_type
 }: Props) => {
   const handleClose = () => {
     setOpen(!open)
@@ -56,6 +58,7 @@ const SpecDrawer = ({
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         options={options}
+        data_type={data_type}
       />
     </Drawer>
   )

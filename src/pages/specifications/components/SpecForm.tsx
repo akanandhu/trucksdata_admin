@@ -1,12 +1,12 @@
 import { Box, Grid } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
 import ErrorBox from 'src/components/ErrorBox'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import { renderMenuItems } from '../../../components/renderStatusMenuItems'
 import DrawerActions from 'src/components/drawers/DrawerActions'
-import { SpecFields } from 'src/types/SpecFields'
+import { FieldDataTypes, SpecFields } from 'src/types/SpecFields'
 import { useGetSpecCategories } from 'src/api/services/specifications/category/get'
 import ArrayTextField from 'src/components/ArrayTextField'
 import { renderSpecMenuItems } from 'src/components/renderSpecCategoryMenu'
@@ -29,7 +29,8 @@ const SpecForm = ({
   handleSubmit,
   onSubmit,
   apiError,
-  options
+  options,
+  data_type
 }: {
   control: Control<SpecFields>
   errors: FieldErrors
@@ -38,8 +39,8 @@ const SpecForm = ({
   onSubmit: (values: SpecFields) => void
   apiError: any
   options: any
+  data_type: FieldDataTypes
 }) => {
-  const [dataType, setDataType] = useState('')
   const specCategories = useGetSpecCategories()
   const { fields, append, remove } = options
 
@@ -76,12 +77,11 @@ const SpecForm = ({
               required
               control={control}
               renderMenuItems={renderMenuItems}
-              handleOnChange={e => setDataType(e.target.value)}
             />
             {errors.data_type && <ErrorBox error={errors.data_type} />}
           </Grid>
-          {dataType === 'drop_down' && (
-            <Grid item xs={12} >
+          {data_type === 'drop_down' && (
+            <Grid item xs={12}>
               <ArrayTextField
                 append={append}
                 control={control}

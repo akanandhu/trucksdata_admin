@@ -12,6 +12,8 @@ import useGetSpecCols from './hooks/columns'
 import { useGetSpecsData } from 'src/api/services/specifications/get'
 import SpecDrawer from './components/SpecDrawer'
 import { useAddSpecification } from 'src/api/services/specifications/post'
+import { useEditSpecification } from 'src/api/services/specifications/patch'
+import usePrefillSpec from './hooks/prefill'
 
 const defaultValues: SpecFields = {
   name: '',
@@ -35,10 +37,14 @@ const Specifications = () => {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
     reset
   } = useForm<SpecFields>({
     defaultValues
   })
+
+  const [data_type] = watch(['data_type'])
 
   const options = useFieldArray({
     control,
@@ -66,8 +72,10 @@ const Specifications = () => {
 
   const deleteVehicleClass = useDeleteVehicleClass()
   const { columns } = useGetSpecCols({ handleDelete, handleEdit })
+  usePrefillSpec({selectedData, setValue})
 
   const addSpec = useAddSpecification()
+  const editSpec = useEditSpecification()
 
   const { data: specs, isLoading } = useGetSpecsData()
   const { data: specsData } = specs?.data || {}
@@ -81,18 +89,17 @@ const Specifications = () => {
     reset()
   }
 
-  const mutationFn:any = addSpec
+  const mutationFn:any = isEdit ?  addSpec : editSpec
 
   function onSubmit(values: SpecFields) {
     const { name, data_type, options, specification_category_id } = values
-   
     const specData = {
       name,
       data_type,
       specification_category_id,
       ...(data_type === 'drop_down' && { options: options })
     }
-    const queryParams = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
+    const queryParams:any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
     mutationFn.mutate(queryParams, {
       onSuccess: () => handleVehicleSuccess()
     })
@@ -128,6 +135,7 @@ const Specifications = () => {
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         options={options}
+        data_type={data_type}
       />
 
       <DeleteConfirmModal

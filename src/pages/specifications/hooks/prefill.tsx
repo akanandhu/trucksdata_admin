@@ -1,11 +1,14 @@
 import { useEffect } from 'react'
 import { UseFormSetValue } from 'react-hook-form';
-import { VehicleClassFields } from 'src/types/VehicleClass'
+import { SpecFields } from 'src/types/SpecFields';
 
-const usePrefillVehicleClass = ({ selectedData, setValue }: { selectedData: VehicleClassFields; setValue: UseFormSetValue<VehicleClassFields>}) => {
+const usePrefillSpec = ({ selectedData, setValue }: { selectedData: SpecFields; setValue: UseFormSetValue<SpecFields>}) => {
   useEffect(() => {
-    setValue('title', selectedData?.title)
-    setValue('status', selectedData?.status)
+    setValue('id', selectedData?.id)
+    setValue('name', selectedData?.name)
+    setValue('data_type', selectedData?.data_type)
+    setValue('options', selectedData?.options)
+    setValue('specification_category_id', selectedData?.specification_category_id)
   }, [selectedData, setValue])
 }
-export default usePrefillVehicleClass
+export default usePrefillSpec
