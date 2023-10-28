@@ -77,14 +77,16 @@ const VehicleClass = () => {
   const { data: vehicleClass, isLoading } = useGetVehicleClasses()
   const { data: vehicleClassData } = vehicleClass?.data || {}
 
+  const isEdit = Boolean(selectedData?.name)
+
   function handleVehicleSuccess() {
     queryClient.invalidateQueries({ queryKey: ['vehicle-class'] })
     handleOpenDrawer()
-    toast.success('Successfully Created')
+    toast.success(`Successfully ${isEdit ? 'Updated' : 'Created'}`)
     reset()
   }
 
-  const mutationFn: any = selectedData?.name ? editVehicleClass : addVehicleClass
+  const mutationFn: any = isEdit ? editVehicleClass : addVehicleClass
 
   function onSubmit(values: VehicleClassFields) {
     const { name, status } = values
@@ -92,7 +94,7 @@ const VehicleClass = () => {
       name,
       status
     }
-    const queryParams = selectedData?.name ? { data: vehicleData, id: selectedData?.id } : { ...vehicleData }
+    const queryParams = isEdit ? { data: vehicleData, id: selectedData?.id } : { ...vehicleData }
     mutationFn.mutate(queryParams, {
       onSuccess: () => handleVehicleSuccess()
     })
