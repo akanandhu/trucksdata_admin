@@ -14,11 +14,9 @@ interface ParamTypes {
 }
 
 const useGetManufacturersCols = ({
-  handleDelete,
   handleEdit,
   handleView
 }: {
-  handleDelete: (id: string) => void
   handleEdit: (id: string) => void
   handleView: (id: string) => void
 }) => {
@@ -75,7 +73,6 @@ const useGetManufacturersCols = ({
         return (
           <BasicTableActions
             handleView={() => handleView(id)}
-            handleDelete={() => handleDelete(id)}
             handleEdit={() => handleEdit(id)}
           />
         )
