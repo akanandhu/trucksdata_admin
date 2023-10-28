@@ -14,8 +14,8 @@ const statusData = [
     status: 'Active'
   },
   {
-    id: 'in-active',
-    status: 'In-active'
+    id: 'disabled',
+    status: 'Disabled'
   }
 ]
 

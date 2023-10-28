@@ -1,5 +1,6 @@
 import { Box, FormControl, Grid } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
+  
 import { useForm } from 'react-hook-form'
 import DrawerActions from 'src/components/drawers/DrawerActions'
 import MultipleSelectFormField from 'src/components/input-fields/MultipleSelectFormField'
@@ -9,12 +10,14 @@ import { renderVehicleClassItems } from '../../../../components/renderVehicleMen
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import { StatusRow } from 'src/fake-data/status'
 import { renderMenuItems } from 'src/components/renderStatusMenuItems'
-import FileUploaderMultiple from 'src/components/input-fields/FileUploaderWithPreview'
+
+// import FileUploaderMultiple from 'src/components/input-fields/FileUploaderWithPreview'
 import DropzoneWrapper from 'src/@core/styles/libs/react-dropzone'
 
 const BrandModel = ({ handleClose }: { handleClose: () => void }) => {
   const { control } = useForm()
-  const [file, setFile] = useState([])
+
+  // const [file, setFile] = useState([])
 
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
@@ -22,7 +25,7 @@ const BrandModel = ({ handleClose }: { handleClose: () => void }) => {
         <form>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <FileUploaderMultiple files={file} setFiles={setFile} />
+              {/* <FileUploaderMultiple files={file} setFiles={setFile} /> */}
             </Grid>
             <Grid item xs={12}>
               <TextFormField control={control} id='name' label='Vehicle Model' required size='medium' />

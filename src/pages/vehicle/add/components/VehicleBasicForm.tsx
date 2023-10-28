@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import {
@@ -14,18 +14,17 @@ import { StatusRow } from 'src/fake-data/status'
 import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
 import { renderMenuItems } from 'src/components/renderStatusMenuItems'
 import DropzoneWrapper from 'src/@core/styles/libs/react-dropzone'
-import FileUploaderMultiple from 'src/components/input-fields/FileUploaderWithPreview'
 import { fuelTypes } from 'src/fake-data/vehicles'
 
 const VehicleBasicForm = ({ control }: { control: any }) => {
 
-  const [file, setFile] = useState([])
+  // const [file, setFile] = useState([])
 
   return (
     <Fragment>
       <Grid item xs={12} >
       <DropzoneWrapper>
-              <FileUploaderMultiple files={file} setFiles={setFile} />
+              {/* <FileUploaderMultiple files={file} setFiles={setFile} /> */}
             </DropzoneWrapper>
       </Grid>
       <Grid item xs={12} sm={6}>

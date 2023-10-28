@@ -10,6 +10,7 @@ async function getManufacturers () {
 export const useGetManufacturers = () => {
     return useQuery({
         queryKey: ['manufacturer'],
-        queryFn:  getManufacturers
+        queryFn:  getManufacturers,
+        staleTime: Infinity
     })
 }

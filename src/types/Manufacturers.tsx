@@ -7,8 +7,8 @@ export type VehicleClassFields = {
 
 export type ManufacturersFields = {
     id?: string
-    title: string
+    name: string
     logo: any
-    vehicle_classes: any[]
+    vehicle_types: any[]
     description: string
 }

@@ -5,7 +5,7 @@ import { renderName } from 'src/utils/render-avatar'
 
 interface RowTypes {
   id: string
-  title: string
+  name: string
   vehicle_classes: any[]
 }
 
@@ -17,7 +17,7 @@ const useGetManufacturersCols = ({
   handleEdit,
   handleView
 }: {
-  handleEdit: (id: string) => void
+  handleEdit: (id: any) => void
   handleView: (id: string) => void
 }) => {
   const columns = [
@@ -29,18 +29,18 @@ const useGetManufacturersCols = ({
     },
     {
       flex: 0.1,
-      field: 'title',
+      field: 'name',
       minWidth: 220,
-      headerName: 'Title',
+      headerName: 'Name',
       renderCell: ({ row }: ParamTypes) => {
-        const { title } = row
+        const { name } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderName(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
-                {title}
+                {name}
               </Typography>
             </Box>
           </Box>
@@ -55,7 +55,7 @@ const useGetManufacturersCols = ({
       renderCell: ({ row }: ParamTypes) => {
         return (
           <Grid>
-            {row.vehicle_classes.map(vehicle_class => (
+            {row.vehicle_classes?.map(vehicle_class => (
               <Chip sx={{ marginX: 1 }} key={vehicle_class} label={vehicle_class} />
             ))}
           </Grid>
@@ -70,12 +70,7 @@ const useGetManufacturersCols = ({
       renderCell: (params: ParamTypes) => {
         const { id } = params.row
 
-        return (
-          <BasicTableActions
-            handleView={() => handleView(id)}
-            handleEdit={() => handleEdit(id)}
-          />
-        )
+        return <BasicTableActions handleView={() => handleView(id)} handleEdit={() => handleEdit(params?.row)} />
       }
     }
   ]

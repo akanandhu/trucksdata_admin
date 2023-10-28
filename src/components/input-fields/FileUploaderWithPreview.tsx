@@ -14,6 +14,7 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDropzone } from 'react-dropzone'
 import { useTheme } from '@mui/material'
+import useCustomToast from '../toast/toast'
 
 export interface FileProp {
   id: string
@@ -48,19 +49,23 @@ export interface AttachDataProps {
 
 interface Props {
   files: any
+  fileLink:any
   setFiles: any
+  setFileLink:any
+  addFiles: any
 }
 
 const FileUploaderMultiple = (props: Props) => {
-  const { files, setFiles,   } = props
+  const { files, setFiles, fileLink, setFileLink, addFiles } = props
   console.log({
     files,
     setFiles,
-
+    
   })
 
   // ** State
   const theme = useTheme()
+  const toast = useCustomToast()
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
@@ -90,12 +95,30 @@ const FileUploaderMultiple = (props: Props) => {
       const maxSize = 10 * 1024 * 1024 // 5MB in bytes
 
       if (totalFileSize > maxSize) {
-        // toast.error('Total File Size Exceeded 10Mb')
+        toast.error('Total File Size Exceeded 10Mb')
 
         return
       }
 
-      setFiles((prevFiles: any) => [...prevFiles, ...acceptedFiles.map(file => Object.assign(file))])
+        setFiles((prevFiles: any) => [...prevFiles, ...acceptedFiles.map(file => Object.assign(file))])
+      
+
+      for (let i = 0; i < acceptedFiles.length; i++) {
+        const file = acceptedFiles[i];
+        const formData = new FormData();
+        
+        // Append each file with a dynamic key
+        formData.append(`attachment[${i}]`, file);
+      
+        try {
+          const response = await addFiles.mutateAsync(formData);
+          console.log(response?.data,'responseCheck')
+          setFileLink((prevKeys: any) => [...prevKeys, response?.data]);
+        } catch (error) {
+          // Handle any errors that occurred during the upload
+          console.error(`Error uploading file "${file.name}":`, error);
+        }
+      }
 
     }
   })
@@ -115,20 +138,17 @@ const FileUploaderMultiple = (props: Props) => {
     }
   }
 
-  const handleRemoveFile = (file: FileProp) => {
-    if (file.id) {
-      // deleteFile.mutate(file.id)
-    }
+  const handleRemoveFile = (file: FileProp, i:number) => {
     const uploadedFiles = files
     const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
     setFiles([...filtered])
-
-    // const newFileLinks = [...fileLink] // Make a copy of the fileLinks array
-    // newFileLinks.splice(index, 1) // Remove the file link at the specified index
-    // setFileLink(newFileLinks)
+    console.log(file,i,'remove')
+    const newFileLinks = [...fileLink] // Make a copy of the fileLinks array
+    newFileLinks.splice(i, 1) // Remove the file link at the specified index
+    setFileLink(newFileLinks)
   }
 
-  const fileList = files.map((file: FileProp) => (
+  const fileList = files?.map((file: FileProp, i: number) => (
     <ListItem
       sx={{
         marginTop: theme.spacing(3.5),
@@ -155,7 +175,7 @@ const FileUploaderMultiple = (props: Props) => {
           )}
         </div>
       </div>
-      <IconButton onClick={() => handleRemoveFile(file)}>
+      <IconButton onClick={() => handleRemoveFile(file, i)}>
         <Icon icon='tabler:x' fontSize={20} />
       </IconButton>
     </ListItem>
@@ -187,7 +207,7 @@ const FileUploaderMultiple = (props: Props) => {
           <Typography sx={{ opacity: 30 }}>(Total allowed file size : 5mb)</Typography>
         </Box>
       </div>
-      {files.length ? (
+      {files?.length ? (
         <div>
           <List>{fileList}</List>
         </div>

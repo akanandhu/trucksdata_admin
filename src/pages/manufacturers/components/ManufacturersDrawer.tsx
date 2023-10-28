@@ -12,11 +12,17 @@ interface Props {
     handleSubmit: UseFormHandleSubmit<ManufacturersFields>
     onSubmit: (values: ManufacturersFields) => void
     errors: FieldErrors
+    fileLink: string[]
+    setFileLink: React.Dispatch<SetStateAction<string[]>>
+    reset: any
+    apiError: any
 }
 
-const ManufacturersDrawer = ({open, setOpen, control, errors, onSubmit, handleSubmit}:Props) => {
+const ManufacturersDrawer = ({open, setOpen, control, errors, onSubmit, handleSubmit, apiError, fileLink, setFileLink, reset}:Props) => {
     const handleClose = () => {
         setOpen(!open)
+        setFileLink([''])
+        reset()
     }
 
   return (
@@ -29,7 +35,7 @@ const ManufacturersDrawer = ({open, setOpen, control, errors, onSubmit, handleSu
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <HeaderWithClose title='Add Manufacturer' handleClose={handleClose} />
-      <ManufacturersForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} errors={errors} handleClose={handleClose}   />
+      <ManufacturersForm fileLink={fileLink} setFileLink={setFileLink} handleSubmit={handleSubmit} apiError={apiError} onSubmit={onSubmit} control={control} errors={errors} handleClose={handleClose}   />
     </Drawer> 
   )
 }

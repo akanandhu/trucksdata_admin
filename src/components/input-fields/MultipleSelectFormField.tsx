@@ -5,11 +5,12 @@ import { Control, Controller } from 'react-hook-form'
 import { ManufacturersFields } from 'src/types/Manufacturers'
 
 interface MultipleSelectProps {
-  label: string
+  label: any
   id: string
   control: Control<ManufacturersFields>
   data: any
-  renderMenuItems : (obj:any) => ReactJSXElement
+  renderMenuItems: (obj: any) => ReactJSXElement
+  labelKey?: string
 }
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -22,7 +23,7 @@ const MenuProps = {
   }
 }
 
-const MultipleSelectFormField = ({ label, id, control, data, renderMenuItems }: MultipleSelectProps) => {
+const MultipleSelectFormField = ({ label, id, control, data, renderMenuItems, labelKey }: MultipleSelectProps) => {
   return (
     <FormControl fullWidth>
       <InputLabel id='-multiple-checkbox-label'>{label ?? ''}</InputLabel>
@@ -42,9 +43,9 @@ const MultipleSelectFormField = ({ label, id, control, data, renderMenuItems }: 
             labelId='multiple-checkbox-label'
             renderValue={selected => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {(selected as unknown as string[]).map(value => (
-                  <Chip key={value} label={value} sx={{ m: 0.75 }} />
-                ))}
+                {(selected as unknown as string[]).map((value: any) => {
+                  return <Chip key={value?.id} label={value?.[labelKey ?? 'name']} sx={{ m: 0.75 }} />
+                })}
               </Box>
             )}
           >
