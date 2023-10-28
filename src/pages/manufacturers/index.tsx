@@ -2,7 +2,6 @@ import { Box, Card, CardHeader, Divider, Grid } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useState } from "react"
 import TableHeader from "src/components/TableHeader"
-import DeleteConfirmModal from "src/components/modals/DeleteConfirmModal"
 import { manufacturersRows } from "src/fake-data/rows"
 import useGetManufacturersCols from "./hooks/columns"
 import ManufacturersDrawer from "./components/ManufacturersDrawer"
@@ -25,6 +24,7 @@ const Manufacturers = () => {
         setOpenDrawer(true)
     }
     const [data, setData] = useState(manufacturersRows)
+    console.log(setData, idToRemove)
     const {columns} = useGetManufacturersCols({handleDelete, handleEdit, handleView})
 
     function handleDelete (id:string) {
@@ -52,13 +52,13 @@ const Manufacturers = () => {
           </Box>
         </Card>
         <ManufacturersDrawer errors={errors} open={openDrawer} setOpen={setOpenDrawer} control={control} />
-        <DeleteConfirmModal
+        {/* <DeleteConfirmModal
           open={deleteConfirm}
           setOpen={setDeleteConfirm}
           remove={data}
           idToRemove={idToRemove}
-          setRemoved={setData}
-        />
+          routeToInvalidate=""
+        /> */}
       </Grid> 
     )
 }
