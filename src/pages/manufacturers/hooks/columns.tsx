@@ -6,7 +6,7 @@ import { renderName } from 'src/utils/render-avatar'
 interface RowTypes {
   id: string
   name: string
-  vehicle_classes: any[]
+  vehicle_types: any[]
 }
 
 interface ParamTypes {
@@ -22,9 +22,9 @@ const useGetManufacturersCols = ({
 }) => {
   const columns = [
     {
-      flex: 0.1,
+      flex: 0.01,
       field: 'id',
-      minWidth: 200,
+      minWidth: 150,
       headerName: 'Id'
     },
     {
@@ -53,17 +53,20 @@ const useGetManufacturersCols = ({
       minWidth: 50,
       headerName: 'Vehicle Class',
       renderCell: ({ row }: ParamTypes) => {
+
+        console.log(row, 'rowCheck')
+
         return (
           <Grid>
-            {row.vehicle_classes?.map(vehicle_class => (
-              <Chip sx={{ marginX: 1 }} key={vehicle_class} label={vehicle_class} />
+            {row.vehicle_types?.map(vehicle_type => (
+              <Chip sx={{ marginX: 1 }} key={vehicle_type?.id} label={vehicle_type?.name} />
             ))}
           </Grid>
         )
       }
     },
     {
-      flex: 0.05,
+      flex: 0.04,
       field: 'actions',
       minWidth: 40,
       headerName: 'Actions',
