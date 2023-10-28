@@ -1,6 +1,6 @@
 import { Box, Grid } from '@mui/material'
 import React from 'react'
-import { Control, FieldErrors } from 'react-hook-form'
+import { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
 import ErrorBox from 'src/components/ErrorBox'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
@@ -22,18 +22,24 @@ const statusData = [
 const VehicleClassForm = ({
   control,
   errors,
-  handleClose
+  handleClose,
+  handleSubmit,
+  onSubmit,
+  apiError
 }: {
   control: Control<VehicleClassFields>
   errors: FieldErrors
   handleClose: () => void
+  handleSubmit: UseFormHandleSubmit<VehicleClassFields>
+  onSubmit: (values: VehicleClassFields) => void
+  apiError: any
 }) => {
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
           <Grid item xs={12}>
-            <TextFormField id='title' label='Vehicle Class Title' size='medium' required control={control} />
+            <TextFormField id='name' label='Vehicle Class Title' size='medium' required control={control} />
             {errors.title && <ErrorBox error={errors.title} />}
           </Grid>
           <Grid item xs={12}>
@@ -49,8 +55,9 @@ const VehicleClassForm = ({
             {errors.title && <ErrorBox error={errors.title} />}
           </Grid>
         </Grid>
+        {apiError && <ErrorBox error={apiError} />}
+        <DrawerActions handleClose={handleClose} />
       </form>
-      <DrawerActions handleClose={handleClose} />
     </Box>
   )
 }

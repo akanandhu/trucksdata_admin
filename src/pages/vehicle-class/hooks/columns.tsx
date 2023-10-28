@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material'
+import { Chip, Typography } from '@mui/material'
 import BasicTableActions from 'src/components/BasicTableActions'
 import { VehicleClassFields } from 'src/types/VehicleClass'
 import { capitaliseFirstLetter } from 'src/utils/capitalise-first-letter'
@@ -7,9 +7,13 @@ interface Props {
   handleEdit: (params: VehicleClassFields) => void
   handleDelete: (id: string) => void
 }
+
 interface RowType {
   status: 'active' | 'inactive'
+  name: string
+  id: string
 }
+
 interface ParamsRow {
   row: RowType
 }
@@ -21,13 +25,22 @@ const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
       field: 'id',
       minWidth: 80,
       headerName: 'Id',
-      type: ''
+      renderCell: (params: ParamsRow) => {
+        const { row } = params
+
+        return <Typography>{row?.id}</Typography>
+      }
     },
     {
       flex: 0.25,
       minWidth: 200,
       field: 'title',
-      headerName: 'Title'
+      headerName: 'Title',
+      renderCell: (params: ParamsRow) => {
+        const { row } = params
+
+        return <Typography>{row?.name}</Typography>
+      }
     },
     {
       flex: 0.075,
@@ -38,7 +51,7 @@ const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
         const { status } = params.row
         const statusColor = status === 'active' ? 'success' : 'secondary'
 
-        return <Chip label={capitaliseFirstLetter(status)} color={statusColor} />
+        return status ? <Chip label={capitaliseFirstLetter(status ?? '')} color={statusColor} /> : '-'
       }
     },
     {
@@ -46,10 +59,10 @@ const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
       field: 'actions',
       minWidth: 40,
       headerName: 'Actions',
-      renderCell: (params: {row: VehicleClassFields}) => {
+      renderCell: (params: { row: VehicleClassFields }) => {
         const { id } = params.row
 
-        return <BasicTableActions handleDelete={() => handleDelete(id)} handleEdit={() => handleEdit(params.row)} />
+        return <BasicTableActions handleDelete={() => handleDelete(id as string)} handleEdit={() => handleEdit(params.row)} />
       }
     }
   ]
