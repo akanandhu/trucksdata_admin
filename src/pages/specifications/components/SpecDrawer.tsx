@@ -16,30 +16,24 @@ interface Props {
   apiError: any
   options: any
   data_type: FieldDataTypes
+  handleClose: () => void
+  mutationLoading: boolean
+  handleDeleteOption: (id: string) => void
 }
 
 const SpecDrawer = ({
   open,
-  setOpen,
   control,
   errors,
-  setSelectedData,
   handleSubmit,
   onSubmit,
   apiError,
   options,
-  data_type
+  data_type,
+  handleClose,
+  mutationLoading,
+  handleDeleteOption
 }: Props) => {
-  const handleClose = () => {
-    setOpen(!open)
-    setSelectedData({
-      data_type: 'text',
-      name: '',
-      options: null,
-      specification_category_id: ''
-    })
-  }
-
   return (
     <Drawer
       open={open}
@@ -59,6 +53,8 @@ const SpecDrawer = ({
         onSubmit={onSubmit}
         options={options}
         data_type={data_type}
+        mutationLoading={mutationLoading}
+        handleDeleteOption={handleDeleteOption}
       />
     </Drawer>
   )

@@ -4,7 +4,6 @@ import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import { useState } from 'react'
 import TableHeader from '../../components/TableHeader'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { useDeleteVehicleClass } from 'src/api/services/vehicle-class/delete'
 import { useQueryClient } from '@tanstack/react-query'
 import useCustomToast from 'src/lib/toast'
 import { SpecFields } from 'src/types/SpecFields'
@@ -14,6 +13,9 @@ import SpecDrawer from './components/SpecDrawer'
 import { useAddSpecification } from 'src/api/services/specifications/post'
 import { useEditSpecification } from 'src/api/services/specifications/patch'
 import usePrefillSpec from './hooks/prefill'
+import { useDeleteSpec } from 'src/api/services/specifications/delete'
+import { useDeleteSpecOpts } from 'src/api/services/specifications/options/delete'
+import { useAddSpecOption } from 'src/api/services/specifications/options/post'
 
 const defaultValues: SpecFields = {
   name: '',
@@ -32,6 +34,7 @@ const Specifications = () => {
     specification_category_id: ''
   })
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [deleteIds, setDeleteIds] = useState<any>([])
 
   const {
     control,
@@ -50,9 +53,14 @@ const Specifications = () => {
     control,
     name: 'options'
   })
-
+  const isEdit = selectedData?.name !== ''
   const queryClient = useQueryClient()
   const toast = useCustomToast()
+  const addSpec = useAddSpecification()
+  const editSpec = useEditSpecification()
+  const addSpecOption = useAddSpecOption()
+  const deleteSpecOpt = useDeleteSpecOpts()
+  const mutationFn: any = isEdit ? editSpec : addSpec
 
   const handleOpenDrawer = () => {
     setOpenDrawer(!openDrawer)
@@ -70,26 +78,71 @@ const Specifications = () => {
     handleOpenDrawer()
   }
 
-  const deleteVehicleClass = useDeleteVehicleClass()
-  const { columns } = useGetSpecCols({ handleDelete, handleEdit })
-  usePrefillSpec({selectedData, setValue})
+  function handleClose() {
+    handleOpenDrawer()
+    setSelectedData({
+      data_type: 'text',
+      name: '',
+      options: null,
+      specification_category_id: ''
+    })
+    mutationFn.reset()
+    setDeleteIds([])
+  }
 
-  const addSpec = useAddSpecification()
-  const editSpec = useEditSpecification()
+  const deleteSpec = useDeleteSpec()
+  const { columns } = useGetSpecCols({ handleDelete, handleEdit })
+  usePrefillSpec({ selectedData, setValue })
 
   const { data: specs, isLoading } = useGetSpecsData()
   const { data: specsData } = specs?.data || {}
 
-  const isEdit = Boolean(selectedData?.name)
+  function handleSuccess(options: any) {
+    if (deleteIds?.length) {
+      deleteIds?.map((id: string) => {
+        return deleteSpecOpt?.mutate(
+          { id },
+          {
+            onSuccess: handleDeleteSuccess
+          }
+        )
+      })
+    } else {
+      handleDeleteSuccess()
+    }
+    const specId = options?.[0]?.specification_id
+    const specsOption = specsData?.filter((spec: { id: string }) => spec?.id === specId)
+    const specOptionCollection = specsOption?.[0]?.options
+    if (selectedData) {
+      if (options?.length) {
+        if (options?.length !== specOptionCollection?.length) {
+          const nonAddedSpecs = options.filter(
+            (obj1: { id: string; name: string }) =>
+              !specOptionCollection?.some(
+                (obj2: { id: string; name: string }) => obj1.id === obj2.id && obj1.name === obj2.name
+              )
+          )
+          if(nonAddedSpecs?.length) {
+            const dataToAdd = {
+              specification_id: specId,
+              options: nonAddedSpecs
+            }
+            addSpecOption.mutate(dataToAdd, {
+              onSuccess: () => handleDeleteSuccess()
+            })
+          }
+        }
+      }
+    }
 
-  function handleVehicleSuccess() {
-    queryClient.invalidateQueries({ queryKey: ['vehicle-class'] })
-    handleOpenDrawer()
+    handleClose()
     toast.success(`Successfully ${isEdit ? 'Updated' : 'Created'}`)
     reset()
   }
 
-  const mutationFn:any = isEdit ?  addSpec : editSpec
+  function handleDeleteSuccess() {
+    queryClient.invalidateQueries({ queryKey: ['specifications'] })
+  }
 
   function onSubmit(values: SpecFields) {
     const { name, data_type, options, specification_category_id } = values
@@ -99,10 +152,19 @@ const Specifications = () => {
       specification_category_id,
       ...(data_type === 'drop_down' && { options: options })
     }
-    const queryParams:any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
+    const queryParams: any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
     mutationFn.mutate(queryParams, {
-      onSuccess: () => handleVehicleSuccess()
+      onSuccess: () => handleSuccess(options)
     })
+  }
+  function handleDeleteOption(option: any) {
+    const specId = option.specification_id
+    const selectedSpec = specsData?.filter((spec: { id: string }) => spec?.id === specId)
+    const selectedOptions = selectedSpec?.[0]?.options
+    const selectedName = option?.option
+    const selectedCollectionToDelete = selectedOptions?.filter((option: any) => option?.option === selectedName)
+    const selectedIdToDelete = selectedCollectionToDelete?.[0]?.id
+    setDeleteIds((prevId: string[]) => [...prevId, selectedIdToDelete])
   }
 
   return (
@@ -115,16 +177,6 @@ const Specifications = () => {
           <DataGrid disableRowSelectionOnClick loading={isLoading} columns={columns as any} rows={specsData ?? []} />
         </Box>
       </Card>
-      {/* <VehicleClassDrawer
-        open={openDrawer}
-        setOpen={setOpenDrawer}
-        control={control}
-        errors={errors}
-        apiError={addVehicleClass?.error}
-        setSelectedData={setSelectedData}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-      /> */}
       <SpecDrawer
         open={openDrawer}
         setOpen={setOpenDrawer}
@@ -136,14 +188,17 @@ const Specifications = () => {
         onSubmit={onSubmit}
         options={options}
         data_type={data_type}
+        handleClose={handleClose}
+        mutationLoading={editSpec.isPending || addSpec.isPending}
+        handleDeleteOption={handleDeleteOption}
       />
 
       <DeleteConfirmModal
         open={deleteConfirm}
         setOpen={setDeleteConfirm}
-        remove={deleteVehicleClass}
+        remove={deleteSpec}
         idToRemove={idToRemove}
-        routeToInvalidate='vehicle-class'
+        routeToInvalidate='specifications'
       />
     </Grid>
   )

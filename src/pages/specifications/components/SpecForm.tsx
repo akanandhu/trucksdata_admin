@@ -30,7 +30,9 @@ const SpecForm = ({
   onSubmit,
   apiError,
   options,
-  data_type
+  data_type,
+  mutationLoading,
+  handleDeleteOption
 }: {
   control: Control<SpecFields>
   errors: FieldErrors
@@ -40,6 +42,8 @@ const SpecForm = ({
   apiError: any
   options: any
   data_type: FieldDataTypes
+  mutationLoading: boolean
+  handleDeleteOption: (id: string) => void
 }) => {
   const specCategories = useGetSpecCategories()
   const { fields, append, remove } = options
@@ -91,12 +95,13 @@ const SpecForm = ({
                 size='medium'
                 label='Option'
                 keyValue='option'
+                handleDeleteItem={handleDeleteOption}
               />
             </Grid>
           )}
         </Grid>
         {apiError && <ErrorBox error={apiError} />}
-        <DrawerActions handleClose={handleClose} />
+        <DrawerActions addDisabled={mutationLoading}  handleClose={handleClose} />
       </form>
     </Box>
   )

@@ -13,14 +13,21 @@ interface Props {
   marginBottom?: number
   label?: string
   keyValue?: string
+  handleDeleteItem: (id: string) => void
 }
 
 const ArrayTextField = (props: Props) => {
-  const { fields, control, id, size, remove, append, marginBottom, label, keyValue } = props
+  const { fields, control, id, size, remove, append, marginBottom, label, keyValue, handleDeleteItem } = props
+
+  function handleDelete(index:any, option: any){
+    remove(index)
+    handleDeleteItem && handleDeleteItem(option)
+  }
 
   return (
     <>
       {fields.map((option: any, index: any) => {
+
         return (
           <Grid display={'flex'} mb={marginBottom ?? 5} key={option.id}>
             <TextFormField
@@ -29,7 +36,7 @@ const ArrayTextField = (props: Props) => {
               id={`${[id]}[${index}].${[keyValue]}`}
               size={size ?? 'small'}
             />
-            <IconButton onClick={() => remove(index)} color='secondary'>
+            <IconButton onClick={() => handleDelete(index, option)} color='secondary'>
               <GridCloseIcon color='error' />
             </IconButton>
           </Grid>
