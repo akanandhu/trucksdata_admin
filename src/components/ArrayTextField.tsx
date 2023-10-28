@@ -1,7 +1,7 @@
-import { Grid, IconButton } from '@mui/material'
+import { Button, Grid, IconButton } from '@mui/material'
 import React from 'react'
 import TextFormField from './input-fields/TextFormField'
-import { GridAddIcon, GridCloseIcon } from '@mui/x-data-grid'
+import { GridCloseIcon } from '@mui/x-data-grid'
 
 interface Props {
   fields: any
@@ -21,17 +21,23 @@ const ArrayTextField = (props: Props) => {
   return (
     <>
       {fields.map((option: any, index: any) => {
-        return(
-        <Grid display={'flex'} mb={marginBottom ?? 5}  key={option.id}>
-          <TextFormField label={label ?? ''} control={control} id={`${[id]}[${index}].${[keyValue]}`} size={size ?? 'small'} />
-          <IconButton onClick={() => remove(index)} color='secondary'>
-            <GridCloseIcon color='error' />
-          </IconButton>
-          <IconButton onClick={() => append({ [keyValue ?? 'value']: '' })}>
-            <GridAddIcon color='success' />
-          </IconButton>
-        </Grid>
-      )})}
+        return (
+          <Grid display={'flex'} mb={marginBottom ?? 5} key={option.id}>
+            <TextFormField
+              label={label ?? ''}
+              control={control}
+              id={`${[id]}[${index}].${[keyValue]}`}
+              size={size ?? 'small'}
+            />
+            <IconButton onClick={() => remove(index)} color='secondary'>
+              <GridCloseIcon color='error' />
+            </IconButton>
+          </Grid>
+        )
+      })}
+      <Button variant='outlined' onClick={() => append({ [keyValue ?? 'value']: '' })}>
+        Add Option
+      </Button>
     </>
   )
 }
