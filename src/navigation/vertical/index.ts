@@ -22,7 +22,13 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Vehicle',
       path: '/vehicle',
       icon: 'tabler:tir'
-    }
+    },
+    {
+      title: 'Specifications',
+      path: '/specifications',
+      icon: 'tabler:file-text'
+    },
+
 
     // {
     //   path: '/acl',
