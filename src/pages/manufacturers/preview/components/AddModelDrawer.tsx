@@ -1,12 +1,23 @@
 import { Drawer } from '@mui/material'
-import React, { SetStateAction } from 'react'
-import HeaderWithClose from 'src/components/drawers/HeaderWithClose';
-import BrandModel from './BrandModel';
+import React from 'react'
+import HeaderWithClose from 'src/components/drawers/HeaderWithClose'
+import BrandModel from './BrandModel'
 
-const AddModelDrawer = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<SetStateAction<boolean>> }) => {
-  function handleClose() {
-    setOpen(!open)
-  }
+const AddModelDrawer = ({
+  open,
+  vehicle_classes,
+  control,
+  handleSubmit,
+  onSubmit,
+  handleClose
+}: {
+  open: boolean
+  vehicle_classes: any
+  control: any
+  handleSubmit: any
+  onSubmit: (values: any) => void
+  handleClose: () => void
+}) => {
 
   return (
     <Drawer
@@ -17,8 +28,8 @@ const AddModelDrawer = ({ open, setOpen }: { open: boolean; setOpen: React.Dispa
       ModalProps={{ keepMounted: true }}
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
-        <HeaderWithClose title='Add Model' handleClose={handleClose} />
-        <BrandModel handleClose={handleClose} />
+      <HeaderWithClose title='Add Model' handleClose={handleClose} />
+      <BrandModel handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} vehicle_classes={vehicle_classes} handleClose={handleClose} />
     </Drawer>
   )
 }

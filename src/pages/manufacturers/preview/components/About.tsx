@@ -39,21 +39,17 @@ const renderList = (arr: any[]) => {
   }
 }
 
-
-
-const AboutBrand = (data: any) => {
-
-  const {logo, title, vehicle_classes} = data?.data || {}
+const AboutBrand = ({data}:{data: any}) => {
 
   const Items = [
     {
       property: 'brand',
-      value: title,
+      value: data?.name ?? '',
       icon: 'tabler:steering-wheel'
     },
     {
       property: 'Vehicle Class',
-      value: vehicle_classes?.join(', '),
+      value: data?.vehicle_types?.map((type: { name: string }) => type?.name)?.join(', ') ?? '',
       icon: 'tabler:tir'
     }
   ]
@@ -61,7 +57,7 @@ const AboutBrand = (data: any) => {
   const theme = useTheme()
 
   return (
-    <Grid  container spacing={6}>
+    <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardContent>
@@ -71,16 +67,11 @@ const AboutBrand = (data: any) => {
               </Typography>
             </Box>
             <Grid display={'flex'} gap={6}>
-            <Box>
-              <ProfilePicture
-                theme={theme}
-                src={logo}
-                alt='brand_logo'
-              />
-            </Box>
-            <Box marginTop={3}>{renderList(Items)}</Box>
+              <Box>
+                <ProfilePicture theme={theme} src={data?.logo ?? ''} alt={'brand_logo'} />
+              </Box>
+              <Box marginTop={3}>{renderList(Items)}</Box>
             </Grid>
-            
           </CardContent>
         </Card>
       </Grid>

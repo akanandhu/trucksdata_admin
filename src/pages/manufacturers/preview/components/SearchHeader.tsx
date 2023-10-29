@@ -1,28 +1,18 @@
 import { Box, Button, FormControl, Grid, MenuItem } from '@mui/material'
 import React from 'react'
-import { useForm } from 'react-hook-form'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { rows } from 'src/fake-data/rows'
 import { Status } from 'src/fake-data/status'
 
 const renderMenuItems = (obj: any) => {
   return (
     <MenuItem key={obj.id} value={obj.id}>
-      {obj.title}
+      {obj.name}
     </MenuItem>
   )
 }
 
-
-
-const SearchHeader = () => {
-  const { control, handleSubmit } = useForm()
-
-  const onSubmit = (values: any) => {
-    console.log(values)
-  }
-
+const SearchHeader = ({ handleSubmit, onSubmit, control, vehicle_classes, setVehicleId }: any) => {
   return (
     <>
       <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
@@ -48,11 +38,12 @@ const SearchHeader = () => {
             <FormControl fullWidth size='small'>
               <SelectFormField
                 label='Vehicle Class'
-                data={rows}
+                data={vehicle_classes?.data?.data ?? []}
                 size={'small'}
                 renderMenuItems={renderMenuItems}
                 control={control}
                 id='vehicle_class'
+                handleOnChange={(e) => setVehicleId(e.target.value)}
               />
             </FormControl>
           </Grid>
@@ -63,7 +54,6 @@ const SearchHeader = () => {
                 label='Status'
                 data={Status}
                 size={'small'}
-
                 renderMenuItems={renderMenuItems}
                 control={control}
                 id='status'
