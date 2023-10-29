@@ -1,5 +1,4 @@
-import { ReactJSXElement } from '@emotion/react/types/jsx-namespace'
-import { Box, Chip, FormControl, InputLabel, Select } from '@mui/material'
+import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select } from '@mui/material'
 import React from 'react'
 import { Control, Controller } from 'react-hook-form'
 import { ManufacturersFields } from 'src/types/Manufacturers'
@@ -9,9 +8,8 @@ interface MultipleSelectProps {
   id: string
   control: Control<ManufacturersFields>
   data: any
-  renderMenuItems: (obj: any) => ReactJSXElement
-  labelKey?: string
 }
+
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
 const MenuProps = {
@@ -23,7 +21,7 @@ const MenuProps = {
   }
 }
 
-const MultipleSelectFormField = ({ label, id, control, data, renderMenuItems, labelKey }: MultipleSelectProps) => {
+const MultipleSelectFormField = ({ label, id, control, data }: MultipleSelectProps) => {
   return (
     <FormControl fullWidth>
       <InputLabel id='-multiple-checkbox-label'>{label ?? ''}</InputLabel>
@@ -32,24 +30,24 @@ const MultipleSelectFormField = ({ label, id, control, data, renderMenuItems, la
         control={control}
         render={({ field: { value, onChange, onBlur } }) => (
           <Select
+            labelId='demo-multiple-checkbox-label'
+            id='demo-multiple-checkbox'
             multiple
-            label={label ?? ''}
             value={value}
-            MenuProps={MenuProps}
             onChange={onChange}
-            defaultValue={[]}
             onBlur={onBlur}
-            id='multiple-checkbox'
-            labelId='multiple-checkbox-label'
-            renderValue={selected => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {(selected as unknown as string[]).map((value: any) => {
-                  return <Chip key={value?.id} label={value?.[labelKey ?? 'name']} sx={{ m: 0.75 }} />
-                })}
-              </Box>
-            )}
+            input={<OutlinedInput label='Vehicle Types' />}
+            placeholder='Vehicle Types'
+            renderValue={selected => selected?.map((item: string) => item).join(', ')}
+            MenuProps={MenuProps}
           >
-            {data && data?.map((obj: any) => renderMenuItems(obj))}
+            {data.map((obj: { id: string; name: string }) => {
+              return (
+                <MenuItem key={obj?.id} value={obj?.name}>
+                  <ListItemText primary={obj?.name} />
+                </MenuItem>
+              )
+            })}
           </Select>
         )}
       />

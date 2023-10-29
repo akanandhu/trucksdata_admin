@@ -1,6 +1,6 @@
 import { Box, Card, CardHeader, Divider, Grid } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import TableHeader from 'src/components/TableHeader'
 import useGetManufacturersCols from './hooks/columns'
 import ManufacturersDrawer from './components/ManufacturersDrawer'
@@ -14,6 +14,9 @@ import { useQueryClient } from '@tanstack/react-query'
 import useCustomToast from 'src/lib/toast'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import usePrefillManufacturer from './hooks/prefill'
+import { useEditManufacturer } from 'src/api/services/manufacturers/patch'
+import { useGetVehicleClasses } from 'src/api/services/vehicle-class/get'
 
 const defaultValues = {
   name: '',
@@ -39,11 +42,13 @@ const Manufacturers = () => {
   })
 
   const router = useRouter()
-  const queryClient:any = useQueryClient()
+  const queryClient: any = useQueryClient()
 
   const [openDrawer, setOpenDrawer] = useState(false)
   const [selectedData, setSelectedData] = useState<any>({})
-  const [fileLink,setFileLink] = useState<string[]>([])
+  const [fileLink, setFileLink] = useState<string[]>([])
+  const [files, setFiles] = useState<string[]>([])
+  
   const handleAdd = () => {
     reset()
     setSelectedData(null)
@@ -51,23 +56,22 @@ const Manufacturers = () => {
   }
 
   // Apis
-  const { data: manufacturers } = useGetManufacturers()
-  const addManufacturer = useAddManufacturer()
+  const isEdit = Boolean(selectedData?.name)
+  const { data: manufacturers, isLoading } = useGetManufacturers()
+  const { data: vehicle_types } = useGetVehicleClasses()
 
-  // const updateManufacturer = useEditManufacturer()
+  const addManufacturer = useAddManufacturer()
+  const editManufacturer = useEditManufacturer()
+
   const { columns } = useGetManufacturersCols({ handleEdit, handleView })
   const toast = useCustomToast()
 
-  useEffect(() => {
-    if(selectedData?.name) {
-        reset({
-          description: selectedData?.description,
-          name: selectedData?.name
-        })
-    } else {
-      reset()
-    }
-  }, [reset, selectedData, setValue])
+  usePrefillManufacturer({
+    selectedData,
+    setValue,
+    setFileLink,
+    setFiles
+  })
 
   function handleEdit(manufacturer: any) {
     setSelectedData(manufacturer)
@@ -81,28 +85,35 @@ const Manufacturers = () => {
   function handleSuccess() {
     toast.success(`Manufacturer Created Successfully`)
     queryClient.invalidateQueries(['manufacturer'])
-    setOpenDrawer(!openDrawer)
-    reset()
+    handleClose()
   }
 
-  const mutationFn = addManufacturer
+  const mutationFn: any = isEdit ? editManufacturer : addManufacturer
 
   function onSubmit(values: ManufacturersFields) {
-    const { name, description, vehicle_types } = values
-    const data:any = {
+    const { name, description, vehicle_types: vehicleTypes } = values
+    const filteredObjects = vehicle_types?.data?.data?.filter((obj: { name: string }) =>
+      vehicleTypes.includes(obj.name)
+    )
+    const data: any = {
       name,
       description,
       logo: fileLink?.[0],
-      vehicle_types: vehicle_types?.map(type => {
-        return {
-          vehicle_type_id: type?.id
-        }
-      })
+      vehicle_types: filteredObjects?.map((type: { id: string }) => type?.id)
     }
 
-    mutationFn.mutate(data, {
+    const queryData = isEdit ? { id: selectedData?.id, data } : data
+
+    mutationFn.mutate(queryData, {
       onSuccess: handleSuccess
     })
+  }
+
+  function handleClose() {
+    setOpenDrawer(!openDrawer)
+    setFileLink([''])
+    reset()
+    mutationFn.reset()
   }
 
   return (
@@ -115,7 +126,16 @@ const Manufacturers = () => {
 
         <TableHeader title='Manufacturers' handleNew={handleAdd} paddingX={7.5} />
         <Box sx={{ height: '100%' }}>
-          <DataGrid disableRowSelectionOnClick columns={columns as any} rows={manufacturers?.data?.data ?? []} />
+          <DataGrid
+            autoHeight
+            pagination
+            disableRowSelectionOnClick
+            rows={manufacturers?.data?.data ? manufacturers?.data?.data : []}
+            columns={columns}
+            rowCount={manufacturers?.data?.total ? manufacturers?.data?.total : 0}
+            loading={isLoading}
+            paginationMode='server'
+          />
         </Box>
       </Card>
       <ManufacturersDrawer
@@ -129,6 +149,10 @@ const Manufacturers = () => {
         fileLink={fileLink}
         setFileLink={setFileLink}
         reset={reset}
+        handleClose={handleClose}
+        vehicle_types={vehicle_types}
+        files={files}
+        setFiles={setFiles}
       />
     </Grid>
   )

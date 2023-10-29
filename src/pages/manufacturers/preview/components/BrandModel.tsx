@@ -3,10 +3,7 @@ import React from 'react'
   
 import { useForm } from 'react-hook-form'
 import DrawerActions from 'src/components/drawers/DrawerActions'
-import MultipleSelectFormField from 'src/components/input-fields/MultipleSelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { rows } from 'src/fake-data/rows'
-import { renderVehicleClassItems } from '../../../../components/renderVehicleMenuItems'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import { StatusRow } from 'src/fake-data/status'
 import { renderMenuItems } from 'src/components/renderStatusMenuItems'
@@ -31,13 +28,12 @@ const BrandModel = ({ handleClose }: { handleClose: () => void }) => {
               <TextFormField control={control} id='name' label='Vehicle Model' required size='medium' />
             </Grid>
             <Grid item xs={12}>
-              <MultipleSelectFormField
+              {/* <MultipleSelectFormField
                 id='vehicle_classes'
                 control={control as any}
                 data={rows}
                 label='Vehicle Class'
-                renderMenuItems={renderVehicleClassItems}
-              />
+              /> */}
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth size='small'>

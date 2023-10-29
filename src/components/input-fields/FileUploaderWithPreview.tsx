@@ -25,6 +25,8 @@ export interface FileProp {
   }
   size: number
   attachment: string
+  thumbnail?: string
+  original?: string
   spec: {
     contentType: string
     name: string
@@ -49,20 +51,17 @@ export interface AttachDataProps {
 
 interface Props {
   files: any
-  fileLink:any
+  fileLink: any
   setFiles: any
-  setFileLink:any
+  setFileLink: any
   addFiles: any
+  isMultiple?: boolean
 }
 
 const FileUploaderMultiple = (props: Props) => {
   const { files, setFiles, fileLink, setFileLink, addFiles } = props
-  console.log({
-    files,
-    setFiles,
-    
-  })
-
+  const dontShow = files?.[0] === null || files?.[0] === undefined
+  
   // ** State
   const theme = useTheme()
   const toast = useCustomToast()
@@ -101,36 +100,35 @@ const FileUploaderMultiple = (props: Props) => {
       }
 
         setFiles((prevFiles: any) => [...prevFiles, ...acceptedFiles.map(file => Object.assign(file))])
-      
+        for (let i = 0; i < acceptedFiles.length; i++) {
+          const file = acceptedFiles[i]
+          const formData = new FormData()
 
-      for (let i = 0; i < acceptedFiles.length; i++) {
-        const file = acceptedFiles[i];
-        const formData = new FormData();
-        
-        // Append each file with a dynamic key
-        formData.append(`attachment[${i}]`, file);
-      
-        try {
-          const response = await addFiles.mutateAsync(formData);
-          console.log(response?.data,'responseCheck')
-          setFileLink((prevKeys: any) => [...prevKeys, response?.data]);
-        } catch (error) {
-          // Handle any errors that occurred during the upload
-          console.error(`Error uploading file "${file.name}":`, error);
+          // Append each file with a dynamic key
+          formData.append(`attachment[${i}]`, file)
+
+          try {
+            const response = await addFiles.mutateAsync(formData)
+            console.log(response?.data, 'responseCheck')
+            setFileLink((prevKeys: any) => [...prevKeys, response?.data])
+          } catch (error) {
+            // Handle any errors that occurred during the upload
+            console.error(`Error uploading file "${file.name}":`, error)
+          }
         }
-      }
-
     }
   })
 
-  const renderFilePreview = (file: FileProp) => {
-    if (file?.name?.endsWith('jpg') || file?.name?.endsWith('png')) {
+  const renderFilePreview = (file: FileProp | any) => {
+    const isFileArray = Boolean(file?.length) 
+    const fileToCheck = isFileArray ? file?.[0] : file
+    if (fileToCheck?.name?.endsWith('jpg') || fileToCheck?.thumbnail?.endsWith('jpg') || fileToCheck?.thumbnail?.endsWith('png')) {
       return (
         <img
           width={38}
           height={38}
-          alt={file.name}
-          src={file.id ? file?.data?.attachment : URL.createObjectURL(file as any)}
+          alt={fileToCheck?.name || 'Image'}
+          src={fileToCheck?.id ? fileToCheck?.data?.attachment : fileToCheck?.original ? fileToCheck?.original : URL.createObjectURL(fileToCheck as any)}
         />
       )
     } else {
@@ -138,17 +136,17 @@ const FileUploaderMultiple = (props: Props) => {
     }
   }
 
-  const handleRemoveFile = (file: FileProp, i:number) => {
+  const handleRemoveFile = (file: FileProp, i: number) => {
     const uploadedFiles = files
     const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
     setFiles([...filtered])
-    console.log(file,i,'remove')
-    const newFileLinks = [...fileLink] // Make a copy of the fileLinks array
-    newFileLinks.splice(i, 1) // Remove the file link at the specified index
+    const newFileLinks = [...fileLink]
+    newFileLinks.splice(i, 1)
     setFileLink(newFileLinks)
   }
 
-  const fileList = files?.map((file: FileProp, i: number) => (
+  const imageDatas = files?.length ? files : fileLink
+  const fileList = imageDatas?.map((file: FileProp, i: number) => (
     <ListItem
       sx={{
         marginTop: theme.spacing(3.5),
@@ -158,7 +156,7 @@ const FileUploaderMultiple = (props: Props) => {
         padding: theme.spacing(2.5, 2.4, 2.5, 6),
         border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(93, 89, 98, 0.14)' : 'rgba(247, 244, 254, 0.14)'}`
       }}
-      key={file.name}
+      key={file?.name || file?.id}
     >
       <div style={{ display: 'flex', alignItems: 'center' }} className='file-details'>
         <div style={{ display: 'flex', marginRight: theme.spacing(3.75) }} className='file-preview'>
@@ -166,11 +164,11 @@ const FileUploaderMultiple = (props: Props) => {
         </div>
         <div>
           <Typography fontWeight={600} className='file-name'>
-            {file.name}
+            {file?.name || 'Image'}
           </Typography>
           {file?.size && (
             <Typography className='file-size' variant='body2'>
-              {Math.round(file.size / 100) / 10} kb
+              {Math.round(file?.size / 100) / 10} kb
             </Typography>
           )}
         </div>
@@ -181,7 +179,6 @@ const FileUploaderMultiple = (props: Props) => {
     </ListItem>
   ))
 
-
   return (
     <Fragment>
       <div {...getRootProps({ className: 'dropzone' })}>
@@ -189,9 +186,6 @@ const FileUploaderMultiple = (props: Props) => {
         <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
           <Box
             sx={{
-              // mb: 8.75,
-              // width: 48,
-              // height: 48,
               display: 'flex',
               gap: 2,
               padding: '2px 8px',
@@ -207,7 +201,7 @@ const FileUploaderMultiple = (props: Props) => {
           <Typography sx={{ opacity: 30 }}>(Total allowed file size : 5mb)</Typography>
         </Box>
       </div>
-      {files?.length ? (
+      {files?.length && !dontShow ? (
         <div>
           <List>{fileList}</List>
         </div>

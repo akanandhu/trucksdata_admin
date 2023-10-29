@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material'
+import React from 'react'
 import Chip from 'src/@core/components/mui/chip'
 import BasicTableActions from 'src/components/BasicTableActions'
 import { renderName } from 'src/utils/render-avatar'
