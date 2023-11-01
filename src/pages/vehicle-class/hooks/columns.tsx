@@ -1,4 +1,5 @@
 import { Chip, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
 import BasicTableActions from 'src/components/BasicTableActions'
 import { VehicleClassFields } from 'src/types/VehicleClass'
 import { capitaliseFirstLetter } from 'src/utils/capitalise-first-letter'
@@ -19,6 +20,8 @@ interface ParamsRow {
 }
 
 const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
+  const router = useRouter()
+
   const columns = [
     {
       flex: 0.1,
@@ -62,7 +65,13 @@ const useGetVehicleClassCols = ({ handleEdit, handleDelete }: Props) => {
       renderCell: (params: { row: VehicleClassFields }) => {
         const { id } = params.row
 
-        return <BasicTableActions handleDelete={() => handleDelete(id as string)} handleEdit={() => handleEdit(params.row)} />
+        return (
+          <BasicTableActions
+            handleView={() => router.push(`/vehicle-class/preview/${id}`)}
+            handleDelete={() => handleDelete(id as string)}
+            handleEdit={() => handleEdit(params.row)}
+          />
+        )
       }
     }
   ]

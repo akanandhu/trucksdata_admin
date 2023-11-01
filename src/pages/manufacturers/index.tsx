@@ -46,9 +46,7 @@ const Manufacturers = () => {
 
   const [openDrawer, setOpenDrawer] = useState(false)
   const [selectedData, setSelectedData] = useState<any>({})
-  const [fileLink, setFileLink] = useState<string[]>([])
-  const [files, setFiles] = useState<string[]>([])
-  
+
   const handleAdd = () => {
     reset()
     setSelectedData(null)
@@ -68,9 +66,7 @@ const Manufacturers = () => {
 
   usePrefillManufacturer({
     selectedData,
-    setValue,
-    setFileLink,
-    setFiles
+    setValue
   })
 
   function handleEdit(manufacturer: any) {
@@ -83,7 +79,7 @@ const Manufacturers = () => {
   }
 
   function handleSuccess() {
-    toast.success(`Manufacturer Created Successfully`)
+    toast.success(`Manufacturer ${isEdit ? 'Updated' : 'Created'} Successfully`)
     queryClient.invalidateQueries(['manufacturer'])
     handleClose()
   }
@@ -91,14 +87,14 @@ const Manufacturers = () => {
   const mutationFn: any = isEdit ? editManufacturer : addManufacturer
 
   function onSubmit(values: ManufacturersFields) {
-    const { name, description, vehicle_types: vehicleTypes } = values
+    const { name, description, vehicle_types: vehicleTypes, logo } = values
     const filteredObjects = vehicle_types?.data?.data?.filter((obj: { name: string }) =>
       vehicleTypes.includes(obj.name)
     )
     const data: any = {
       name,
       description,
-      logo: fileLink?.[0],
+      logo,
       vehicle_types: filteredObjects?.map((type: { id: string }) => type?.id)
     }
 
@@ -111,9 +107,10 @@ const Manufacturers = () => {
 
   function handleClose() {
     setOpenDrawer(!openDrawer)
-    setFileLink([''])
+    setSelectedData(null)
     reset()
     mutationFn.reset()
+
   }
 
   return (
@@ -146,13 +143,9 @@ const Manufacturers = () => {
         open={openDrawer}
         setOpen={setOpenDrawer}
         control={control}
-        fileLink={fileLink}
-        setFileLink={setFileLink}
         reset={reset}
         handleClose={handleClose}
         vehicle_types={vehicle_types}
-        files={files}
-        setFiles={setFiles}
       />
     </Grid>
   )

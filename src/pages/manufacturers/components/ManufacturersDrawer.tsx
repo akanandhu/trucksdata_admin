@@ -12,14 +12,12 @@ interface Props {
   handleSubmit: UseFormHandleSubmit<ManufacturersFields>
   onSubmit: (values: ManufacturersFields) => void
   errors: FieldErrors
-  fileLink: string[]
-  setFileLink: React.Dispatch<SetStateAction<string[]>>
+
   reset: any
   apiError: any
   handleClose: () => void
   vehicle_types: any
-  files: any
-  setFiles: React.Dispatch<SetStateAction<any>>
+
 }
 
 const ManufacturersDrawer = ({
@@ -30,11 +28,8 @@ const ManufacturersDrawer = ({
   onSubmit,
   handleSubmit,
   apiError,
-  fileLink,
-  setFileLink,
   vehicle_types,
-  files,
-  setFiles
+
 }: Props) => {
   return (
     <Drawer
@@ -48,10 +43,6 @@ const ManufacturersDrawer = ({
       <HeaderWithClose title='Add Manufacturer' handleClose={handleClose} />
       <ManufacturersForm
         vehicle_types={vehicle_types}
-        fileLink={fileLink}
-        files={files}
-        setFiles={setFiles}
-        setFileLink={setFileLink}
         handleSubmit={handleSubmit}
         apiError={apiError}
         onSubmit={onSubmit}
