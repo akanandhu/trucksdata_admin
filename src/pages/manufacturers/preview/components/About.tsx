@@ -40,7 +40,7 @@ const renderList = (arr: any[]) => {
 }
 
 const AboutBrand = ({data}:{data: any}) => {
-
+  const logo = data?.logo?.[0]
   const Items = [
     {
       property: 'brand',
@@ -68,7 +68,7 @@ const AboutBrand = ({data}:{data: any}) => {
             </Box>
             <Grid display={'flex'} gap={6}>
               <Box>
-                <ProfilePicture theme={theme} src={data?.logo ?? ''} alt={'brand_logo'} />
+                <ProfilePicture theme={theme} src={logo?.thumbnail ?? ''} alt={'brand_logo'} />
               </Box>
               <Box marginTop={3}>{renderList(Items)}</Box>
             </Grid>
