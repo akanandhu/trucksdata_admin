@@ -15,4 +15,18 @@ export const useGetVehicleClasses = () => {
   })
 }
 
-// get - useQuery
+// view
+
+function getVehicleClass(id: string) {
+  const response = axiosInstance.get(`vehicle-types/${id}`)
+
+  return response
+}
+
+export const useGetVehicleClass = (id: string) => {
+  return useQuery({
+    queryKey: ['vehicle-class-single'],
+    queryFn: () => getVehicleClass(id),
+    staleTime: Infinity
+  })
+}

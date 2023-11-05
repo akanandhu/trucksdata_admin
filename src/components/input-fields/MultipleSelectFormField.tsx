@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select } from '@mui/material'
+import { Divider, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material'
 import React from 'react'
 import { Control, Controller } from 'react-hook-form'
 import { ManufacturersFields } from 'src/types/Manufacturers'
@@ -8,6 +8,9 @@ interface MultipleSelectProps {
   id: string
   control: Control<ManufacturersFields>
   data: any
+  ref?: any
+  valueKey?: string
+  selectedName?: string
 }
 
 const ITEM_HEIGHT = 48
@@ -21,7 +24,8 @@ const MenuProps = {
   }
 }
 
-const MultipleSelectFormField = ({ label, id, control, data }: MultipleSelectProps) => {
+const MultipleSelectFormField = ({ label, id, control, data, ref, valueKey = 'name', selectedName = 'name' }: MultipleSelectProps) => {
+
   return (
     <FormControl fullWidth>
       <InputLabel id='-multiple-checkbox-label'>{label ?? ''}</InputLabel>
@@ -33,18 +37,27 @@ const MultipleSelectFormField = ({ label, id, control, data }: MultipleSelectPro
             labelId='demo-multiple-checkbox-label'
             id='demo-multiple-checkbox'
             multiple
-            value={value}
+            value={value ?? []}
             onChange={onChange}
             onBlur={onBlur}
             input={<OutlinedInput label='Vehicle Types' />}
             placeholder='Vehicle Types'
-            renderValue={selected => selected?.map((item: string) => item).join(', ')}
             MenuProps={MenuProps}
+            renderValue={selected =>
+              selected
+                ?.map((id: string) => {
+                  const selectedOption = data.find((item: any) => item[valueKey] === id)
+
+                  return selectedOption ? selectedOption[selectedName] : ''
+                })
+                .join(', ')
+            }
           >
-            {data.map((obj: { id: string; name: string }) => {
+            {data.map((obj:any) => {
               return (
-                <MenuItem key={obj?.id} value={obj?.name}>
-                  <ListItemText primary={obj?.name} />
+                <MenuItem key={obj?.id} value={obj[valueKey as any]}>
+                  {obj?.name}
+                  <Divider ref={ref} />
                 </MenuItem>
               )
             })}

@@ -2,11 +2,14 @@ import { Box, Typography } from '@mui/material'
 import BasicTableActions from 'src/components/BasicTableActions'
 
 interface CellType {
-  row: any
+  specification: {
+    name: string
+  }
+  id: string
 }
 
-const useSeriesColumns = (props: { handleEdit: any, handleDelete: (id: string) => void }) => {
-  const { handleEdit, handleDelete } = props
+const useGetVehicleClassSpecCols = (props: { handleDelete: (id: string) => void }) => {
+  const { handleDelete } = props
 
   const columns = [
     {
@@ -14,14 +17,12 @@ const useSeriesColumns = (props: { handleEdit: any, handleDelete: (id: string) =
       field: 'name',
       minWidth: 220,
       headerName: 'Name',
-      renderCell: ({ row }: CellType) => {
-        const { title } = row
-
+      renderCell: ({ row }: { row: CellType }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {title}
+                {row?.specification?.name}
               </Typography>
             </Box>
           </Box>
@@ -33,8 +34,8 @@ const useSeriesColumns = (props: { handleEdit: any, handleDelete: (id: string) =
       minWidth: 100,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: (params: any) => {
-        return <BasicTableActions handleDelete={() => handleDelete(params?.id)} handleEdit={() => handleEdit(params?.row)} />
+      renderCell: (params: CellType) => {
+        return <BasicTableActions handleDelete={() => handleDelete(params?.id)} />
       }
     }
   ]
@@ -42,4 +43,4 @@ const useSeriesColumns = (props: { handleEdit: any, handleDelete: (id: string) =
   return columns
 }
 
-export default useSeriesColumns
+export default useGetVehicleClassSpecCols

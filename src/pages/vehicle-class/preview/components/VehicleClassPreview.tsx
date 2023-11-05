@@ -1,31 +1,29 @@
-import { Grid } from '@mui/material'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { useGetManufacturer } from 'src/api/services/manufacturers/get'
-import { Datum } from 'src/types/ManufacturersModels'
-import { useGetManufacturerSeries } from 'src/api/services/manufacturers/series/get'
+import { Button, Card, CardHeader, Divider, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useGetVehicleClasses } from 'src/api/services/vehicle-class/get'
-import { useAddSeries } from 'src/api/services/manufacturers/series/post'
+import { useGetVehicleClass } from 'src/api/services/vehicle-class/get'
 import useCustomToast from 'src/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
-import { useEditSeries } from 'src/api/services/manufacturers/series/patch'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
-import { useDeleteSeries } from 'src/api/services/manufacturers/series/delete'
 import usePrefillSeries from 'src/pages/manufacturers/preview/hooks/prefill'
-import useSeriesColumns from 'src/pages/manufacturers/preview/hooks/columns'
-import AboutBrand from 'src/pages/manufacturers/preview/components/About'
-import ModelsTable from 'src/pages/manufacturers/preview/components/ModelsTable'
-import AddModelDrawer from 'src/pages/manufacturers/preview/components/AddModelDrawer'
-
-const defaultValues = {
-  vehicle_class: 1
-}
+import { DataGrid } from '@mui/x-data-grid'
+import { useGetVehicleClassSpecs } from 'src/api/services/vehicle-class/specifications/get'
+import { useGetEnergySources } from 'src/api/services/energy/get'
+import FallbackSpinner from 'src/@core/components/spinner'
+import AddVehicleClassSpecs from './AddVehicleClassSpecs'
+import { useAddSpecsToClass } from 'src/api/services/vehicle-class/specifications/post'
+import { useGetSpecsDataPagination } from 'src/api/services/specifications/get'
+import getFlatData from 'src/utils/get-data-flat'
+import getArrayFlat from 'src/utils/get-array-flat'
+import { useReloadOnPageScroll } from 'src/hooks/useReloadOnScroll'
+import { useInView } from 'react-intersection-observer'
+import { useRouter } from 'next/router'
+import { useDeleteVehicleClassSpec } from 'src/api/services/vehicle-class/specifications/delete'
+import useGetVehicleClassSpecCols from '../hooks/columns'
 
 const VehicleClassPreview = () => {
   const router = useRouter()
   const id = router?.query?.id as any
-
   const queryClient = useQueryClient()
 
   const [open, setOpen] = useState(false)
@@ -33,43 +31,52 @@ const VehicleClassPreview = () => {
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [idsToDelete, setIdsToDelete] = useState('')
 
-  const { handleSubmit, control, setValue } = useForm()
-  const { handleSubmit: handleSubmitForm, control: control1 } = useForm({
-    defaultValues
-  })
+  // const [energyId, setEnergyId] = useState('')
 
-  const deleteFn = useDeleteSeries()
-  const { data: vehicle_classes } = useGetVehicleClasses()
-  const addSeries = useAddSeries()
-  const editSeries = useEditSeries()
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors }
+  } = useForm()
+
+  const deleteFn = useDeleteVehicleClassSpec()
+  const addSpecsToClass = useAddSpecsToClass()
   const toast = useCustomToast()
 
   const isEdit = Boolean(selectedData?.title)
 
-  const mutationFn: any = isEdit ? editSeries : addSeries
+  const mutationFn: any = addSpecsToClass
 
-  const [vehicleId, setVehicleId] = useState('')
+  const { data } = useGetVehicleClass(id)
 
-  useEffect(() => {
-    if (vehicle_classes) {
-      const vehicleTypeId = vehicle_classes?.data?.data?.[0]?.id
-      setVehicleId(vehicleTypeId)
-    }
-  }, [vehicle_classes])
+  const { data: energy, isLoading: energyLoading } = useGetEnergySources()
+  const energyData = energy?.data?.data
+  const dieselData = energyData?.filter((energy: { name: string }) => energy.name === 'Diesel')
+  const dieselId = dieselData?.[0]?.id
 
-  const manufacturer = useGetManufacturer(id as any)
-  const { data: series } = useGetManufacturerSeries(id, {
-    vehicle_type_id: vehicleId
+  const [selectedId, setSelectedId] = useState(dieselId)
+
+  const { data: classSpecs } = useGetVehicleClassSpecs({
+    vehicle_type_id: id as string,
+    energy_source_id: selectedId ?? dieselId
   })
-  const manufacturerDataFiltered = manufacturer?.data?.data?.data?.filter((item: Datum) => item.id === Number(id ?? 0))
-  const dataObj = manufacturerDataFiltered?.[0]
+  const classSpecData = classSpecs?.data
+
+  const { data: specs, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetSpecsDataPagination()
+  const flatSpecs = getFlatData(specs)
+  const specData = getArrayFlat(flatSpecs ?? [])
+  const { inView, ref } = useInView()
+
+  useReloadOnPageScroll({
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    inView
+  })
 
   function handleAddModal() {
     setOpen(!open)
-  }
-
-  function onSubmit(values: any) {
-    console.log(values, 'submitted')
   }
 
   function handleSuccess() {
@@ -78,15 +85,25 @@ const VehicleClassPreview = () => {
     setOpen(!open)
   }
 
-  function onSubmitDrawer(values: any) {
+  function onSubmit(values: any) {
     const data = {
-      ...values,
-      manufacturer_id: id
+      vehicle_type_id: id,
+      specifications : values?.specifications?.map((specId: string) => {
+        return {
+          energy_source_id: values?.energy_source_id,
+          specification_id: specId
+        }
+      })
     }
+
     const queryData = isEdit ? { id: selectedData?.id, data } : data
     mutationFn.mutate(queryData, {
       onSuccess: () => handleSuccess()
     })
+  }
+
+  function handleEnergyChange(e: SelectChangeEvent<any>) {
+    setSelectedId(e.target.value)
   }
 
   function handleClose() {
@@ -105,57 +122,83 @@ const VehicleClassPreview = () => {
     setValue
   })
 
-  const handleEdit = (params: any) => {
-    setOpen(!open)
-    setSelectedData(params)
-  }
 
   const handleDelete = (id: string) => {
     setOpenConfirmation(!openConfirmation)
     setIdsToDelete(id)
   }
 
-  const columns = useSeriesColumns({
-    handleEdit,
+  const columns = useGetVehicleClassSpecCols({
     handleDelete
   })
+
+  if (energyLoading) {
+    return <FallbackSpinner />
+  }
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <AboutBrand data={dataObj} />
-      </Grid>
-      <Grid item xs={12}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
-            <ModelsTable
-              id={id}
-              data={series ?? []}
-              handleAddNew={handleAddModal}
-              handleSubmit={handleSubmitForm}
-              onSubmit={onSubmit}
-              control={control1}
-              vehicle_classes={vehicle_classes}
-              columns={columns}
-              setVehicleId={setVehicleId}
-            />
+            <Card sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <CardHeader title={data?.data?.name} />
+            </Card>
           </Grid>
         </Grid>
       </Grid>
-      <AddModelDrawer
+
+      <Grid item xs={12}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <Grid sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <CardHeader title='Specifications' />
+              </Grid>
+              <Divider />
+              <Grid display={'flex'} justifyContent={'flex-end'} padding={4} paddingX={5}>
+                <Select defaultValue={dieselId} size={'small'} value={selectedId} onChange={e => handleEnergyChange(e)}>
+                  {energyData?.map((energy: { id: number; name: string }) => {
+                    return (
+                      <MenuItem key={energy.id} value={energy.id}>
+                        {energy.name}
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+              </Grid>
+              <Divider />
+
+              <Grid display={'flex'} justifyContent={'flex-end'} padding={4} paddingX={5}>
+                <Button onClick={handleAddModal} variant='contained'>
+                  Add Specifications
+                </Button>
+              </Grid>
+              <Divider />
+              <DataGrid disableRowSelectionOnClick columns={columns as any} rows={classSpecData ?? []} />
+            </Card>
+          </Grid>
+        </Grid>
+      </Grid>
+      <AddVehicleClassSpecs
         open={open}
-        vehicle_classes={vehicle_classes}
-        control={control}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmitDrawer}
         handleClose={handleClose}
-      />  
+        energySources={energyData}
+        error={errors}
+        handleSubmit={handleSubmit}
+        isLoading={mutationFn.isLoading}
+        onSubmit={onSubmit}
+        apiError={mutationFn.errors}
+        control={control}
+        specs={specData}
+        ref={ref}
+      />
       <DeleteConfirmModal
         open={openConfirmation}
         setOpen={setOpenConfirmation}
         remove={deleteFn}
         idToRemove={idsToDelete}
-        routeToInvalidate='series'
+        routeToInvalidate='vehicle-class-specs'
       />
     </Grid>
   )
