@@ -10,15 +10,20 @@ import { FieldDataTypes, SpecFields } from 'src/types/SpecFields'
 import { useGetSpecCategories } from 'src/api/services/specifications/category/get'
 import ArrayTextField from 'src/components/ArrayTextField'
 import { renderSpecMenuItems } from 'src/components/renderSpecCategoryMenu'
+import NestedArrayField from 'src/components/NestedArrayField'
 
 const dataTypes = [
+  {
+    id: 'text',
+    status: 'Text'
+  },
   {
     id: 'drop_down',
     status: 'Drop down'
   },
   {
-    id: 'text',
-    status: 'Text'
+    id: 'nested_drop_down',
+    status: 'Nested Drop down'
   }
 ]
 
@@ -99,9 +104,20 @@ const SpecForm = ({
               />
             </Grid>
           )}
+          {data_type === 'nested_drop_down' && (
+            <Grid item xs={12}>
+              <NestedArrayField
+                append={append}
+                control={control}
+                fields={fields}
+                remove={remove}
+                
+              />
+            </Grid>
+          )}
         </Grid>
         {apiError && <ErrorBox error={apiError} />}
-        <DrawerActions addDisabled={mutationLoading}  handleClose={handleClose} />
+        <DrawerActions addDisabled={mutationLoading} handleClose={handleClose} />
       </form>
     </Box>
   )

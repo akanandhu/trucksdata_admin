@@ -9,6 +9,7 @@ const usePrefillSpec = ({ selectedData, setValue }: { selectedData: SpecFields; 
     setValue('data_type', selectedData?.data_type)
     setValue('options', selectedData?.options)
     setValue('specification_category_id', selectedData?.specification_category_id)
+
   }, [selectedData, setValue])
 }
 export default usePrefillSpec

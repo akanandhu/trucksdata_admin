@@ -1,7 +1,16 @@
-export type FieldDataTypes = 'drop_down' | 'text'
+export type FieldDataTypes = 'drop_down' | 'text' | 'nested_drop_down'
 
 export interface Options {
     options: 'string'
+}
+
+export interface ChildOptions {
+  option: string
+}
+
+export interface NestedOptions {
+  option: string
+  child_options: any
 }
 
 

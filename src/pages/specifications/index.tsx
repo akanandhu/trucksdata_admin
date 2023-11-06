@@ -21,7 +21,7 @@ const defaultValues: SpecFields = {
   name: '',
   data_type: 'text',
   options: null,
-  specification_category_id: ''
+  specification_category_id: '',
 }
 
 const Specifications = () => {
@@ -31,7 +31,7 @@ const Specifications = () => {
     name: '',
     data_type: 'text',
     options: null,
-    specification_category_id: ''
+    specification_category_id: '',
   })
   const [openDrawer, setOpenDrawer] = useState(false)
   const [deleteIds, setDeleteIds] = useState<any>([])
@@ -53,6 +53,9 @@ const Specifications = () => {
     control,
     name: 'options'
   })
+
+ 
+
   const isEdit = selectedData?.name !== ''
   const queryClient = useQueryClient()
   const toast = useCustomToast()
@@ -84,7 +87,7 @@ const Specifications = () => {
       data_type: 'text',
       name: '',
       options: null,
-      specification_category_id: ''
+      specification_category_id: '',
     })
     mutationFn.reset()
     setDeleteIds([])
@@ -110,6 +113,7 @@ const Specifications = () => {
     } else {
       handleDeleteSuccess()
     }
+    console.log(options,'optionCheck')
     const specId = options?.[0]?.specification_id
     const specsOption = specsData?.filter((spec: { id: string }) => spec?.id === specId)
     const specOptionCollection = specsOption?.[0]?.options
@@ -145,12 +149,13 @@ const Specifications = () => {
   }
 
   function onSubmit(values: SpecFields) {
+    
     const { name, data_type, options, specification_category_id } = values
     const specData = {
       name,
       data_type,
       specification_category_id,
-      ...(data_type === 'drop_down' && { options: options })
+      ...((data_type === 'drop_down' || data_type === 'nested_drop_down')  && { options: options })
     }
     const queryParams: any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
     mutationFn.mutate(queryParams, {
