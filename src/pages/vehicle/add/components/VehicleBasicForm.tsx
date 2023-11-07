@@ -1,42 +1,50 @@
-import { Grid } from '@mui/material'
-import React, { Fragment } from 'react'
+import {  FormLabel, Grid } from '@mui/material'
+import React, { Fragment, useState } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import {
-  AgricultureConfigRow,
-  AxelConfigRow,
-  ChasisTypeRow,
-  VehicleTypeRow,
-  manufacturersRows,
-  rows
-} from 'src/fake-data/rows'
 import { StatusRow } from 'src/fake-data/status'
-import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
 import { renderMenuItems } from 'src/components/renderStatusMenuItems'
-import DropzoneWrapper from 'src/@core/styles/libs/react-dropzone'
-import { fuelTypes } from 'src/fake-data/vehicles'
+import FileInput from 'src/components/input-fields/FileInput'
+import { useGetVehicleClasses } from 'src/api/services/vehicle-class/get'
+import { renderMenu } from 'src/components/renderMenuItemsName'
+import { useGetManufacturers } from 'src/api/services/manufacturers/get'
+import { useGetManufacturerSeries } from 'src/api/services/manufacturers/series/get'
+import { useGetEnergySources } from 'src/api/services/energy/get'
 
 const VehicleBasicForm = ({ control }: { control: any }) => {
+  const [vehicleClassId, setVehicleClassId] = useState('')
+  const [manufacturerId, setManufacturerId] = useState(0)
 
-  // const [file, setFile] = useState([])
+  // vehicle class data
+  const { data: vehicle_class } = useGetVehicleClasses()
+  const vehicleClass = vehicle_class?.data?.data
+
+  // manufacturer data
+  const { data: manufacturers } = useGetManufacturers()
+  const manufacturersData = manufacturers?.data?.data
+
+  // series data
+  const { data: series } = useGetManufacturerSeries(manufacturerId ?? 0, { vehicle_type_id: vehicleClassId })
+  const seriesData = series?.data?.data
+
+  // energy data
+  const { data: energy } = useGetEnergySources()
+  const energyData = energy?.data?.data
+  console.log(energy, 'energyCheck')
 
   return (
     <Fragment>
-      <Grid item xs={12} >
-      <DropzoneWrapper>
-              {/* <FileUploaderMultiple files={file} setFiles={setFile} /> */}
-            </DropzoneWrapper>
-      </Grid>
       <Grid item xs={12} sm={6}>
         <TextFormField control={control} id='name' label='Variant Name' required size='medium' />
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
           label='Vehicle Class'
-          data={rows}
+          data={vehicleClass ?? []}
           required
           size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
+          renderMenuItems={renderMenu}
+          handleOnChange={e => setVehicleClassId(e.target.value)}
           control={control}
           id='vehicle_class'
         />
@@ -44,10 +52,11 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
       <Grid item xs={12} sm={6}>
         <SelectFormField
           label='Brand Name'
-          data={manufacturersRows}
+          data={manufacturersData}
           size={'medium'}
           required
-          renderMenuItems={renderMenuItemsTitle}
+          renderMenuItems={renderMenu}
+          handleOnChange={e => setManufacturerId(e.target.value as any)}
           control={control}
           id='brand_name'
         />
@@ -55,52 +64,18 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
       <Grid item xs={12} sm={6}>
         <SelectFormField
           label='Model Name'
-          data={manufacturersRows?.[0]?.models}
+          data={seriesData ?? []}
           size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
+          renderMenuItems={renderMenu}
           control={control}
           id='model_name'
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <SelectFormField
-          label='Applications'
-          data={AgricultureConfigRow}
-          size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
-          control={control}
-          id='axel_config'
-        />
+        <TextFormField control={control} id='min_price' size='medium' type='number' label='Min Price' />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <SelectFormField
-          label='Axel Configuration'
-          data={AxelConfigRow}
-          size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
-          control={control}
-          id='axel_config'
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <SelectFormField
-          label='Vehicle Type'
-          data={VehicleTypeRow}
-          size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
-          control={control}
-          id='vehicle_type'
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <SelectFormField
-          label='Chasis Option'
-          data={ChasisTypeRow}
-          size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
-          control={control}
-          id='chasis_option'
-        />
+        <TextFormField control={control} id='max_price' size='medium' type='number' label='Max Price' />
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
@@ -116,12 +91,23 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
       <Grid item xs={12} sm={6}>
         <SelectFormField
           label='Fuel Type'
-          data={fuelTypes}
+          data={energyData}
           size={'medium'}
-          renderMenuItems={renderMenuItemsTitle}
+          renderMenuItems={renderMenu}
           control={control}
           id='fuel_type'
         />
+      </Grid>
+      <Grid display={'flex'} flexDirection={'column'} gap={1} item xs={12}>
+        <FormLabel>Images</FormLabel>
+        <FileInput control={control} id='images' multiple />
+      </Grid>
+      <Grid display={'flex'} flexDirection={'column'} gap={1} item xs={12}>
+        <FormLabel>Brochure</FormLabel>
+        <FileInput control={control} id='brochure' multiple />
+      </Grid>
+      <Grid mt={2} item xs={12}>
+        <TextFormField control={control} id='description' label='Description' multiline rows={10} size='medium' />
       </Grid>
     </Fragment>
   )

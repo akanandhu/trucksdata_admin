@@ -1,59 +1,44 @@
-import { Grid } from "@mui/material"
-import StepperCustomVertical from "src/components/form-wizard/CustomVerticalStepper"
+import { Grid } from '@mui/material'
+import { useGetSpecCategories } from 'src/api/services/specifications/category/get'
+import StepperCustomVertical from 'src/components/form-wizard/CustomVerticalStepper'
 
-const steps = [
-    {
-      icon: 'tabler:tir',
-      title: 'Variant Details',
-      subtitle: 'Enter Variant Details'
-    },
-    {
-      icon: 'tabler:ruler',
-      title: 'Vehicle Dimensions',
-      subtitle: 'Enter Vehicle Dimensions'
-    },
-    {
-      icon: 'tabler:assembly',
-      title: 'Engine Specification',
-      subtitle: 'Enter Engine Specifications'
-    },
-    {
-        icon: 'tabler:manual-gearbox',
-        title: 'Transmission',
-        subtitle: 'Enter Transmission Details'
-      },
-      {
-        icon: 'tabler:truck',
-        title: 'Chasis & Suspension',
-        subtitle: 'Enter Chasis Frame & Suspension Details'
-      },
-      {
-        icon: 'tabler:steering-wheel',
-        title: 'Steering & Braking',
-        subtitle: 'Enter Steering & Braking Details'
-      },
-      {
-        icon: 'tabler:aspect-ratio',
-        title: 'Tyre Size',
-        subtitle: 'Enter Tyre Size Details'
-      },
-      {
-        icon: 'tabler:plug',
-        title: 'Cabin & Electrical',
-        subtitle: 'Enter Cabin & Electrical Details'
-      },
-      {
-        icon: 'tabler:circle-letter-o',
-        title: 'Other Details',
-        subtitle: 'Enter Other Details'
-      }
-  ]
+function getIcon(title: string) {
+  const icons: any = {
+    'Variant Details': 'tabler:tir',
+    'Vehicle Dimensions': 'tabler:ruler',
+    'Engine Specification': 'tabler:assembly',
+    Transmission: 'tabler:manual-gearbox',
+    'Chassis & Suspension': 'tabler:truck',
+    'Steering & Braking': 'tabler:steering-wheel',
+    'Tyre Size': 'tabler:aspect-ratio',
+    'Cabin & Electrical': 'tabler:plug',
+    'Other Details': 'tabler:circle-letter-o'
+  }
 
+  return icons[title]
+}
 
 const VehiclePage = () => {
+  const vehicleCategoriesData = useGetSpecCategories()
+  const vehicleCategories = vehicleCategoriesData?.data?.data?.data
+
+  const steps = vehicleCategories?.map((category: { name: string }) => {
+    return {
+      icon: getIcon(category?.name ?? ''),
+      title: category?.name,
+      subtitle: `Enter ${category?.name} Details`
+    }
+  })
+
+  steps?.splice(0, 0, {
+    icon: 'tabler:tir',
+    title: 'Vehicle Details',
+    subtitle: 'Enter Vehicle Details'
+  }) 
+
   return (
     <Grid>
-        <StepperCustomVertical steps={steps} />
+      <StepperCustomVertical steps={steps ?? []} />
     </Grid>
   )
 }

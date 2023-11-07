@@ -156,10 +156,10 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                {steps[activeStep].title}
+                {steps[activeStep]?.title}
               </Typography>
               <Typography variant='caption' component='p'>
-                {steps[activeStep].subtitle}
+                {steps[activeStep]?.subtitle}
               </Typography>
             </Grid>
             {getStepContent(activeStep)}
@@ -210,11 +210,11 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
                           ...(activeStep > index && { color: theme => hexToRGBA(theme.palette.primary.main, 0.4) })
                         }}
                       >
-                        <Icon icon={step.icon} />
+                        <Icon icon={step?.icon} />
                       </RenderAvatar>
                       <div>
-                        <Typography className='step-title'>{step.title}</Typography>
-                        <Typography className='step-subtitle'>{step.subtitle}</Typography>
+                        <Typography className='step-title'>{step?.title}</Typography>
+                        <Typography className='step-subtitle'>{step?.subtitle}</Typography>
                       </div>
                     </div>
                   </StepLabel>
