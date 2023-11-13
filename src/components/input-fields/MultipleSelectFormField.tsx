@@ -9,6 +9,7 @@ interface MultipleSelectProps {
   control: Control<ManufacturersFields>
   data: any
   ref?: any
+  required?: boolean
   valueKey?: string
   selectedName?: string
 }
@@ -24,7 +25,7 @@ const MenuProps = {
   }
 }
 
-const MultipleSelectFormField = ({ label, id, control, data, ref, valueKey = 'name', selectedName = 'name' }: MultipleSelectProps) => {
+const MultipleSelectFormField = ({ label, id, control, data, required, ref, valueKey = 'name', selectedName = 'name' }: MultipleSelectProps) => {
 
   return (
     <FormControl fullWidth>
@@ -38,6 +39,7 @@ const MultipleSelectFormField = ({ label, id, control, data, ref, valueKey = 'na
             id='demo-multiple-checkbox'
             multiple
             value={value ?? []}
+            required={required ?? false}
             onChange={onChange}
             onBlur={onBlur}
             input={<OutlinedInput label='Vehicle Types' />}
@@ -45,9 +47,9 @@ const MultipleSelectFormField = ({ label, id, control, data, ref, valueKey = 'na
             MenuProps={MenuProps}
             renderValue={selected =>
               selected
-                ?.map((id: string) => {
-                  const selectedOption = data.find((item: any) => item[valueKey] === id)
-
+                ?.map((id: any) => {
+                  const selectedOption = data.find((item: any) => (item[valueKey] === id) || (item[valueKey] === id?.name))
+                  
                   return selectedOption ? selectedOption[selectedName] : ''
                 })
                 .join(', ')

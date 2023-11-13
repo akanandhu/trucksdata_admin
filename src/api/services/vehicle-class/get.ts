@@ -25,8 +25,8 @@ function getVehicleClass(id: string) {
 
 export const useGetVehicleClass = (id: string) => {
   return useQuery({
-    queryKey: ['vehicle-class-single'],
+    queryKey: ['vehicle-class-single', id],
     queryFn: () => getVehicleClass(id),
-    staleTime: Infinity
+    staleTime: Infinity,
   })
 }

@@ -1,6 +1,7 @@
 export type VehicleClassFields = {
   id?: string
   title?: string
+  energy_sources: string[]
   status: 'active' | 'in-active'
   name: string
 }

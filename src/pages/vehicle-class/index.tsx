@@ -2,7 +2,7 @@ import { Box, Card, CardHeader, Divider, Grid } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import useGetVehicleClassCols from './hooks/columns'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import TableHeader from '../../components/TableHeader'
 import VehicleClassDrawer from './components/VehicleClassDrawer'
 import { useForm } from 'react-hook-form'
@@ -19,7 +19,8 @@ const defaultValues: VehicleClassFields = {
   id: '',
   title: '',
   status: 'active',
-  name: ''
+  name: '',
+  energy_sources: []
 }
 
 const VehicleClass = () => {
@@ -28,7 +29,8 @@ const VehicleClass = () => {
   const [selectedData, setSelectedData] = useState<VehicleClassFields>({
     id: '',
     name: '',
-    status: 'active'
+    status: 'active',
+    energy_sources: []
   })
 
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -66,10 +68,6 @@ const VehicleClass = () => {
   const { columns } = useGetVehicleClassCols({ handleDelete, handleEdit })
 
   usePrefillVehicleClass({ selectedData, setValue })
-  useEffect(() => {
-    setValue('name', selectedData?.name)
-    setValue('status', selectedData?.status)
-  }, [selectedData, setValue])
 
   const addVehicleClass = useAddVehicleClass()
   const editVehicleClass = useEditVehicleClass()
@@ -89,15 +87,26 @@ const VehicleClass = () => {
   const mutationFn: any = isEdit ? editVehicleClass : addVehicleClass
 
   function onSubmit(values: VehicleClassFields) {
-    const { name, status } = values
+    const { name, status, energy_sources } = values
     const vehicleData: any = {
       name,
-      status
+      status,
+      energy_sources: energySources(energy_sources)
     }
     const queryParams = isEdit ? { data: vehicleData, id: selectedData?.id } : { ...vehicleData }
     mutationFn.mutate(queryParams, {
       onSuccess: () => handleVehicleSuccess()
     })
+  }
+
+  function energySources(energy_sources: any[]) {
+    return isEdit
+      ? energy_sources
+      : energy_sources?.map((source: any) => {
+          return {
+            energy_source_id: source
+          }
+        })
   }
 
   return (

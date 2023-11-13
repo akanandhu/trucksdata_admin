@@ -1,21 +1,8 @@
-import { Grid } from '@mui/material'
-import React, { Fragment } from 'react'
-import TextFormField from 'src/components/input-fields/TextFormField'
+import React from 'react'
+import FormFields from 'src/components/FormFields'
 
-const ChasisForm = ({ control }: { control: any }) => {
-  return (
-    <Fragment>
-      <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='frame_size' label='Frame Size (mm)' required size='medium' />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='front' type='number' label='Front Suspension' required size='medium' />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='rear' type='number' label='Rear Suspension' required size='medium' />
-      </Grid>
-    </Fragment>
-  )
+const ChasisForm = ({ step, control, specs }: { step: number; control: any; specs: any }) => {
+  return <FormFields control={control} specs={specs} step={step} />
 }
 
 export default ChasisForm

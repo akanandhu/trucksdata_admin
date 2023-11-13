@@ -1,4 +1,4 @@
-import {  FormLabel, Grid } from '@mui/material'
+import { FormLabel, Grid } from '@mui/material'
 import React, { Fragment, useState } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
@@ -11,7 +11,7 @@ import { useGetManufacturers } from 'src/api/services/manufacturers/get'
 import { useGetManufacturerSeries } from 'src/api/services/manufacturers/series/get'
 import { useGetEnergySources } from 'src/api/services/energy/get'
 
-const VehicleBasicForm = ({ control }: { control: any }) => {
+const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }) => {
   const [vehicleClassId, setVehicleClassId] = useState('')
   const [manufacturerId, setManufacturerId] = useState(0)
 
@@ -30,7 +30,6 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
   // energy data
   const { data: energy } = useGetEnergySources()
   const energyData = energy?.data?.data
-  console.log(energy, 'energyCheck')
 
   return (
     <Fragment>
@@ -46,7 +45,7 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
           renderMenuItems={renderMenu}
           handleOnChange={e => setVehicleClassId(e.target.value)}
           control={control}
-          id='vehicle_class'
+          id='vehicle_type_id'
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -95,7 +94,7 @@ const VehicleBasicForm = ({ control }: { control: any }) => {
           size={'medium'}
           renderMenuItems={renderMenu}
           control={control}
-          id='fuel_type'
+          id='energy_source_id'
         />
       </Grid>
       <Grid display={'flex'} flexDirection={'column'} gap={1} item xs={12}>

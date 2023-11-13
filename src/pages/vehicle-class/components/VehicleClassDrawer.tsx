@@ -23,6 +23,7 @@ const VehicleClassDrawer = ({ open, setOpen, control, errors, setSelectedData, h
       id: '',
       status: 'active',
       title: '',
+      energy_sources: [],
       name: ''
     })
   }

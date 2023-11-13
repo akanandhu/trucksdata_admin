@@ -1,10 +1,10 @@
 import { getSpecs } from 'src/functions/get-specifications'
 import renderFormFields from 'src/functions/renderFormFields'
 
-const VehicleDimensionsForm = ({ step, control, specs }: { step: number; control: any; specs: any }) => {
+const FormFields = ({ step, specs, control }: { step: number; specs: any; control: any }) => {
   const specifications = getSpecs(step, specs)
 
   return renderFormFields({ specifications, control })
 }
 
-export default VehicleDimensionsForm
+export default FormFields

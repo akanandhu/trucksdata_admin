@@ -8,7 +8,6 @@ import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import usePrefillSeries from 'src/pages/manufacturers/preview/hooks/prefill'
 import { DataGrid } from '@mui/x-data-grid'
 import { useGetVehicleClassSpecs } from 'src/api/services/vehicle-class/specifications/get'
-import { useGetEnergySources } from 'src/api/services/energy/get'
 import FallbackSpinner from 'src/@core/components/spinner'
 import AddVehicleClassSpecs from './AddVehicleClassSpecs'
 import { useAddSpecsToClass } from 'src/api/services/vehicle-class/specifications/post'
@@ -48,18 +47,16 @@ const VehicleClassPreview = () => {
 
   const mutationFn: any = addSpecsToClass
 
-  const { data } = useGetVehicleClass(id)
+  const { data, isLoading } = useGetVehicleClass(id)
+  const energySources = data?.data?.energy_sources ?? []
+  const energyId = energySources?.[0]?.id
+  console.log(energySources,'datacheck')
 
-  const { data: energy, isLoading: energyLoading } = useGetEnergySources()
-  const energyData = energy?.data?.data
-  const dieselData = energyData?.filter((energy: { name: string }) => energy.name === 'Diesel')
-  const dieselId = dieselData?.[0]?.id
-
-  const [selectedId, setSelectedId] = useState(dieselId)
+  const [selectedId, setSelectedId] = useState(energyId)
 
   const { data: classSpecs } = useGetVehicleClassSpecs({
     vehicle_type_id: id as string,
-    energy_source_id: selectedId ?? dieselId
+    energy_source_id: selectedId ?? energyId
   })
   const classSpecData = classSpecs?.data
 
@@ -132,7 +129,7 @@ const VehicleClassPreview = () => {
     handleDelete
   })
 
-  if (energyLoading) {
+  if (isLoading) {
     return <FallbackSpinner />
   }
 
@@ -157,8 +154,8 @@ const VehicleClassPreview = () => {
               </Grid>
               <Divider />
               <Grid display={'flex'} justifyContent={'flex-end'} padding={4} paddingX={5}>
-                <Select defaultValue={dieselId} size={'small'} value={selectedId} onChange={e => handleEnergyChange(e)}>
-                  {energyData?.map((energy: { id: number; name: string }) => {
+                <Select defaultValue={energyId} size={'small'} value={selectedId} onChange={e => handleEnergyChange(e)}>
+                  {energySources?.map((energy: { id: number; name: string }) => {
                     return (
                       <MenuItem key={energy.id} value={energy.id}>
                         {energy.name}
@@ -183,7 +180,7 @@ const VehicleClassPreview = () => {
       <AddVehicleClassSpecs
         open={open}
         handleClose={handleClose}
-        energySources={energyData}
+        energySources={energySources}
         error={errors}
         handleSubmit={handleSubmit}
         isLoading={mutationFn.isLoading}

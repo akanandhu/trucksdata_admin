@@ -42,6 +42,7 @@ import SteeringBreakingForm from 'src/pages/vehicle/add/components/SteeringBreak
 import TyreForm from 'src/pages/vehicle/add/components/TyreForm'
 import CabinForm from 'src/pages/vehicle/add/components/CabinType'
 import OtherDetailsForm from 'src/pages/vehicle/add/components/OtherDetailsForm'
+import { useGetVehicleClass } from 'src/api/services/vehicle-class/get'
 
 interface State {
   password: string
@@ -105,7 +106,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
     }
   }
 
-  const { control } = useForm()
+  const { control, watch } = useForm()
 
   const handleReset = () => {
   
@@ -113,26 +114,34 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
     setState({ ...state, password: '', password2: '' })
   }
 
+  const [vehicleType, energySourceId] = watch(['vehicle_type_id', 'energy_source_id'])
+  const {data: vehicleClass } = useGetVehicleClass(vehicleType ?? 1)
+  const vehicle_class = vehicleClass?.data
+  const energyData = vehicle_class?.energy_sources
+  const specsCollection = energyData?.filter((obj: { id: number }) => obj?.id === energySourceId)
+  const specs = specsCollection?.[0]?.specifications
+  console.log(specs,'specsssss')
+
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return <VehicleBasicForm control={control} />
+        return <VehicleBasicForm step={activeStep} control={control} specs={specs} />
       case 1:
-        return <VehicleDimensionsForm control={control} />
+        return <VehicleDimensionsForm step={activeStep} control={control} specs={specs} />
       case 2:
-        return <SpecificationForm control={control} />
+        return <SpecificationForm step={activeStep} control={control} specs={specs} />
       case 3:
-        return <TransmissionForm control={control} />
+        return <TransmissionForm step={activeStep} control={control} specs={specs} />
       case 4:
-        return <ChasisForm control={control} />
+        return <ChasisForm step={activeStep} control={control} specs={specs} />
       case 5:
-        return <SteeringBreakingForm control={control} />
+        return <SteeringBreakingForm step={activeStep} control={control} specs={specs} />
       case 6:
-        return <TyreForm control={control} />
+        return <TyreForm step={activeStep} control={control} specs={specs} />
       case 7:
-        return <CabinForm control={control} />
+        return <CabinForm step={activeStep} control={control} specs={specs} />
       case 8:
-        return <OtherDetailsForm control={control} />
+        return <OtherDetailsForm step={activeStep} control={control} specs={specs} />
       default:
         return 'Unknown Step'
     }

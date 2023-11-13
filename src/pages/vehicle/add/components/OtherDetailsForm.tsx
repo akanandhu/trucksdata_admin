@@ -1,15 +1,8 @@
-import { Grid } from '@mui/material'
 import React from 'react'
-import TextFormField from 'src/components/input-fields/TextFormField'
+import FormFields from 'src/components/FormFields';
 
-const OtherDetailsForm = ({control}:{control: any}) => {
-  return (
-    <>
-      <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='air_conditioning'  label='Air Conditioning' size='medium' />
-      </Grid>
-    </>
-  )
+const OtherDetailsForm = ({ step, control, specs }: { step: number; control: any; specs: any }) => {
+  return <FormFields step={step} control={control} specs={specs} />
 }
 
 export default OtherDetailsForm

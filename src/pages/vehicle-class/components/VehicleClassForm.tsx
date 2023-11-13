@@ -7,6 +7,8 @@ import TextFormField from 'src/components/input-fields/TextFormField'
 import { renderMenuItems } from '../../../components/renderStatusMenuItems'
 import { VehicleClassFields } from 'src/types/VehicleClass'
 import DrawerActions from 'src/components/drawers/DrawerActions'
+import MultipleSelectFormField from 'src/components/input-fields/MultipleSelectFormField'
+import { useGetEnergySources } from 'src/api/services/energy/get'
 
 const statusData = [
   {
@@ -34,6 +36,9 @@ const VehicleClassForm = ({
   onSubmit: (values: VehicleClassFields) => void
   apiError: any
 }) => {
+  const { data } = useGetEnergySources()
+  const energy = data?.data?.data ?? []
+
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -41,6 +46,16 @@ const VehicleClassForm = ({
           <Grid item xs={12}>
             <TextFormField id='name' label='Vehicle Class Title' size='medium' required control={control} />
             {errors.title && <ErrorBox error={errors.title} />}
+          </Grid>
+          <Grid item xs={12}>
+            <MultipleSelectFormField
+              data={energy}
+              id='energy_sources'
+              label='Energy Sources'
+              control={control as any}
+              valueKey='id'
+            />
+            {errors.energy_sources && <ErrorBox error={errors.energy_sources} />}
           </Grid>
           <Grid item xs={12}>
             <SelectFormField

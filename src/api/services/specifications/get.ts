@@ -35,3 +35,18 @@ export const useGetSpecsDataPagination = () => {
     getPreviousPageParam: firstPage => firstPage.data.from
   })
 }
+
+
+async function getSpecView (id: number) {
+  const response  = await axiosInstance.get(`specifications/${id}`)
+
+  return response
+}
+
+
+export const useGetSpecView = (id: number) => {
+  return useQuery({
+    queryKey: ['spec-view'],
+    queryFn: () =>  getSpecView(id)
+  })
+} 
