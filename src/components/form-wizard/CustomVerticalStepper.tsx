@@ -48,6 +48,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import useGetVehicleSchema from 'src/pages/vehicle/add/hooks/useGetVehicleSchema'
 import getSpecValues from 'src/pages/vehicle/add/functions/getSpecValue'
 import { useAddVehicle } from 'src/api/services/vehicle/post'
+import { useGetVehicle } from 'src/api/services/vehicle/get'
+import { useRouter } from 'next/router'
 
 const StepperHeaderContainer = styled(CardContent)<CardContentProps>(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -156,8 +158,13 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         description,
         video_links,
         brochure,
+        price_unit,
+        is_popular,
+        vehicle_specs,
         ...rest
       } = values
+
+      console.log(price_unit, is_popular, vehicle_specs)
 
       const specificationData = getSpecValues(rest, specs)
 
@@ -187,6 +194,13 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
   function handleSuccess() {
     toast.success('Vehicle Created Successfully')
   }
+
+  const router = useRouter()
+  const id = router?.query?.id
+
+  const { data: vehicleData } = useGetVehicle(id as string)
+  const vehicle = vehicleData?.data
+  console.log(vehicle, 'vehicleData')
 
   const getStepContent = (step: number) => {
     switch (step) {

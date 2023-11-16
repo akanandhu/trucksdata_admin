@@ -20,3 +20,17 @@ export const useGetVehicles = (params: VehicleParamsTypes | null) => {
     staleTime: Infinity
   })
 }
+
+async function getVehicle(id: string) {
+  const response = await axiosInstance.get(`/vehicles/${id}`)
+
+  return response
+}
+
+export const useGetVehicle = (id: string) => {
+  return useQuery({
+    queryKey: ['vehicle', id],
+    queryFn: () => getVehicle(id),
+    enabled: !!id
+  })
+}

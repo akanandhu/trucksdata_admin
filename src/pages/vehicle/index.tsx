@@ -9,9 +9,10 @@ import { useGetVehicles } from 'src/api/services/vehicle/get'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { VehicleParamsTypes } from 'src/types/Vehicle'
+import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
+import { useRemoveVehicle } from 'src/api/services/vehicle/delete'
 
 // import { useState } from "react"
-
 
 const defaultValues = {
   title: ''
@@ -24,9 +25,24 @@ const Vehicle = () => {
     router.push('/vehicle/add/')
   }
 
-  const columns = useGetVehicleColumns()
+  const [deleteId, setDeleteId] = useState<number>()
+  const [open, setOpen] = useState(false)
 
-  // const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const remove = useRemoveVehicle()
+
+  const columns = useGetVehicleColumns({
+    handleDelete,
+    handleEdit
+  })
+
+  function handleDelete(id: number) {
+    setOpen(!open)
+    setDeleteId(id)
+  }
+
+  function handleEdit (id: number) {
+    router.push(`/vehicle/add?id=${id}`)
+  }
 
   const { control, handleSubmit } = useForm({
     defaultValues
@@ -34,14 +50,14 @@ const Vehicle = () => {
   const [params, setParams] = useState<VehicleParamsTypes | null>({
     title: ''
   })
-  console.log(params, 'paramsCheck')
+
   function onSubmit(values: any) {
     setParams({
       ...values
     })
   }
 
-  function onClear () {
+  function onClear() {
     setParams(null)
   }
 
@@ -61,13 +77,13 @@ const Vehicle = () => {
           <DataGrid disableRowSelectionOnClick columns={columns} rows={vehicleData ?? []} />
         </Box>
       </Card>
-      {/* <DeleteConfirmModal
-          open={deleteConfirm}
-          setOpen={setDeleteConfirm}
-          remove={vehicles}
-          idToRemove={idToRemove}
-          setRemoved={setData}
-        /> */}
+      <DeleteConfirmModal
+        open={open}
+        setOpen={setOpen}
+        remove={remove}
+        idToRemove={deleteId as any}
+        routeToInvalidate='vehicles'
+      />
     </Grid>
   )
 }

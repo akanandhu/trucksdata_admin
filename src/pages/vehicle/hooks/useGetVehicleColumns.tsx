@@ -2,17 +2,13 @@ import { Box, Chip, Grid, Typography } from '@mui/material'
 import React from 'react'
 import BasicTableActions from 'src/components/BasicTableActions'
 
-const useGetVehicleColumns = () => {
-  const handleView = (id: string) => {
-    console.log(id)
-  }
-  const handleEdit = (id: string) => {
-    console.log(id)
-  }
-  const handleDelete = (id: string) => {
-    console.log(id)
-  }
-
+const useGetVehicleColumns = ({
+  handleEdit,
+  handleDelete
+}: {
+  handleEdit: (id: number) => void
+  handleDelete: (id: number) => void
+}) => {
   const columns = [
     {
       flex: 0.1,
@@ -45,32 +41,29 @@ const useGetVehicleColumns = () => {
       renderCell: ({ row }: any) => {
         return (
           <Grid>
-            {row.vehicle_class && 
-              <Chip sx={{ marginX: 1 }} key={row.vehicle_class} label={row.vehicle_class} />
-            }
+            {row.vehicle_class && <Chip sx={{ marginX: 1 }} key={row.vehicle_class} label={row.vehicle_class} />}
           </Grid>
         )
       }
     },
 
     {
-        flex: 0.1,
-        field: 'vehicle_brand',
-        minWidth: 50,
-        headerName: 'Vehicle Brand',
-        renderCell: ({ row }: any) => {
+      flex: 0.1,
+      field: 'vehicle_brand',
+      minWidth: 50,
+      headerName: 'Vehicle Brand',
+      renderCell: ({ row }: any) => {
+        const { vehicle_brand } = row
 
-            const {vehicle_brand} = row
-
-          return (
-            <Grid>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
+        return (
+          <Grid>
+            <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
               {vehicle_brand}
             </Typography>
-            </Grid>
-          )
-        }
-      },
+          </Grid>
+        )
+      }
+    },
     {
       flex: 0.05,
       field: 'actions',
@@ -79,13 +72,7 @@ const useGetVehicleColumns = () => {
       renderCell: (params: any) => {
         const { id } = params.row
 
-        return (
-          <BasicTableActions
-            handleView={() => handleView(id)}
-            handleDelete={() => handleDelete(id)}
-            handleEdit={() => handleEdit(id)}
-          />
-        )
+        return <BasicTableActions handleDelete={() => handleDelete(id)} handleEdit={() => handleEdit(id)} />
       }
     }
   ]

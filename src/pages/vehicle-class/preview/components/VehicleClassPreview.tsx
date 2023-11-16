@@ -50,7 +50,6 @@ const VehicleClassPreview = () => {
   const { data, isLoading } = useGetVehicleClass(id)
   const energySources = data?.data?.energy_sources ?? []
   const energyId = energySources?.[0]?.id
-  console.log(energySources,'datacheck')
 
   const [selectedId, setSelectedId] = useState(energyId)
 
@@ -77,8 +76,8 @@ const VehicleClassPreview = () => {
   }
 
   function handleSuccess() {
-    toast.success(`Series ${isEdit ? 'Updated' : 'Created'} Successfully`)
-    queryClient.invalidateQueries({ queryKey: ['series'] })
+    toast.success(`Specifications ${isEdit ? 'Updated' : 'Created'} Successfully`)
+    queryClient.invalidateQueries({ queryKey: ['vehicle-class-specs'] })
     setOpen(!open)
   }
 
