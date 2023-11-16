@@ -10,8 +10,23 @@ import { renderMenu } from 'src/components/renderMenuItemsName'
 import { useGetManufacturers } from 'src/api/services/manufacturers/get'
 import { useGetManufacturerSeries } from 'src/api/services/manufacturers/series/get'
 import { useGetEnergySources } from 'src/api/services/energy/get'
+import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
+import usePrefillDefault from '../hooks/usePrefillDefault'
+import { Control, UseFormSetValue } from 'react-hook-form'
+import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
+import ErrorBox from 'src/components/ErrorBox'
 
-const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }) => {
+const VehicleBasicForm = ({
+  errors,
+  control,
+  setValue
+}: {
+  errors: any
+  step: number
+  control: Control<VehicleSubmitTypes>
+  specs: any
+  setValue: UseFormSetValue<VehicleSubmitTypes>
+}) => {
   const [vehicleClassId, setVehicleClassId] = useState('')
   const [manufacturerId, setManufacturerId] = useState(0)
 
@@ -23,18 +38,22 @@ const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }
   const { data: manufacturers } = useGetManufacturers()
   const manufacturersData = manufacturers?.data?.data
 
-  // series data
   const { data: series } = useGetManufacturerSeries(manufacturerId ?? 0, { vehicle_type_id: vehicleClassId })
-  const seriesData = series?.data?.data
 
   // energy data
   const { data: energy } = useGetEnergySources()
   const energyData = energy?.data?.data
 
+  usePrefillDefault({
+    vehicleClass,
+    setValue
+  })
+
   return (
     <Fragment>
       <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='name' label='Variant Name' required size='medium' />
+        <TextFormField control={control} id='title' label='Variant Name' required size='medium' />
+        {errors?.title && <ErrorBox error={errors?.title} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
@@ -47,6 +66,7 @@ const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }
           control={control}
           id='vehicle_type_id'
         />
+        {errors?.vehicle_type_id && <ErrorBox error={errors?.vehicle_type_id} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
@@ -57,24 +77,28 @@ const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }
           renderMenuItems={renderMenu}
           handleOnChange={e => setManufacturerId(e.target.value as any)}
           control={control}
-          id='brand_name'
+          id='manufacturer_id'
         />
+        {errors?.manufacturer_id && <ErrorBox error={errors?.manufacturer_id} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
-          label='Model Name'
-          data={seriesData ?? []}
+          label='Series Name'
+          data={series ?? []}
           size={'medium'}
-          renderMenuItems={renderMenu}
+          renderMenuItems={renderMenuItemsTitle}
           control={control}
-          id='model_name'
+          id='series_id'
         />
+        {errors?.series_id && <ErrorBox error={errors?.series_id} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextFormField control={control} id='min_price' size='medium' type='number' label='Min Price' />
+        {errors?.min_price && <ErrorBox error={errors?.min_price} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextFormField control={control} id='max_price' size='medium' type='number' label='Max Price' />
+        {errors?.max_price && <ErrorBox error={errors?.max_price} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
@@ -84,8 +108,9 @@ const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }
           required
           renderMenuItems={renderMenuItems}
           control={control}
-          id='brand_name'
+          id='status'
         />
+        {errors?.status && <ErrorBox error={errors?.status} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
@@ -95,7 +120,9 @@ const VehicleBasicForm = ({ control}: { step: number; control: any; specs: any }
           renderMenuItems={renderMenu}
           control={control}
           id='energy_source_id'
+          required
         />
+        {errors?.energy_source_id && <ErrorBox error={errors?.energy_source_id} />}
       </Grid>
       <Grid display={'flex'} flexDirection={'column'} gap={1} item xs={12}>
         <FormLabel>Images</FormLabel>

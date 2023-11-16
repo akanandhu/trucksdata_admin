@@ -43,13 +43,11 @@ import TyreForm from 'src/pages/vehicle/add/components/TyreForm'
 import CabinForm from 'src/pages/vehicle/add/components/CabinType'
 import OtherDetailsForm from 'src/pages/vehicle/add/components/OtherDetailsForm'
 import { useGetVehicleClass } from 'src/api/services/vehicle-class/get'
-
-interface State {
-  password: string
-  password2: string
-  showPassword: boolean
-  showPassword2: boolean
-}
+import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
+import { yupResolver } from '@hookform/resolvers/yup'
+import useGetVehicleSchema from 'src/pages/vehicle/add/hooks/useGetVehicleSchema'
+import getSpecValues from 'src/pages/vehicle/add/functions/getSpecValue'
+import { useAddVehicle } from 'src/api/services/vehicle/post'
 
 const StepperHeaderContainer = styled(CardContent)<CardContentProps>(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -83,49 +81,119 @@ const Step = styled(MuiStep)<StepProps>(({ theme }) => ({
   }
 }))
 
+const defaultValues: VehicleSubmitTypes = {
+  vehicle_type_id: 0,
+  energy_source_id: 0,
+  description: '',
+  brochure: [],
+  images: [],
+  manufacturer_id: '',
+  min_price: 0,
+  max_price: 0,
+  price_unit: 'Rs',
+  title: '',
+  video_links: [],
+  series_id: ''
+}
+
 const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
   // ** States
 
   const [activeStep, setActiveStep] = useState<number>(0)
 
-  const [state, setState] = useState<State>({
-    password: '',
-    password2: '',
-    showPassword: false,
-    showPassword2: false
+  const schema = useGetVehicleSchema()
+
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<VehicleSubmitTypes>({
+    defaultValues,
+    resolver: yupResolver(schema),
+    mode: 'onBlur'
   })
 
   // Handle Stepper
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
-  const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1)
-    if (activeStep === steps.length - 1) {
-      toast.success('Form Submitted')
-    }
-  }
-
-  const { control, watch } = useForm()
 
   const handleReset = () => {
-  
     setActiveStep(0)
-    setState({ ...state, password: '', password2: '' })
+    reset({
+      vehicle_type_id: 0,
+      energy_source_id: 0
+    })
   }
 
   const [vehicleType, energySourceId] = watch(['vehicle_type_id', 'energy_source_id'])
-  const {data: vehicleClass } = useGetVehicleClass(vehicleType ?? 1)
+  const { data: vehicleClass } = useGetVehicleClass(vehicleType ?? 1)
   const vehicle_class = vehicleClass?.data
   const energyData = vehicle_class?.energy_sources
   const specsCollection = energyData?.filter((obj: { id: number }) => obj?.id === energySourceId)
   const specs = specsCollection?.[0]?.specifications
-  console.log(specs,'specsssss')
+
+  const create = useAddVehicle()
+
+  const mutationFn = create
+
+  function onSubmit(values: VehicleSubmitTypes) {
+    setActiveStep(prevActiveStep => prevActiveStep + 1)
+
+    if (activeStep === steps.length - 1) {
+      const {
+        title,
+        manufacturer_id,
+        energy_source_id,
+        vehicle_type_id,
+        series_id,
+        min_price,
+        max_price,
+        images,
+        description,
+        video_links,
+        brochure,
+        ...rest
+      } = values
+
+      const specificationData = getSpecValues(rest, specs)
+
+      const vehicle: any = {
+        title,
+        manufacturer_id,
+        energy_source_id,
+        vehicle_type_id,
+        series_id,
+        min_price,
+        max_price,
+        images,
+        description,
+        video_links,
+        brochure,
+        price_unit: 'Lakh',
+        status,
+        vehicle_specs: specificationData
+      }
+
+      mutationFn.mutate(vehicle, {
+        onSuccess: () => handleSuccess()
+      })
+    }
+  }
+
+  function handleSuccess() {
+    toast.success('Vehicle Created Successfully')
+  }
 
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return <VehicleBasicForm step={activeStep} control={control} specs={specs} />
+        return (
+          <VehicleBasicForm errors={errors} step={activeStep} control={control} specs={specs} setValue={setValue} />
+        )
       case 1:
         return <VehicleDimensionsForm step={activeStep} control={control} specs={specs} />
       case 2:
@@ -161,7 +229,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
       )
     } else {
       return (
-        <form onSubmit={e => e.preventDefault()}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.primary' }}>
@@ -182,7 +250,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
               >
                 Back
               </Button>
-              <Button size='large' variant='contained' onClick={handleNext}>
+              <Button type='submit' size='large' variant='contained'>
                 {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
               </Button>
             </Grid>

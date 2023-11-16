@@ -1,6 +1,8 @@
+import { Control } from 'react-hook-form';
 import FormFields from 'src/components/FormFields'
+import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes';
 
-const TransmissionForm = ({ step, control, specs }: { step: number; control: any; specs: any }) => {
+const TransmissionForm = ({ step, control, specs }: { step: number; control: Control<VehicleSubmitTypes>; specs: any }) => {
   return <FormFields control={control} specs={specs} step={step} />
 }
 
