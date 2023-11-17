@@ -15,6 +15,7 @@ interface Props {
   onSubmit: (values: VehicleClassFields) => void
   apiError: any
   clearError: () => void
+  energy: any
 }
 
 const VehicleClassDrawer = ({
@@ -26,7 +27,8 @@ const VehicleClassDrawer = ({
   handleSubmit,
   onSubmit,
   apiError,
-  clearError
+  clearError,
+  energy
 }: Props) => {
   const handleClose = () => {
     setOpen(!open)
@@ -57,6 +59,7 @@ const VehicleClassDrawer = ({
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
+        energy={energy ?? []}
       />
     </Drawer>
   )

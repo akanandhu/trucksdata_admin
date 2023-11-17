@@ -8,7 +8,6 @@ import { renderMenuItems } from '../../../components/renderStatusMenuItems'
 import { VehicleClassFields } from 'src/types/VehicleClass'
 import DrawerActions from 'src/components/drawers/DrawerActions'
 import MultipleSelectFormField from 'src/components/input-fields/MultipleSelectFormField'
-import { useGetEnergySources } from 'src/api/services/energy/get'
 
 const statusData = [
   {
@@ -27,7 +26,8 @@ const VehicleClassForm = ({
   handleClose,
   handleSubmit,
   onSubmit,
-  apiError
+  apiError,
+  energy
 }: {
   control: Control<VehicleClassFields>
   errors: FieldErrors
@@ -35,10 +35,9 @@ const VehicleClassForm = ({
   handleSubmit: UseFormHandleSubmit<VehicleClassFields>
   onSubmit: (values: VehicleClassFields) => void
   apiError: any
+  energy: any
 }) => {
-  const { data } = useGetEnergySources()
-  const energy = data?.data?.data ?? []
-  console.log(energy, 'enerySaveee')
+ 
 
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>

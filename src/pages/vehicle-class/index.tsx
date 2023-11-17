@@ -15,6 +15,7 @@ import { useAddVehicleClass } from 'src/api/services/vehicle-class/post'
 import useCustomToast from 'src/lib/toast'
 import { useEditVehicleClass } from 'src/api/services/vehicle-class/patch'
 import FallbackSpinner from 'src/@core/components/spinner'
+import { useGetEnergySources } from 'src/api/services/energy/get'
 
 const defaultValues: VehicleClassFields = {
   id: '',
@@ -73,6 +74,9 @@ const VehicleClass = () => {
   const addVehicleClass = useAddVehicleClass()
   const editVehicleClass = useEditVehicleClass()
 
+  const { data } = useGetEnergySources()
+  const energy = data?.data?.data ?? []
+
   const { data: vehicleClass, isLoading } = useGetVehicleClasses()
   const { data: vehicleClassData } = vehicleClass?.data || {}
 
@@ -101,20 +105,20 @@ const VehicleClass = () => {
   }
 
   function energySources(energy_sources: any[]) {
-    return isEdit
-      ? energy_sources
-      : energy_sources?.map((source: any) => {
-          return {
-            energy_source_id: source
-          }
-        })
+    return energy_sources?.map((source: any) => {
+      const energyObj = energy?.find((item: { name: string }) => item.name === source)
+
+      return {
+        energy_source_id: energyObj?.id
+      }
+    })
   }
 
-  if(isLoading) {
+  if (isLoading) {
     return <FallbackSpinner />
   }
 
-  function clearError () {
+  function clearError() {
     addVehicleClass.reset()
     editVehicleClass.reset()
   }
@@ -144,6 +148,7 @@ const VehicleClass = () => {
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         clearError={clearError}
+        energy={energy ?? []}
       />
       <DeleteConfirmModal
         open={deleteConfirm}
