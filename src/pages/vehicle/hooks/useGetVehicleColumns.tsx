@@ -40,7 +40,6 @@ const useGetVehicleColumns = ({
       headerName: 'Vehicle Class',
       renderCell: ({ row }: any) => {
 
-        console.log(row, 'rowCheck')
 
         return (
           <Grid>

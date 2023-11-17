@@ -32,7 +32,7 @@ const SelectFormField = ({
 }) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id='input-label' size={size ?? 'normal'} >
+      <InputLabel id='input-label' size={size ?? 'normal'}>
         {label && required ? <RequiredLabel text={label} /> : label ? label : ''}
       </InputLabel>
       <Controller
@@ -55,6 +55,16 @@ const SelectFormField = ({
               '& .MuiFormLabel-asterisk': { color: 'red' },
               '& .MuiInputBase-input.Mui-disabled': {
                 WebkitTextFillColor: '#000000'
+              }
+            }}
+            MenuProps={{
+              autoFocus: false,
+              PaperProps: {
+                style: {
+                  maxHeight: 300,
+                  boxSizing: 'border-box',
+                  marginTop: '2px'
+                }
               }
             }}
             onBlur={onBlur}

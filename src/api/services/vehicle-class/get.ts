@@ -17,13 +17,13 @@ export const useGetVehicleClasses = () => {
 
 // view
 
-function getVehicleClass(id: number) {
+function getVehicleClass(id: number | string) {
   const response = axiosInstance.get(`vehicle-types/${id}`)
 
   return response
 }
 
-export const useGetVehicleClass = (id: number) => {
+export const useGetVehicleClass = (id: string | number) => {
   return useQuery({
     queryKey: ['vehicle-class-single', id],
     queryFn: () => getVehicleClass(id),

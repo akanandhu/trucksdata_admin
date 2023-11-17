@@ -3,8 +3,8 @@
 export interface VehicleSubmitTypes {
   title: string;
   manufacturer_id: number | string;
-  energy_source_id: number;
-  vehicle_type_id: number;
+  energy_source_id: number | string;
+  vehicle_type_id: number | string;
   series_id?: any;
   min_price: number;
   max_price?: any;

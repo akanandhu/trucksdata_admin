@@ -85,8 +85,8 @@ const Step = styled(MuiStep)<StepProps>(({ theme }) => ({
 }))
 
 const defaultValues: VehicleSubmitTypes = {
-  vehicle_type_id: 0,
-  energy_source_id: 0,
+  vehicle_type_id: '',
+  energy_source_id: '',
   description: '',
   brochure: [],
   images: [],
