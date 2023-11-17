@@ -32,7 +32,7 @@ const SpecDrawer = ({
   data_type,
   handleClose,
   mutationLoading,
-  handleDeleteOption
+  handleDeleteOption,
 }: Props) => {
   return (
     <Drawer

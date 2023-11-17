@@ -57,6 +57,14 @@ const SpecForm = ({
     append({ option: '' })
   }
 
+  function handleDataType(value: string) {
+    if (value !== 'text') {
+      for (let i = fields.length - 1; i > 0; i--) {
+        remove(i)
+      }
+    }
+  }
+
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -86,6 +94,7 @@ const SpecForm = ({
               required
               control={control}
               renderMenuItems={renderMenuItems}
+              handleOnChange={e => handleDataType(e.target.value)}
             />
             {errors.data_type && <ErrorBox error={errors.data_type} />}
           </Grid>
@@ -106,13 +115,7 @@ const SpecForm = ({
           )}
           {data_type === 'nested_drop_down' && (
             <Grid item xs={12}>
-              <NestedArrayField
-                append={append}
-                control={control}
-                fields={fields}
-                remove={remove}
-                
-              />
+              <NestedArrayField append={append} control={control} fields={fields} remove={remove} />
             </Grid>
           )}
         </Grid>
