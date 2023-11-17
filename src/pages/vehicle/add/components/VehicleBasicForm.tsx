@@ -1,15 +1,11 @@
 import { FormLabel, Grid } from '@mui/material'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
 import { StatusRow } from 'src/fake-data/status'
 import { renderMenuItems } from 'src/components/renderStatusMenuItems'
 import FileInput from 'src/components/input-fields/FileInput'
-import { useGetVehicleClasses } from 'src/api/services/vehicle-class/get'
 import { renderMenu } from 'src/components/renderMenuItemsName'
-import { useGetManufacturers } from 'src/api/services/manufacturers/get'
-import { useGetManufacturerSeries } from 'src/api/services/manufacturers/series/get'
-import { useGetEnergySources } from 'src/api/services/energy/get'
 import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
 import usePrefillDefault from '../hooks/usePrefillDefault'
 import { Control, UseFormSetValue } from 'react-hook-form'
@@ -19,31 +15,23 @@ import ErrorBox from 'src/components/ErrorBox'
 const VehicleBasicForm = ({
   errors,
   control,
-  setValue
+  setValue,
+  vehicleClass,
+  manufacturersData,
+  series,
+  energyData,
+
 }: {
   errors: any
   step: number
   control: Control<VehicleSubmitTypes>
   specs: any
   setValue: UseFormSetValue<VehicleSubmitTypes>
+  vehicleClass: any
+  manufacturersData: any
+  series: any
+  energyData: any
 }) => {
-  const [vehicleClassId, setVehicleClassId] = useState('')
-  const [manufacturerId, setManufacturerId] = useState(0)
-
-  // vehicle class data
-  const { data: vehicle_class } = useGetVehicleClasses()
-  const vehicleClass = vehicle_class?.data?.data
-
-  // manufacturer data
-  const { data: manufacturers } = useGetManufacturers()
-  const manufacturersData = manufacturers?.data?.data
-
-  const { data: series } = useGetManufacturerSeries(manufacturerId ?? 0, { vehicle_type_id: vehicleClassId })
-
-  // energy data
-  const { data: energy } = useGetEnergySources()
-  const energyData = energy?.data?.data
-
   usePrefillDefault({
     vehicleClass,
     setValue
@@ -62,7 +50,6 @@ const VehicleBasicForm = ({
           required
           size={'medium'}
           renderMenuItems={renderMenu}
-          handleOnChange={e => setVehicleClassId(e.target.value)}
           control={control}
           id='vehicle_type_id'
         />
@@ -75,7 +62,6 @@ const VehicleBasicForm = ({
           size={'medium'}
           required
           renderMenuItems={renderMenu}
-          handleOnChange={e => setManufacturerId(e.target.value as any)}
           control={control}
           id='manufacturer_id'
         />

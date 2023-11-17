@@ -42,7 +42,7 @@ import SteeringBreakingForm from 'src/pages/vehicle/add/components/SteeringBreak
 import TyreForm from 'src/pages/vehicle/add/components/TyreForm'
 import CabinForm from 'src/pages/vehicle/add/components/CabinType'
 import OtherDetailsForm from 'src/pages/vehicle/add/components/OtherDetailsForm'
-import { useGetVehicleClass } from 'src/api/services/vehicle-class/get'
+import { useGetVehicleClass, useGetVehicleClasses } from 'src/api/services/vehicle-class/get'
 import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useGetVehicleSchema from 'src/pages/vehicle/add/hooks/useGetVehicleSchema'
@@ -50,6 +50,7 @@ import getSpecValues from 'src/pages/vehicle/add/functions/getSpecValue'
 import { useAddVehicle } from 'src/api/services/vehicle/post'
 import { useGetVehicle } from 'src/api/services/vehicle/get'
 import { useRouter } from 'next/router'
+import usePrefillVehicle from 'src/pages/vehicle/add/hooks/usePrefillVehicle'
 
 const StepperHeaderContainer = styled(CardContent)<CardContentProps>(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -132,20 +133,31 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
     })
   }
 
-  const [vehicleType, energySourceId] = watch(['vehicle_type_id', 'energy_source_id'])
-  const { data: vehicleClass } = useGetVehicleClass(vehicleType ?? 1)
+  // vehicle class
+  const { data: vehicle_class_data, isFetched } = useGetVehicleClasses()
+  const vehicleClassData = vehicle_class_data?.data?.data
+
+  const [vehicleType, energySourceId, manufacturerId] = watch([
+    'vehicle_type_id',
+    'energy_source_id',
+    'manufacturer_id'
+  ])
+
+  const { data: vehicleClass, isFetched: vehicleFetched } = useGetVehicleClass(vehicleType ?? 1)
   const vehicle_class = vehicleClass?.data
   const energyData = vehicle_class?.energy_sources
+  const manufacturers = vehicle_class?.manufacturers
+  const selectedManufacturer = manufacturers?.find((item: { id: string | number }) => item?.id === manufacturerId)
+  const series = selectedManufacturer?.series
+
   const specsCollection = energyData?.filter((obj: { id: number }) => obj?.id === energySourceId)
   const specs = specsCollection?.[0]?.specifications
-
   const create = useAddVehicle()
 
   const mutationFn = create
 
   function onSubmit(values: VehicleSubmitTypes) {
     setActiveStep(prevActiveStep => prevActiveStep + 1)
-
     if (activeStep === steps.length - 1) {
       const {
         title,
@@ -202,13 +214,29 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
 
   const { data: vehicleData } = useGetVehicle(id as string)
   const vehicle = vehicleData?.data
-  console.log(vehicle, 'vehicleData')
+
+  usePrefillVehicle({
+    vehicle,
+    vehicleFetched,
+    isFetched,
+    reset
+  })
 
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
         return (
-          <VehicleBasicForm errors={errors} step={activeStep} control={control} specs={specs} setValue={setValue} />
+          <VehicleBasicForm
+            vehicleClass={vehicleClassData ?? []}
+            manufacturersData={manufacturers ?? []}
+            series={series ?? []}
+            energyData={energyData}
+            errors={errors}
+            step={activeStep}
+            control={control}
+            specs={specs}
+            setValue={setValue}
+          />
         )
       case 1:
         return <VehicleDimensionsForm step={activeStep} control={control} specs={specs} />
