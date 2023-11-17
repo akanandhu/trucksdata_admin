@@ -29,8 +29,8 @@ const usePrefillVehicle = ({
 }) => {
   useEffect(() => {
     if (isFetched && vehicleFetched) {
-      const { vehicle_specs, ...rest } = vehicle
-      const vehicleSpecs = transformData(vehicle_specs)
+      const { vehicle_specs, ...rest } = vehicle || {}
+      const vehicleSpecs = transformData(vehicle_specs ?? [])
 
       reset({
         ...rest,
