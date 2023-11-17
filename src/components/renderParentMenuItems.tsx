@@ -1,21 +1,16 @@
-import { Typography } from '@mui/material'
+import { MenuItem } from '@mui/material'
 import React from 'react'
-import { ParentMenuItem } from 'src/components/renderStatusMenuItems'
 
-export const renderParentMenuItems = ({ obj }: { obj: any }) => {
-  const isParent = !!obj?.children
-  const hasChild = obj?.children?.length > 0
+export const renderParentMenuItems = (obj: any) => {
+  const isParent = obj?.child_options?.length
 
   return (
-    <ParentMenuItem disabled={hasChild} key={obj.id} value={obj.id}>
-      <Typography paddingLeft={isParent ? 0 : 3} fontSize={isParent ? 16 : 14} fontWeight={isParent ? 600 : 500}>
-        {obj.account_name}{' '}
-        {obj?.children && (
-          <Typography fontSize={12} fontStyle={'italic'}>
-            ({obj?.children})
-          </Typography>
-        )}
-      </Typography>
-    </ParentMenuItem>
+    <MenuItem
+      sx={{ fontWeight: isParent ? 900 : 400, fontSize: isParent ? '1.25rem' : '1rem', paddingLeft: isParent ? 0 : 3 }}
+      key={obj?.id}
+      value={obj.option}
+    >
+      {obj.option}
+    </MenuItem>
   )
 }
