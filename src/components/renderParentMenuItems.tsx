@@ -6,7 +6,7 @@ export const renderParentMenuItems = (obj: any) => {
 
   return (
     <MenuItem
-      sx={{ fontWeight: isParent ? 900 : 400, fontSize: isParent ? '1.25rem' : '1rem', paddingLeft: isParent ? 0 : 3 }}
+      sx={{ fontWeight: isParent ? 900 : 400, fontSize: isParent ? '1.25rem' : '1rem', paddingLeft: isParent ? 3 : 6 }}
       key={obj?.id}
       value={obj.option}
     >
