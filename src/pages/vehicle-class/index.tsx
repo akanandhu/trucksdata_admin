@@ -114,6 +114,11 @@ const VehicleClass = () => {
     return <FallbackSpinner />
   }
 
+  function clearError () {
+    addVehicleClass.reset()
+    editVehicleClass.reset()
+  }
+
   return (
     <Grid>
       <Card>
@@ -138,6 +143,7 @@ const VehicleClass = () => {
         setSelectedData={setSelectedData}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
+        clearError={clearError}
       />
       <DeleteConfirmModal
         open={deleteConfirm}

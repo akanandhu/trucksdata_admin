@@ -14,9 +14,20 @@ interface Props {
   handleSubmit: UseFormHandleSubmit<VehicleClassFields>
   onSubmit: (values: VehicleClassFields) => void
   apiError: any
+  clearError: () => void
 }
 
-const VehicleClassDrawer = ({ open, setOpen, control, errors, setSelectedData, handleSubmit, onSubmit, apiError }: Props) => {
+const VehicleClassDrawer = ({
+  open,
+  setOpen,
+  control,
+  errors,
+  setSelectedData,
+  handleSubmit,
+  onSubmit,
+  apiError,
+  clearError
+}: Props) => {
   const handleClose = () => {
     setOpen(!open)
     setSelectedData({
@@ -26,6 +37,7 @@ const VehicleClassDrawer = ({ open, setOpen, control, errors, setSelectedData, h
       energy_sources: [],
       name: ''
     })
+    clearError()
   }
 
   return (
@@ -38,7 +50,14 @@ const VehicleClassDrawer = ({ open, setOpen, control, errors, setSelectedData, h
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <HeaderWithClose title='Add Vehicle Class' handleClose={handleClose} />
-      <VehicleClassForm control={control} apiError={apiError} errors={errors} handleClose={handleClose} handleSubmit={handleSubmit} onSubmit={onSubmit} />
+      <VehicleClassForm
+        control={control}
+        apiError={apiError}
+        errors={errors}
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+      />
     </Drawer>
   )
 }
