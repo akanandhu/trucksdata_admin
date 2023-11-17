@@ -39,6 +39,9 @@ const useGetVehicleColumns = ({
       minWidth: 50,
       headerName: 'Vehicle Class',
       renderCell: ({ row }: any) => {
+
+        console.log(row, 'rowCheck')
+
         return (
           <Grid>
             {row.vehicle_class && <Chip sx={{ marginX: 1 }} key={row.vehicle_class} label={row.vehicle_class} />}

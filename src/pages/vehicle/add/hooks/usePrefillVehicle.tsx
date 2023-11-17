@@ -7,8 +7,8 @@ function transformData(inputData: any) {
   const output: any = {}
 
   inputData.forEach((item: { specification: { name: string }; values: string | any[] }) => {
-    const specName = item.specification.name
-    const value = item.values.length > 0 ? item.values[0].value : null
+    const specName = item?.specification?.name
+    const value = item?.values?.length > 0 ? item?.values[0]?.value : null
 
     output[specName] = value
   })
