@@ -46,7 +46,7 @@ const ModelsTable = ({
       />
       <Divider />
       <TableHeader title='Model' handleNew={handleAddNewModal} paddingX={17} />
-      <DataGrid autoHeight disableRowSelectionOnClick pagination rows={data ?? []} rowHeight={60} columns={columns} />
+      <DataGrid autoHeight disableRowSelectionOnClick pagination pageSizeOptions={[]}  rows={data ?? []} rowHeight={60} columns={columns} />
     </Card>
   )
 }

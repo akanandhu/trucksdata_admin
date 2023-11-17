@@ -132,6 +132,7 @@ const Manufacturers = () => {
             rowCount={manufacturers?.data?.total ? manufacturers?.data?.total : 0}
             loading={isLoading}
             paginationMode='server'
+            pageSizeOptions={[]}
           />
         </Box>
       </Card>

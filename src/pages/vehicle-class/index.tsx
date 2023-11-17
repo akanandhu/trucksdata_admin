@@ -135,6 +135,7 @@ const VehicleClass = () => {
             loading={isLoading}
             columns={columns as any}
             rows={vehicleClassData ?? []}
+            pageSizeOptions={[]}
           />
         </Box>
       </Card>

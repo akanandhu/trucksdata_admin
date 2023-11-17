@@ -84,7 +84,7 @@ const VehicleClassPreview = () => {
   function onSubmit(values: any) {
     const data = {
       vehicle_type_id: id,
-      specifications : values?.specifications?.map((specId: string) => {
+      specifications: values?.specifications?.map((specId: string) => {
         return {
           energy_source_id: values?.energy_source_id,
           specification_id: specId
@@ -117,7 +117,6 @@ const VehicleClassPreview = () => {
     selectedData,
     setValue
   })
-
 
   const handleDelete = (id: string) => {
     setOpenConfirmation(!openConfirmation)
@@ -171,7 +170,13 @@ const VehicleClassPreview = () => {
                 </Button>
               </Grid>
               <Divider />
-              <DataGrid disableRowSelectionOnClick columns={columns as any} rows={classSpecData ?? []} />
+              <DataGrid
+                disableRowSelectionOnClick
+                columns={columns as any}
+                rows={classSpecData ?? []}
+                pageSizeOptions={[]}
+
+              />
             </Card>
           </Grid>
         </Grid>

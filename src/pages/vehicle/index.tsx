@@ -79,7 +79,7 @@ const Vehicle = () => {
 
         <TableHeader title='Vehicle' handleNew={handleAdd} paddingX={16} />
         <Box sx={{ height: '100%' }}>
-          <DataGrid disableRowSelectionOnClick columns={columns} rows={vehicleData ?? []} />
+          <DataGrid disableRowSelectionOnClick columns={columns} pageSizeOptions={[]} rows={vehicleData ?? []} />
         </Box>
       </Card>
       <DeleteConfirmModal
