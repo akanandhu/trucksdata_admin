@@ -12,8 +12,10 @@ const usePrefillVehicleClass = ({
   const energySources = selectedData?.energy_sources
 
   useEffect(() => {
+    const energySources = selectedData?.energy_sources?.map((energy_source: any) => energy_source?.name)
+
     setValue('name', selectedData?.name)
-    setValue('energy_sources', selectedData?.energy_sources)
+    setValue('energy_sources', energySources)
     setValue('status', selectedData?.status)
   }, [energySources, selectedData, setValue])
 }

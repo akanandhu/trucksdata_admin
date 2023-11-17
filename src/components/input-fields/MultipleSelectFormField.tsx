@@ -25,8 +25,16 @@ const MenuProps = {
   }
 }
 
-const MultipleSelectFormField = ({ label, id, control, data, required, ref, valueKey = 'name', selectedName = 'name' }: MultipleSelectProps) => {
-
+const MultipleSelectFormField = ({
+  label,
+  id,
+  control,
+  data,
+  required,
+  ref,
+  valueKey = 'name',
+  selectedName = 'name'
+}: MultipleSelectProps) => {
   return (
     <FormControl fullWidth>
       <InputLabel id='-multiple-checkbox-label'>{label ?? ''}</InputLabel>
@@ -48,14 +56,14 @@ const MultipleSelectFormField = ({ label, id, control, data, required, ref, valu
             renderValue={selected =>
               selected
                 ?.map((id: any) => {
-                  const selectedOption = data.find((item: any) => (item[valueKey] === id) || (item[valueKey] === id?.name))
-                  
+                  const selectedOption = data.find((item: any) => item[valueKey] === id || item?.name === id?.name)
+
                   return selectedOption ? selectedOption[selectedName] : ''
                 })
                 .join(', ')
             }
           >
-            {data.map((obj:any) => {
+            {data.map((obj: any) => {
               return (
                 <MenuItem key={obj?.id} value={obj[valueKey as any]}>
                   {obj?.name}

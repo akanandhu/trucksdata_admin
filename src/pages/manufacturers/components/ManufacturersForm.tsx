@@ -33,6 +33,8 @@ const ManufacturersForm = ({
     handleClose()
   }
 
+  console.log(vehicle_types?.data?.data, 'enerySaveee')
+
   return (
     <Box key={display} sx={{ p: theme => theme.spacing(0, 6, 6) }}>
       <form onSubmit={handleSubmit(onSubmit)}>

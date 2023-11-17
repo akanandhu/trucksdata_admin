@@ -13,7 +13,6 @@ const usePrefillManufacturer = ({
     if (selectedData) {
       const vehicleTypeNames = selectedData?.vehicle_types?.map(vehicle_type => vehicle_type?.name)
       const logo = selectedData?.logo ?? []
-      console.log(logo,'logoCheck')
       setValue('name', selectedData?.name)
       setValue('vehicle_types', vehicleTypeNames)
       setValue('description', selectedData?.description)

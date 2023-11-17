@@ -38,6 +38,7 @@ const VehicleClassForm = ({
 }) => {
   const { data } = useGetEnergySources()
   const energy = data?.data?.data ?? []
+  console.log(energy, 'enerySaveee')
 
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
@@ -49,11 +50,10 @@ const VehicleClassForm = ({
           </Grid>
           <Grid item xs={12}>
             <MultipleSelectFormField
-              data={energy}
+              data={energy ?? []}
               id='energy_sources'
               label='Energy Sources'
               control={control as any}
-              valueKey='id'
             />
             {errors.energy_sources && <ErrorBox error={errors.energy_sources} />}
           </Grid>
