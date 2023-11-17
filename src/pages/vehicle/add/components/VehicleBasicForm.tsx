@@ -11,6 +11,7 @@ import usePrefillDefault from '../hooks/usePrefillDefault'
 import { Control, UseFormSetValue } from 'react-hook-form'
 import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
 import ErrorBox from 'src/components/ErrorBox'
+import CheckBoxFormField from 'src/components/CheckboxFormField'
 
 const VehicleBasicForm = ({
   errors,
@@ -19,8 +20,7 @@ const VehicleBasicForm = ({
   vehicleClass,
   manufacturersData,
   series,
-  energyData,
-
+  energyData
 }: {
   errors: any
   step: number
@@ -117,6 +117,9 @@ const VehicleBasicForm = ({
       <Grid display={'flex'} flexDirection={'column'} gap={1} item xs={12}>
         <FormLabel>Brochure</FormLabel>
         <FileInput control={control} id='brochure' multiple />
+      </Grid>
+      <Grid mt={2} item xs={12}>
+        <CheckBoxFormField control={control as any} id='is_popular' labelAfterCheck='Is this a Popular Truck?' />
       </Grid>
       <Grid mt={2} item xs={12}>
         <TextFormField control={control} id='description' label='Description' multiline rows={10} size='medium' />

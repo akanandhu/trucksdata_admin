@@ -178,7 +178,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         ...rest
       } = values
 
-      console.log(price_unit, is_popular, vehicle_specs, status)
+      console.log(price_unit,  vehicle_specs, status)
 
       const specificationData = getSpecValues(rest, specs)
 
@@ -190,6 +190,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         series_id,
         min_price,
         max_price,
+        is_popular,
         images,
         description,
         video_links,

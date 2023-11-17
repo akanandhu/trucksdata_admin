@@ -28,7 +28,7 @@ const usePrefillVehicle = ({
   reset: UseFormReset<VehicleSubmitTypes>
 }) => {
   useEffect(() => {
-    if (isFetched && vehicleFetched) {
+    if (vehicleFetched) {
       const { vehicle_specs, ...rest } = vehicle || {}
       const vehicleSpecs = transformData(vehicle_specs ?? [])
 
