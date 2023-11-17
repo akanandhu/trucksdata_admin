@@ -94,6 +94,7 @@ const defaultValues: VehicleSubmitTypes = {
   max_price: 0,
   price_unit: 'Rs',
   title: '',
+  status: '',
   video_links: [],
   series_id: ''
 }
@@ -161,10 +162,11 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         price_unit,
         is_popular,
         vehicle_specs,
+        status,
         ...rest
       } = values
 
-      console.log(price_unit, is_popular, vehicle_specs)
+      console.log(price_unit, is_popular, vehicle_specs, status)
 
       const specificationData = getSpecValues(rest, specs)
 

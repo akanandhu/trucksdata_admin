@@ -10,6 +10,7 @@ export interface VehicleSubmitTypes {
   max_price?: any;
   price_unit: string;
   images: string[];
+  status: string;
   is_popular?: boolean;
   description: string;
   video_links: Videolink[];
