@@ -96,7 +96,12 @@ const defaultValues: VehicleSubmitTypes = {
   price_unit: 'Rs',
   title: '',
   status: '',
-  video_links: [],
+  video_links: [
+    {
+      url: '',
+      language: ''
+    }
+  ],
   series_id: ''
 }
 
@@ -134,7 +139,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
   }
 
   // vehicle class
-  const { data: vehicle_class_data, isFetched } = useGetVehicleClasses()
+  const { data: vehicle_class_data } = useGetVehicleClasses()
   const vehicleClassData = vehicle_class_data?.data?.data
 
   const [vehicleType, energySourceId, manufacturerId] = watch([
@@ -178,7 +183,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         ...rest
       } = values
 
-      console.log(price_unit,  vehicle_specs, status)
+      console.log(price_unit, vehicle_specs, status)
 
       const specificationData = getSpecValues(rest, specs)
 
@@ -219,7 +224,6 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
   usePrefillVehicle({
     vehicle,
     vehicleFetched,
-    isFetched,
     reset
   })
 

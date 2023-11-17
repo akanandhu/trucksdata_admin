@@ -1,4 +1,4 @@
-import { FormLabel, Grid } from '@mui/material'
+import { Button, FormLabel, Grid, IconButton } from '@mui/material'
 import React, { Fragment } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
@@ -8,10 +8,22 @@ import FileInput from 'src/components/input-fields/FileInput'
 import { renderMenu } from 'src/components/renderMenuItemsName'
 import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
 import usePrefillDefault from '../hooks/usePrefillDefault'
-import { Control, UseFormSetValue } from 'react-hook-form'
+import { Control, UseFormSetValue, useFieldArray } from 'react-hook-form'
 import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
 import ErrorBox from 'src/components/ErrorBox'
 import CheckBoxFormField from 'src/components/CheckboxFormField'
+import { GridCloseIcon } from '@mui/x-data-grid'
+
+const languageData = [
+  {
+    id: 'english',
+    name: 'English'
+  },
+  {
+    id: 'malayalam',
+    name: 'Malayalam'
+  }
+]
 
 const VehicleBasicForm = ({
   errors,
@@ -36,6 +48,19 @@ const VehicleBasicForm = ({
     vehicleClass,
     setValue
   })
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'video_links',
+    control
+  })
+
+  if (fields.length === 0) {
+    append({ language: '', url: '' })
+  }
+
+  function handleDeleteItem(index: any) {
+    remove(index)
+  }
 
   return (
     <Fragment>
@@ -121,6 +146,36 @@ const VehicleBasicForm = ({
       <Grid mt={2} item xs={12}>
         <CheckBoxFormField control={control as any} id='is_popular' labelAfterCheck='Is this a Popular Truck?' />
       </Grid>
+      <Grid mt={2} item xs={12}>
+        {fields?.map((field, index) => {
+          return (
+            <Grid display={'flex'} gap={6} mt={2} item xs={12} key={index}>
+              <TextFormField
+                label='Youtube Video URL'
+                control={control}
+                id={`video_links.[${index}].url`}
+                size='medium'
+              />
+              <SelectFormField
+                control={control}
+                id={`video_links.[${index}].language`}
+                size={'medium'}
+                renderMenuItems={renderMenu}
+                placeholder='Video Language'
+                label={'Video language'}
+                data={languageData}
+              />
+              <IconButton onClick={() => handleDeleteItem(index)} color='secondary'>
+                <GridCloseIcon color='error' />
+              </IconButton>
+            </Grid>
+          )
+        })}
+        <Button sx={{ marginTop: 4 }} variant='outlined' onClick={() => append({ url: '', language: '' })}>
+          Add Link
+        </Button>
+      </Grid>
+
       <Grid mt={2} item xs={12}>
         <TextFormField control={control} id='description' label='Description' multiline rows={10} size='medium' />
       </Grid>

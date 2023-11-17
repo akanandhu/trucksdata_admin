@@ -18,12 +18,10 @@ function transformData(inputData: any) {
 
 const usePrefillVehicle = ({
   vehicle,
-  isFetched,
   vehicleFetched,
   reset
 }: {
   vehicle: Vehicle
-  isFetched: boolean
   vehicleFetched: boolean
   reset: UseFormReset<VehicleSubmitTypes>
 }) => {
@@ -37,7 +35,7 @@ const usePrefillVehicle = ({
         ...vehicleSpecs
       })
     }
-  }, [isFetched, reset, vehicle, vehicleFetched])
+  }, [ reset, vehicle, vehicleFetched])
 }
 
 export default usePrefillVehicle

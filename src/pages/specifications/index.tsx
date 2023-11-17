@@ -112,7 +112,6 @@ const Specifications = () => {
     } else {
       handleDeleteSuccess()
     }
-    console.log(options, 'optionCheck')
     const specId = options?.[0]?.specification_id
     const specsOption = specsData?.filter((spec: { id: string }) => spec?.id === specId)
     const specOptionCollection = specsOption?.[0]?.options
