@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { VehicleParamsTypes } from 'src/types/Vehicle'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import { useRemoveVehicle } from 'src/api/services/vehicle/delete'
+import FallbackSpinner from 'src/@core/components/spinner'
 
 // import { useState } from "react"
 
@@ -61,8 +62,12 @@ const Vehicle = () => {
     setParams(null)
   }
 
-  const { data: vehicles } = useGetVehicles(params)
+  const { data: vehicles, isLoading } = useGetVehicles(params)
   const vehicleData = vehicles?.data?.data
+
+  if(isLoading) {
+    return <FallbackSpinner />
+  }
 
   return (
     <Grid>

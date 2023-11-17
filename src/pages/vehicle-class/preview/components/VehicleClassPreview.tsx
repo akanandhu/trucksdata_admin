@@ -47,7 +47,7 @@ const VehicleClassPreview = () => {
 
   const mutationFn: any = addSpecsToClass
 
-  const { data, isLoading } = useGetVehicleClass(id)
+  const { data } = useGetVehicleClass(id)
   const energySources = data?.data?.energy_sources ?? []
   const energyId = energySources?.[0]?.id
 
@@ -59,7 +59,7 @@ const VehicleClassPreview = () => {
   })
   const classSpecData = classSpecs?.data
 
-  const { data: specs, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetSpecsDataPagination()
+  const { data: specs, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = useGetSpecsDataPagination()
   const flatSpecs = getFlatData(specs)
   const specData = getArrayFlat(flatSpecs ?? [])
   const { inView, ref } = useInView()

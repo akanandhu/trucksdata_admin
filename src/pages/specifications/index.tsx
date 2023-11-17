@@ -16,6 +16,7 @@ import usePrefillSpec from './hooks/prefill'
 import { useDeleteSpec } from 'src/api/services/specifications/delete'
 import { useDeleteSpecOpts } from 'src/api/services/specifications/options/delete'
 import { useAddSpecOption } from 'src/api/services/specifications/options/post'
+import FallbackSpinner from 'src/@core/components/spinner'
 
 const defaultValues: SpecFields = {
   name: '',
@@ -170,6 +171,10 @@ const Specifications = () => {
     const selectedCollectionToDelete = selectedOptions?.filter((option: any) => option?.option === selectedName)
     const selectedIdToDelete = selectedCollectionToDelete?.[0]?.id
     setDeleteIds((prevId: string[]) => [...prevId, selectedIdToDelete])
+  }
+
+  if(isLoading) {
+    return <FallbackSpinner />
   }
 
   return (

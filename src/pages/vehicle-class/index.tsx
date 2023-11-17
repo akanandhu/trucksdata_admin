@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useAddVehicleClass } from 'src/api/services/vehicle-class/post'
 import useCustomToast from 'src/lib/toast'
 import { useEditVehicleClass } from 'src/api/services/vehicle-class/patch'
+import FallbackSpinner from 'src/@core/components/spinner'
 
 const defaultValues: VehicleClassFields = {
   id: '',
@@ -107,6 +108,10 @@ const VehicleClass = () => {
             energy_source_id: source
           }
         })
+  }
+
+  if(isLoading) {
+    return <FallbackSpinner />
   }
 
   return (
