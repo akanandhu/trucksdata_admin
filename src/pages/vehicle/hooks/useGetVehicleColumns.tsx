@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import React from 'react'
 import BasicTableActions from 'src/components/BasicTableActions'
 
@@ -39,12 +39,12 @@ const useGetVehicleColumns = ({
       minWidth: 50,
       headerName: 'Vehicle Class',
       renderCell: ({ row }: any) => {
-
+        const { vehicle_type } = row || {}
 
         return (
-          <Grid>
-            {row.vehicle_class && <Chip sx={{ marginX: 1 }} key={row.vehicle_class} label={row.vehicle_class} />}
-          </Grid>
+          <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
+            {vehicle_type?.name}
+          </Typography>
         )
       }
     },
@@ -55,12 +55,12 @@ const useGetVehicleColumns = ({
       minWidth: 50,
       headerName: 'Vehicle Brand',
       renderCell: ({ row }: any) => {
-        const { vehicle_brand } = row
+        const { manufacturer } = row
 
         return (
           <Grid>
             <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
-              {vehicle_brand}
+              {manufacturer?.name}
             </Typography>
           </Grid>
         )
