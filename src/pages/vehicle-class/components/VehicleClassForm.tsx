@@ -37,8 +37,6 @@ const VehicleClassForm = ({
   apiError: any
   energy: any
 }) => {
- 
-
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -53,6 +51,7 @@ const VehicleClassForm = ({
               id='energy_sources'
               label='Energy Sources'
               control={control as any}
+              isName
             />
             {errors.energy_sources && <ErrorBox error={errors.energy_sources} />}
           </Grid>

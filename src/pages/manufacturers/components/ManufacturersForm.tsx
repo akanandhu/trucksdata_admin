@@ -52,6 +52,8 @@ const ManufacturersForm = ({
               control={control}
               data={vehicle_types?.data?.data ?? []}
               label={<RequiredLabel text='Vehicle Types' />}
+              isName
+
             />
             {errors?.vehicle_types && <ErrorBox error={errors?.vehicle_types} />}
           </Grid>

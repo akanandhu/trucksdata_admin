@@ -15,6 +15,7 @@ interface MultipleSelectProps {
   displayKey?: string
   specialValueKey?: string
   isSpec?: boolean
+  isName?: boolean
 }
 
 const ITEM_HEIGHT = 48
@@ -39,7 +40,8 @@ const MultipleSelectFormField = ({
   selectedName = 'name',
   displayKey = 'name',
   specialValueKey = 'id',
-  isSpec
+  isSpec,
+  isName
 }: MultipleSelectProps) => {
   return (
     <FormControl fullWidth>
@@ -64,10 +66,14 @@ const MultipleSelectFormField = ({
                 ?.map((id: any) => {
                   const selectedOption = isSpec
                     ? data?.find((item: { option: string }) => item?.option === id)
+                    : isName
+                    ? data?.find((item: { name: string }) => item.name === id)
                     : data.find(
                         (item: any) =>
                           item[specialValueKey ? specialValueKey : valueKey] === id || item?.name === id?.name
                       )
+
+                  console.log(data, id, 'specccName')
 
                   return selectedOption ? selectedOption[selectedName] : ''
                 })

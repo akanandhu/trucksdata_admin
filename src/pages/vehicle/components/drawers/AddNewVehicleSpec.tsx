@@ -104,7 +104,7 @@ const AddNewVehicleSpec = ({
 
     const mutateData: any = isEdit
       ? { id: vehicle_id, spec_id: specification_id, data: dataToEdit }
-      : { value: data, vehicle_id: vehicleId }
+      : { values: data, vehicle_id: vehicleId }
 
     mutateFn.mutate(mutateData, {
       onSuccess: () => handleSuccess()
