@@ -7,8 +7,7 @@ import { renderMenuItems } from 'src/components/renderStatusMenuItems'
 import FileInput from 'src/components/input-fields/FileInput'
 import { renderMenu } from 'src/components/renderMenuItemsName'
 import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
-import usePrefillDefault from '../hooks/usePrefillDefault'
-import { Control, UseFormSetValue, useFieldArray } from 'react-hook-form'
+import { Control,  useFieldArray } from 'react-hook-form'
 import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
 import ErrorBox from 'src/components/ErrorBox'
 import CheckBoxFormField from 'src/components/CheckboxFormField'
@@ -28,7 +27,6 @@ const languageData = [
 const VehicleBasicForm = ({
   errors,
   control,
-  setValue,
   vehicleClass,
   manufacturersData,
   series,
@@ -38,16 +36,12 @@ const VehicleBasicForm = ({
   step: number
   control: Control<VehicleSubmitTypes>
   specs: any
-  setValue: UseFormSetValue<VehicleSubmitTypes>
   vehicleClass: any
   manufacturersData: any
   series: any
   energyData: any
 }) => {
-  usePrefillDefault({
-    vehicleClass,
-    setValue
-  })
+
 
   const { fields, append, remove } = useFieldArray({
     name: 'video_links',
@@ -64,10 +58,6 @@ const VehicleBasicForm = ({
 
   return (
     <Fragment>
-      <Grid item xs={12} sm={6}>
-        <TextFormField control={control} id='title' label='Variant Name' required size='medium' />
-        {errors?.title && <ErrorBox error={errors?.title} />}
-      </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
           label='Vehicle Class'
@@ -91,6 +81,10 @@ const VehicleBasicForm = ({
           id='manufacturer_id'
         />
         {errors?.manufacturer_id && <ErrorBox error={errors?.manufacturer_id} />}
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextFormField control={control} id='title' label='Variant Name' required size='medium' />
+        {errors?.title && <ErrorBox error={errors?.title} />}
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField

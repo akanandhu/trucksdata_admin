@@ -48,9 +48,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import useGetVehicleSchema from 'src/pages/vehicle/add/hooks/useGetVehicleSchema'
 import getSpecValues from 'src/pages/vehicle/add/functions/getSpecValue'
 import { useAddVehicle } from 'src/api/services/vehicle/post'
-import { useGetVehicle } from 'src/api/services/vehicle/get'
 import { useRouter } from 'next/router'
-import usePrefillVehicle from 'src/pages/vehicle/add/hooks/usePrefillVehicle'
+import { useQueryClient } from '@tanstack/react-query'
 
 const StepperHeaderContainer = styled(CardContent)<CardContentProps>(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -111,11 +110,11 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
   const [activeStep, setActiveStep] = useState<number>(0)
 
   const schema = useGetVehicleSchema()
+  const queryClient = useQueryClient()
 
   const {
     control,
     watch,
-    setValue,
     handleSubmit,
     reset,
     formState: { errors }
@@ -148,7 +147,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
     'manufacturer_id'
   ])
 
-  const { data: vehicleClass, isFetched: vehicleFetched } = useGetVehicleClass(vehicleType ?? 1)
+  const { data: vehicleClass,  } = useGetVehicleClass(vehicleType ?? 1)
   const vehicle_class = vehicleClass?.data
   const energyData = vehicle_class?.energy_sources
   const manufacturers = vehicle_class?.manufacturers
@@ -213,19 +212,19 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
 
   function handleSuccess() {
     toast.success('Vehicle Created Successfully')
+    queryClient.invalidateQueries({queryKey: ['vehicles']})
+    router.push('/vehicle')
   }
 
   const router = useRouter()
-  const id = router?.query?.id
 
-  const { data: vehicleData } = useGetVehicle(id as string)
-  const vehicle = vehicleData?.data
 
-  usePrefillVehicle({
-    vehicle,
-    vehicleFetched,
-    reset
-  })
+
+  // usePrefillVehicle({
+  //   vehicle,
+  //   vehicleFetched,
+  //   reset
+  // })
 
   const getStepContent = (step: number) => {
     switch (step) {
@@ -240,7 +239,6 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
             step={activeStep}
             control={control}
             specs={specs}
-            setValue={setValue}
           />
         )
       case 1:
