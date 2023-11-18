@@ -14,6 +14,9 @@ import useGetIndivitualVehicleSpecs from '../hooks/useGetIndivitualVehicleSpecs'
 import AddNewVehicleSpec from '../components/drawers/AddNewVehicleSpec'
 import { useDeleteVehicleSpecs } from 'src/api/services/vehicle/delete'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
+import { useUpdateVehicle } from 'src/api/services/vehicle/patch'
+import useCustomToast from 'src/lib/toast'
+import { useQueryClient } from '@tanstack/react-query'
 
 const defaultValues: VehicleSubmitTypes = {
   vehicle_type_id: '',
@@ -50,6 +53,7 @@ const VehiclePreview = () => {
     control,
     reset,
     watch,
+    handleSubmit,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -80,8 +84,6 @@ const VehiclePreview = () => {
   const specsCollection = energyData?.filter((obj: { id: number }) => obj?.id === energySourceId)
   const specs = specsCollection?.[0]?.specifications
 
-  console.log(specs, 'specsCheck')
-
   usePrefillVehicle({
     reset,
     vehicle,
@@ -105,11 +107,31 @@ const VehiclePreview = () => {
     setIdToRemove(id)
   }
 
-  
-
   const [openSpec, setOpenSpec] = useState(false)
   function handleAddSpec() {
     setOpenSpec(!openSpec)
+  }
+
+  const update = useUpdateVehicle()
+
+  function onSubmit(values: any) {
+    delete values.price_unit
+    const dataValues = { price_unit: 'Rs', ...values }
+    const data: any = {
+      id: vehicleId,
+      data: dataValues
+    }
+    update.mutate(data, {
+      onSuccess: () => handleSuccess()
+    })
+  }
+
+  const toast = useCustomToast()
+  const queryClient = useQueryClient()
+
+  function handleSuccess() {
+    toast.success('Vehicle updated successfully')
+    queryClient.invalidateQueries({queryKey: ['vehicle']})
   }
 
   return (
@@ -118,21 +140,25 @@ const VehiclePreview = () => {
         <Typography fontSize={20}>Basic Vehicle Details</Typography>
       </Card>
       <Card sx={{ p: 10 }}>
-        <Grid container spacing={5}>
-          <VehicleBasicForm
-            vehicleClass={vehicleClassData ?? []}
-            manufacturersData={manufacturers ?? []}
-            series={series ?? []}
-            energyData={energyData}
-            errors={errors}
-            step={1}
-            control={control}
-            specs={specs}
-          />
-        </Grid>
-        <Grid display={'flex'} justifyContent={'end'} sx={{ my: 6 }}>
-          <Button variant='contained'>Save Changes</Button>
-        </Grid>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={5}>
+            <VehicleBasicForm
+              vehicleClass={vehicleClassData ?? []}
+              manufacturersData={manufacturers ?? []}
+              series={series ?? []}
+              energyData={energyData}
+              errors={errors}
+              step={1}
+              control={control}
+              specs={specs}
+            />
+          </Grid>
+          <Grid display={'flex'} justifyContent={'end'} sx={{ my: 6 }}>
+            <Button type='submit' variant='contained'>
+              Save Changes
+            </Button>
+          </Grid>
+        </form>
       </Card>
       <Card sx={{ p: 5, my: 2, display: 'flex', justifyContent: 'space-between' }}>
         <Typography fontSize={20}>Vehicle Specifications</Typography>
