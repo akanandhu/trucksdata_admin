@@ -200,6 +200,7 @@ const VehicleClassPreview = () => {
         remove={deleteFn}
         idToRemove={idsToDelete}
         routeToInvalidate='vehicle-class-specs'
+        optionalRouteToInvalidate='energy-sources'
       />
     </Grid>
   )

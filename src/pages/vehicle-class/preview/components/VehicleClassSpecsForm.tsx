@@ -1,5 +1,5 @@
 import { Box, Grid } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { UseFormHandleSubmit } from 'react-hook-form'
 import ErrorBox from 'src/components/ErrorBox'
 import DrawerActions from 'src/components/drawers/DrawerActions'
@@ -24,6 +24,15 @@ interface ClassSpecForms {
 
 const VehicleClassSpecsForm = (props: ClassSpecForms) => {
   const { energySources, handleSubmit, onSubmit, ref, isLoading, error, handleClose, apiError, control, specs } = props
+  const [specifications, setSpecifications] = useState([])
+
+  function handleEnergyChange(energy: string) {
+    const data: any = energySources.find((item: any) => item.id === energy)
+    const selectedSpec = data?.specifications
+    const ids = selectedSpec?.map((spec: { specification_id: number }) => spec?.specification_id)
+    const filteredSpecs = specs?.filter((spec: { id: string }) => !ids.includes(spec.id))
+    setSpecifications(filteredSpecs ?? [])
+  }
 
   return (
     <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
@@ -38,11 +47,19 @@ const VehicleClassSpecsForm = (props: ClassSpecForms) => {
               required
               control={control}
               renderMenuItems={renderSpecMenuItems}
+              handleOnChange={e => handleEnergyChange(e.target.value)}
             />
             {error.energy_source_id && <ErrorBox error={error.energy_source_id} />}
           </Grid>
           <Grid item xs={12}>
-            <MultipleSelectFormField valueKey='id' ref={ref} control={control} data={specs ?? []} id='specifications' label={'Specifications'} />
+            <MultipleSelectFormField
+              valueKey='id'
+              ref={ref}
+              control={control}
+              data={specifications ?? []}
+              id='specifications'
+              label={'Specifications'}
+            />
           </Grid>
         </Grid>
         {apiError && <ErrorBox error={apiError} />}
