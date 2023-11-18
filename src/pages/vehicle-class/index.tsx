@@ -108,9 +108,8 @@ const VehicleClass = () => {
     return energy_sources?.map((source: any) => {
       const energyObj = energy?.find((item: { name: string }) => item.name === source)
 
-      return {
-        energy_source_id: energyObj?.id
-      }
+      return  energyObj?.id
+      
     })
   }
 
