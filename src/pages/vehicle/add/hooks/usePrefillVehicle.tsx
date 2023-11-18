@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { SetStateAction, useEffect } from 'react'
 import { UseFormReset } from 'react-hook-form'
 import { Vehicle } from 'src/types/Vehicle'
 import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
@@ -19,11 +19,13 @@ function transformData(inputData: any) {
 const usePrefillVehicle = ({
   vehicle,
   vehicleFetched,
-  reset
+  reset,
+  setRefresh
 }: {
   vehicle: Vehicle
   vehicleFetched: boolean
   reset: UseFormReset<VehicleSubmitTypes>
+  setRefresh: React.Dispatch<SetStateAction<number>>
 }) => {
   useEffect(() => {
     if (vehicleFetched) {
@@ -33,10 +35,11 @@ const usePrefillVehicle = ({
       reset({
         ...rest,
         ...vehicleSpecs,
-        is_popular: Boolean(is_popular)
+        is_popular: Boolean(is_popular) 
       })
+      setRefresh((refresh) => refresh + 1)
     }
-  }, [reset, vehicle, vehicleFetched])
+  }, [reset, setRefresh, vehicle, vehicleFetched])
 }
 
 export default usePrefillVehicle

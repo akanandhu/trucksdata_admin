@@ -68,11 +68,13 @@ const VehiclePreview = () => {
 
   const removeSpec = useDeleteVehicleSpecs(vehicleId as any)
 
-  const [vehicleType, energySourceId, manufacturerId] = watch([
+  const [vehicleType, energySourceId, manufacturerId, isPop] = watch([
     'vehicle_type_id',
     'energy_source_id',
-    'manufacturer_id'
+    'manufacturer_id',
+    'is_popular'
   ])
+  console.log(Boolean(isPop), 'isPopppp')
 
   const { data: vehicleClass } = useGetVehicleClass(vehicleType ?? 1)
   const vehicle_class = vehicleClass?.data
@@ -84,10 +86,13 @@ const VehiclePreview = () => {
   const specsCollection = energyData?.filter((obj: { id: number }) => obj?.id === energySourceId)
   const specs = specsCollection?.[0]?.specifications
 
+  const [refresh, setRefresh] = useState(0)
+
   usePrefillVehicle({
     reset,
     vehicle,
-    vehicleFetched
+    vehicleFetched,
+    setRefresh
   })
 
   const columns = useGetIndivitualVehicleSpecs({
@@ -148,7 +153,7 @@ const VehiclePreview = () => {
       </Card>
       <Card sx={{ p: 10 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={5}>
+          <Grid key={`id_${refresh}`} container spacing={5}>
             <VehicleBasicForm
               vehicleClass={vehicleClassData ?? []}
               manufacturersData={manufacturers ?? []}
