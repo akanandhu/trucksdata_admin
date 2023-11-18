@@ -27,7 +27,7 @@ const usePrefillVehicle = ({
 }) => {
   useEffect(() => {
     if (vehicleFetched) {
-      const { vehicle_specs, is_popular,  ...rest } = vehicle || {}
+      const { vehicle_specs, is_popular, ...rest } = vehicle || {}
       const vehicleSpecs = transformData(vehicle_specs ?? [])
 
       reset({
@@ -36,7 +36,7 @@ const usePrefillVehicle = ({
         is_popular: Boolean(is_popular)
       })
     }
-  }, [ reset, vehicle, vehicleFetched])
+  }, [reset, vehicle, vehicleFetched])
 }
 
 export default usePrefillVehicle

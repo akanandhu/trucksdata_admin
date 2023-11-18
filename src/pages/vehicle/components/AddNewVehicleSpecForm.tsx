@@ -13,12 +13,14 @@ const AddNewVehicleSpecForm = ({
   handleClose,
   selectedOption,
   setSelectedOption,
+  isEdit
 }: {
   control: any
   specs: any
   handleClose: () => void
   selectedOption: any
   setSelectedOption: any
+  isEdit: boolean
 }) => {
   function handleSpecChange(spec: any) {
     const specId = spec.target.value
@@ -27,6 +29,8 @@ const AddNewVehicleSpecForm = ({
   }
 
   const type = selectedOption?.specification?.data_type
+
+  const options = selectedOption?.specification?.options || selectedOption?.options
 
   return (
     <>
@@ -39,13 +43,14 @@ const AddNewVehicleSpecForm = ({
           size={'medium'}
           placeholder='Specification'
           label='Specification'
+          isDisabled={isEdit}
           handleOnChange={e => handleSpecChange(e)}
         />
       </Grid>
       <Grid item xs={12}>
         {type === 'drop_down' ? (
           <MultipleSelectFormField
-            data={selectedOption?.specification.options}
+            data={options ?? []}
             control={control}
             label={selectedOption?.specification.name}
             id={selectedOption?.specification.name}
@@ -65,7 +70,7 @@ const AddNewVehicleSpecForm = ({
         ) : type === 'nested_drop_down' ? (
           <SelectFormField
             label={selectedOption?.specification.name}
-            data={flattenOptions(selectedOption?.specification.options) ?? []}
+            data={flattenOptions(options) ?? []}
             size={'medium'}
             renderMenuItems={renderParentMenuItems}
             control={control}

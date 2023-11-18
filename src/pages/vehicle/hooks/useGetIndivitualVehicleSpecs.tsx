@@ -55,7 +55,7 @@ const useGetIndivitualVehicleSpecs = ({
       renderCell: (params: any) => {
         const { id } = params.row
 
-        return <BasicTableActions handleEdit={() => handleEdit(id)} handleDelete={() => handleDelete(id)} />
+        return <BasicTableActions handleEdit={() => handleEdit(params)} handleDelete={() => handleDelete(id)} />
       }
     }
   ]

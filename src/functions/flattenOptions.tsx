@@ -1,7 +1,7 @@
 export function flattenOptions(options: any[], parentId = null) {
     const result: any[] = [];
   
-    options.forEach((option) => {
+    options?.forEach((option) => {
       const newOption = { ...option };
   
       if (parentId !== null) {

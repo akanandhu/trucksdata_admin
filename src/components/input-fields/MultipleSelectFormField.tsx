@@ -74,7 +74,7 @@ const MultipleSelectFormField = ({
                 .join(', ')
             }
           >
-            {data.map((obj: any) => {
+            {data?.map((obj: any) => {
               return (
                 <MenuItem key={obj?.id} value={obj[valueKey as any]}>
                   {obj?.[displayKey ?? 'name']}

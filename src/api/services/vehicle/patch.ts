@@ -9,3 +9,11 @@ export const useUpdateVehicle = () => {
     }
   })
 }
+
+export const useUpdateSpecToVehicle = () => {
+  return useMutation({
+    mutationFn: (values: { id: number; spec_id: number; data: VehicleTypes }) => {
+      return axiosInstance.patch(`vehicle-specs/${values?.id}/values/${values.spec_id}`, values?.data)
+    }
+  })
+}

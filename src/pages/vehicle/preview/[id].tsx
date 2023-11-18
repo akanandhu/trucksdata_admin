@@ -47,8 +47,6 @@ const VehiclePreview = () => {
   const vehicle = data?.data
   const vehicleSpecs = vehicle?.vehicle_specs ?? []
 
-  console.log(vehicle, 'vehicleChecking')
-
   const {
     control,
     reset,
@@ -59,6 +57,8 @@ const VehiclePreview = () => {
     defaultValues,
     resolver: yupResolver(schema)
   })
+
+  const [selectedOption, setSelectedOption] = useState<any>({})
 
   // vehicle class
   const { data: vehicle_class_data } = useGetVehicleClasses()
@@ -95,9 +95,15 @@ const VehiclePreview = () => {
     handleDelete
   })
 
-  function handleEdit(id: number) {
-    console.log(id)
+  const [prefillData, setPrefillData] = useState<any>({})
+  function handleEdit(obj: any) {
+    const { row } = obj || {}
+    const selectedSpec = specs?.find((spec: any) => spec?.specification_id === row?.specification_id)
+    setSelectedOption({ ...row, options: selectedSpec?.specification?.options })
+    setPrefillData(row)
+    setOpenSpec(!openSpec)
   }
+
 
   const [openDelete, setOpenDelete] = useState(false)
   const [idToRemove, setIdToRemove] = useState<any>('')
@@ -110,6 +116,7 @@ const VehiclePreview = () => {
   const [openSpec, setOpenSpec] = useState(false)
   function handleAddSpec() {
     setOpenSpec(!openSpec)
+    setPrefillData(null)
   }
 
   const update = useUpdateVehicle()
@@ -131,7 +138,7 @@ const VehiclePreview = () => {
 
   function handleSuccess() {
     toast.success('Vehicle updated successfully')
-    queryClient.invalidateQueries({queryKey: ['vehicle']})
+    queryClient.invalidateQueries({ queryKey: ['vehicle'] })
   }
 
   return (
@@ -174,6 +181,9 @@ const VehiclePreview = () => {
         handleClose={handleAddSpec}
         specsData={specs ?? []}
         addedSpecs={vehicleSpecs ?? []}
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
+        prefillData={prefillData}
       />
       <DeleteConfirmModal
         idToRemove={idToRemove}
