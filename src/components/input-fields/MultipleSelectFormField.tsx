@@ -12,6 +12,9 @@ interface MultipleSelectProps {
   required?: boolean
   valueKey?: string
   selectedName?: string
+  displayKey?: string
+  specialValueKey?: string
+  isSpec?: boolean
 }
 
 const ITEM_HEIGHT = 48
@@ -33,7 +36,10 @@ const MultipleSelectFormField = ({
   required,
   ref,
   valueKey = 'name',
-  selectedName = 'name'
+  selectedName = 'name',
+  displayKey = 'name',
+  specialValueKey = 'id',
+  isSpec
 }: MultipleSelectProps) => {
   return (
     <FormControl fullWidth>
@@ -56,7 +62,12 @@ const MultipleSelectFormField = ({
             renderValue={selected =>
               selected
                 ?.map((id: any) => {
-                  const selectedOption = data.find((item: any) => item[valueKey] === id || item?.name === id?.name)
+                  const selectedOption = isSpec
+                    ? data?.find((item: { option: string }) => item?.option === id)
+                    : data.find(
+                        (item: any) =>
+                          item[specialValueKey ? specialValueKey : valueKey] === id || item?.name === id?.name
+                      )
 
                   return selectedOption ? selectedOption[selectedName] : ''
                 })
@@ -66,7 +77,7 @@ const MultipleSelectFormField = ({
             {data.map((obj: any) => {
               return (
                 <MenuItem key={obj?.id} value={obj[valueKey as any]}>
-                  {obj?.name}
+                  {obj?.[displayKey ?? 'name']}
                   <Divider ref={ref} />
                 </MenuItem>
               )

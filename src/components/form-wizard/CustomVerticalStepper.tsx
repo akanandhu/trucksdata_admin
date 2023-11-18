@@ -147,7 +147,7 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
     'manufacturer_id'
   ])
 
-  const { data: vehicleClass,  } = useGetVehicleClass(vehicleType ?? 1)
+  const { data: vehicleClass } = useGetVehicleClass(vehicleType ?? 1)
   const vehicle_class = vehicleClass?.data
   const energyData = vehicle_class?.energy_sources
   const manufacturers = vehicle_class?.manufacturers
@@ -177,12 +177,14 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         brochure,
         price_unit,
         is_popular,
+        is_latest,
+        is_upcoming,
         vehicle_specs,
         status,
         ...rest
       } = values
 
-      console.log(price_unit, vehicle_specs, status)
+      console.log(price_unit, vehicle_specs, status, is_latest, is_upcoming)
 
       const specificationData = getSpecValues(rest, specs)
 
@@ -212,19 +214,11 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
 
   function handleSuccess() {
     toast.success('Vehicle Created Successfully')
-    queryClient.invalidateQueries({queryKey: ['vehicles']})
+    queryClient.invalidateQueries({ queryKey: ['vehicles'] })
     router.push('/vehicle')
   }
 
   const router = useRouter()
-
-
-
-  // usePrefillVehicle({
-  //   vehicle,
-  //   vehicleFetched,
-  //   reset
-  // })
 
   const getStepContent = (step: number) => {
     switch (step) {

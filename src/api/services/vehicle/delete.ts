@@ -8,3 +8,11 @@ export const useRemoveVehicle = () => {
     }
   })
 }
+
+export const useDeleteVehicleSpecs = (vehicleId: number) => {
+  return useMutation({
+    mutationFn: ({ id }: { vehicleId: number; id: number }) => {
+      return axiosInstance.delete(`vehicles/${vehicleId}/vehicle-specs/${id}`)
+    }
+  })
+}

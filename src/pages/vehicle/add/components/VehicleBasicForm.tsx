@@ -7,7 +7,7 @@ import { renderMenuItems } from 'src/components/renderStatusMenuItems'
 import FileInput from 'src/components/input-fields/FileInput'
 import { renderMenu } from 'src/components/renderMenuItemsName'
 import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
-import { Control,  useFieldArray } from 'react-hook-form'
+import { Control, useFieldArray } from 'react-hook-form'
 import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
 import ErrorBox from 'src/components/ErrorBox'
 import CheckBoxFormField from 'src/components/CheckboxFormField'
@@ -41,8 +41,6 @@ const VehicleBasicForm = ({
   series: any
   energyData: any
 }) => {
-
-
   const { fields, append, remove } = useFieldArray({
     name: 'video_links',
     control
@@ -137,13 +135,19 @@ const VehicleBasicForm = ({
         <FormLabel>Brochure</FormLabel>
         <FileInput control={control} id='brochure' multiple />
       </Grid>
-      <Grid mt={2} item xs={12}>
+      <Grid mt={2} item xs={4}>
         <CheckBoxFormField control={control as any} id='is_popular' labelAfterCheck='Is this a Popular Truck?' />
+      </Grid>
+      <Grid mt={2} item xs={4}>
+        <CheckBoxFormField control={control as any} id='is_latest' labelAfterCheck='Is this a Latest Truck?' />
+      </Grid>
+      <Grid mt={2} item xs={4}>
+        <CheckBoxFormField control={control as any} id='is_upcoming' labelAfterCheck='Is this a Upcoming Truck?' />
       </Grid>
       <Grid mt={2} item xs={12}>
         {fields?.map((field, index) => {
           return (
-            <Grid display={'flex'} gap={6} mt={2} item xs={12} key={index}>
+            <Grid display={'flex'} gap={6} mt={6} item xs={12} key={index}>
               <TextFormField
                 label='Youtube Video URL'
                 control={control}

@@ -3,10 +3,10 @@ import React from 'react'
 import BasicTableActions from 'src/components/BasicTableActions'
 
 const useGetVehicleColumns = ({
-  handleEdit,
+  handleView,
   handleDelete
 }: {
-  handleEdit: (id: number) => void
+  handleView: (id: number) => void
   handleDelete: (id: number) => void
 }) => {
   const columns = [
@@ -74,7 +74,7 @@ const useGetVehicleColumns = ({
       renderCell: (params: any) => {
         const { id } = params.row
 
-        return <BasicTableActions handleDelete={() => handleDelete(id)} handleEdit={() => handleEdit(id)} />
+        return <BasicTableActions handleDelete={() => handleDelete(id)} handleView={() => handleView(id)} />
       }
     }
   ]

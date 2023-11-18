@@ -33,7 +33,7 @@ const Vehicle = () => {
 
   const columns = useGetVehicleColumns({
     handleDelete,
-    handleEdit
+    handleView
   })
 
   function handleDelete(id: number) {
@@ -41,8 +41,8 @@ const Vehicle = () => {
     setDeleteId(id)
   }
 
-  function handleEdit (id: number) {
-    router.push(`/vehicle/add?id=${id}`)
+  function handleView(id: number) {
+    router.push(`/vehicle/preview/${id}`)
   }
 
   const { control, handleSubmit } = useForm({
@@ -65,7 +65,7 @@ const Vehicle = () => {
   const { data: vehicles, isLoading } = useGetVehicles(params)
   const vehicleData = vehicles?.data?.data
 
-  if(isLoading) {
+  if (isLoading) {
     return <FallbackSpinner />
   }
 

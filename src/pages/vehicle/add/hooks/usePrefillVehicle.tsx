@@ -27,12 +27,13 @@ const usePrefillVehicle = ({
 }) => {
   useEffect(() => {
     if (vehicleFetched) {
-      const { vehicle_specs, ...rest } = vehicle || {}
+      const { vehicle_specs, is_popular,  ...rest } = vehicle || {}
       const vehicleSpecs = transformData(vehicle_specs ?? [])
 
       reset({
         ...rest,
-        ...vehicleSpecs
+        ...vehicleSpecs,
+        is_popular: Boolean(is_popular)
       })
     }
   }, [ reset, vehicle, vehicleFetched])
