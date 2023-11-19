@@ -54,7 +54,7 @@ const SelectFormField = ({
             sx={{
               '& .MuiFormLabel-asterisk': { color: 'red' },
               '& .MuiInputBase-input.Mui-disabled': {
-                WebkitTextFillColor: '#000000'
+                WebkitTextFillColor: '#ffffff'
               }
             }}
             MenuProps={{

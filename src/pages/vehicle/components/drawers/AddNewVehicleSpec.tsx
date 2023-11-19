@@ -1,16 +1,22 @@
 import { Divider, Drawer, Grid } from '@mui/material'
-import React, { SetStateAction, useEffect } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
 import HeaderWithClose from 'src/components/drawers/HeaderWithClose'
 import AddNewVehicleSpecForm from '../AddNewVehicleSpecForm'
 import { useForm } from 'react-hook-form'
-import { useAddNewSpecToVehicle } from 'src/api/services/vehicle/post'
+import { useAddNewSpecToVehicle, useAddNewSpecValueToVehicle } from 'src/api/services/vehicle/post'
 import { useRouter } from 'next/router'
 import useCustomToast from 'src/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
-import { useUpdateSpecToVehicle } from 'src/api/services/vehicle/patch'
+import { useRemoveSpecValueFromVehicle } from 'src/api/services/vehicle/delete'
+import { useGetVehicleSpecData } from 'src/api/services/vehicle/get'
 
 const defaultValues = {
-  specification_id: ''
+  specification_id: '',
+  values: [
+    {
+      value: ''
+    }
+  ]
 }
 
 const AddNewVehicleSpec = ({
@@ -20,7 +26,7 @@ const AddNewVehicleSpec = ({
   addedSpecs,
   selectedOption,
   setSelectedOption,
-  prefillData
+  prefillId
 }: {
   open: boolean
   handleClose: () => void
@@ -28,9 +34,12 @@ const AddNewVehicleSpec = ({
   addedSpecs: any
   selectedOption: any
   setSelectedOption: React.Dispatch<SetStateAction<any>>
-  prefillData: any
+  prefillId: any
 }) => {
-  const isEdit = Boolean(prefillData)
+  const isEdit = Boolean(prefillId)
+
+  const router = useRouter()
+  const vehicleId = router?.query?.id as string
 
   const specs = !isEdit
     ? specsData?.filter(
@@ -43,80 +52,101 @@ const AddNewVehicleSpec = ({
     defaultValues
   })
 
+  const [refresh, setRefresh] = useState(0)
+
+  const { data: prefillData, isFetched } = useGetVehicleSpecData(vehicleId, prefillId?.id)
+
   useEffect(() => {
-    const specValues = prefillData?.values?.map((item: { value: string }) => {
-      return item?.value
-    })
+    if (isFetched) {
+      const specValues = prefillData?.values?.map((item: { value: string }) => {
+        return { value: item?.value }
+      })
+      console.log(prefillData, 'prefillData')
+      setValue('specification_id', prefillData?.specification_id)
+      setValue(`values`, specValues)
+      setRefresh(refresh => refresh + 1)
+    }
+  }, [isFetched, prefillData, setRefresh, setValue])
 
-    setValue('specification_id', prefillData?.specification_id)
-    setValue(`${prefillData?.specification?.name}`, specValues)
-  }, [prefillData, setValue])
-
+  const addNewSpecValue = useAddNewSpecValueToVehicle()
   const addNewSpec = useAddNewSpecToVehicle()
-  const updateSpec = useUpdateSpecToVehicle()
+  const removeSpecValue = useRemoveSpecValueFromVehicle(prefillData?.specification_id)
 
-  const mutateFn: any = isEdit ? updateSpec : addNewSpec
+  const mutateFn: any = isEdit ? addNewSpecValue : addNewSpec
 
-  const router = useRouter()
   const toast = useCustomToast()
 
   function handleOnClose() {
     reset({})
     handleClose()
     setSelectedOption(null)
+    setDeleteIds([])
   }
 
-  const vehicle_id = router?.query?.id
+  function onSubmit(data: any) {
+    const { specification_id, values } = data || {}
 
-  function onSubmit(values: any) {
-    const spec_type = selectedOption?.specification?.data_type
-    const specName = prefillData?.specification?.name
+    const specValues = prefillData?.values || []
 
-    const { specification_id, ...rest } = values || {}
-    const vehicleId = Number(vehicle_id)
-    const valuesCollection = !isEdit
-      ? Object.keys(rest)?.map((key: any) => {
-          const dataValue = Array.isArray(values[key]) ? values[key] : [values[key]]
+    const newlyAddedValues = [...specValues, ...values].filter(item => {
+      return !(
+        specValues.some((model: { value: string }) => model.value === item.value) &&
+        values.some((model: { value: string }) => model.value === item.value)
+      )
+    })
+    
+    const mapItem = isEdit ? newlyAddedValues : [1]
 
+    mapItem?.map((item: { value: string }) => {
+      const dataToSend = {
+        specification_id,
+        value: item.value,
+        parent_value_id: null
+      }
+
+      const dataToAdd = {
+        specification_id,
+        spec_type: selectedOption?.specification?.data_type,
+        is_key_feature: false,
+        values: values?.map((item: { value: string }) => {
           return {
-            values: Array.isArray(dataValue)
-              ? dataValue?.map((item: any) => ({
-                  value: item
-                }))
-              : null
+            value: item.value
           }
         })
-      : rest[specName]?.map((item: any) => ({
-          value: item
-        }))
+      }
 
-    const data = {
-      specification_id,
-      spec_type,
-      is_key_feature: false,
-      ...valuesCollection?.[0]
-    }
-
-    const dataToEdit = {
-      _method: 'put',
-      value: valuesCollection
-    }
-
-    const mutateData: any = isEdit
-      ? { id: vehicle_id, spec_id: specification_id, data: dataToEdit }
-      : { values: data, vehicle_id: vehicleId }
-
-    mutateFn.mutate(mutateData, {
-      onSuccess: () => handleSuccess()
+      const dataToMutate = isEdit
+        ? { values: dataToSend, spec_id: prefillData?.id }
+        : { values: dataToAdd, vehicle_id: vehicleId }
+      mutateFn.mutate(dataToMutate, {
+        onSuccess: () => handleSuccess()
+      })
     })
   }
 
   const queryClient = useQueryClient()
 
   function handleSuccess() {
+    // delete options if any first
+    deleteIds?.map((id: number) => {
+      removeSpecValue.mutate({
+        id
+      })
+    })
     handleOnClose()
     queryClient.invalidateQueries({ queryKey: ['vehicle'] })
     toast.success(`Specification added to vehicle`)
+  }
+
+  const [deleteIds, setDeleteIds] = useState<any>([])
+
+  function handleRemove(obj: any) {
+    if (isEdit) {
+      const objValue = obj.value
+      const addedValues = prefillData?.values || []
+      const idToDelete = addedValues?.find((item: { value: string }) => item.value === objValue)?.id
+      setDeleteIds((prevId: string[]) => [...prevId, idToDelete])
+    }
   }
 
   return (
@@ -131,7 +161,7 @@ const AddNewVehicleSpec = ({
       <HeaderWithClose title='Add More Specifications' handleClose={handleClose} />
       <Divider />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={5} padding={4}>
+        <Grid key={`refresh${refresh}`} container spacing={5} padding={4}>
           <AddNewVehicleSpecForm
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
@@ -139,6 +169,7 @@ const AddNewVehicleSpec = ({
             control={control}
             specs={specs ?? []}
             isEdit={isEdit}
+            handleRemove={handleRemove}
           />
         </Grid>
       </form>

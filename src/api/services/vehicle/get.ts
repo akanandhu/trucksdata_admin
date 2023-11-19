@@ -34,3 +34,17 @@ export const useGetVehicle = (id: string) => {
     enabled: !!id
   })
 }
+
+async function getVehicleSpecData(vehicleId: string, specId: number) {
+  const response = await axiosInstance.get(`vehicles/${vehicleId}/vehicle-specs/${specId}`)
+
+  return response?.data
+}
+
+export const useGetVehicleSpecData = (vehicleId: string, specId: number) => {
+  return useQuery({
+    queryKey: ['vehicle-spec-data', vehicleId, specId],
+    queryFn: () => getVehicleSpecData(vehicleId, specId),
+    enabled: !!specId
+  })
+}

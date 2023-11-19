@@ -100,12 +100,13 @@ const VehiclePreview = () => {
     handleDelete
   })
 
-  const [prefillData, setPrefillData] = useState<any>({})
+  const [prefillId, setPrefillId] = useState<any>({})
+
   function handleEdit(obj: any) {
     const { row } = obj || {}
     const selectedSpec = specs?.find((spec: any) => spec?.specification_id === row?.specification_id)
     setSelectedOption({ ...row, options: selectedSpec?.specification?.options })
-    setPrefillData(row)
+    setPrefillId(row)
     setOpenSpec(!openSpec)
   }
 
@@ -121,7 +122,7 @@ const VehiclePreview = () => {
   const [openSpec, setOpenSpec] = useState(false)
   function handleAddSpec() {
     setOpenSpec(!openSpec)
-    setPrefillData(null)
+    setPrefillId(null)
   }
 
   const update = useUpdateVehicle()
@@ -188,7 +189,7 @@ const VehiclePreview = () => {
         addedSpecs={vehicleSpecs ?? []}
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}
-        prefillData={prefillData}
+        prefillId={prefillId}
       />
       <DeleteConfirmModal
         idToRemove={idToRemove}

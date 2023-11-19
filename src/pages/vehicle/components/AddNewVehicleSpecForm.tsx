@@ -1,11 +1,10 @@
 import { Grid } from '@mui/material'
+import ArrayFieldDropDown from 'src/components/ArrayFieldDropDown'
+import ArraySelectFieldParent from 'src/components/ArraySelectFieldParent'
+import ArrayTextInput from 'src/components/ArrayTextInput'
 import DrawerActions from 'src/components/drawers/DrawerActions'
-import MultipleSelectFormField from 'src/components/input-fields/MultipleSelectFormField'
-import MultipleTextField from 'src/components/input-fields/MultipleTextField'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
-import { renderParentMenuItems } from 'src/components/renderParentMenuItems'
 import renderSpecs from 'src/components/renderSpecs'
-import { flattenOptions } from 'src/functions/flattenOptions'
 
 const AddNewVehicleSpecForm = ({
   control,
@@ -13,7 +12,8 @@ const AddNewVehicleSpecForm = ({
   handleClose,
   selectedOption,
   setSelectedOption,
-  isEdit
+  isEdit,
+  handleRemove
 }: {
   control: any
   specs: any
@@ -21,6 +21,7 @@ const AddNewVehicleSpecForm = ({
   selectedOption: any
   setSelectedOption: any
   isEdit: boolean
+  handleRemove?: (val: any) => void
 }) => {
   function handleSpecChange(spec: any) {
     const specId = spec.target.value
@@ -49,32 +50,25 @@ const AddNewVehicleSpecForm = ({
       </Grid>
       <Grid item xs={12}>
         {type === 'drop_down' ? (
-          <MultipleSelectFormField
-            data={options ?? []}
-            control={control}
-            label={selectedOption?.specification.name}
-            id={selectedOption?.specification.name}
-            selectedName='option'
+          <ArrayFieldDropDown
             displayKey='option'
-            valueKey='option'
+            label={selectedOption?.specification.name}
+            isSpec
+            options={options}
+            selectedName='option'
             specialValueKey='option'
-            isSpec={true}
+            valueKey='option'
+            control={control}
+            handleRemove={handleRemove}
           />
         ) : type === 'text' ? (
-          <MultipleTextField
-            control={control}
-            fieldName={selectedOption?.specification.name}
-            label={selectedOption?.specification.name}
-            textFieldType='text'
-          />
+          <ArrayTextInput control={control} handleRemove={handleRemove} />
         ) : type === 'nested_drop_down' ? (
-          <SelectFormField
-            label={selectedOption?.specification.name}
-            data={flattenOptions(options) ?? []}
-            size={'medium'}
-            renderMenuItems={renderParentMenuItems}
+          <ArraySelectFieldParent
             control={control}
-            id={selectedOption?.specification.name}
+            label={selectedOption?.specification.name}
+            options={options}
+            handleRemove={handleRemove}
           />
         ) : null}
       </Grid>

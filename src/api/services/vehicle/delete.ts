@@ -16,3 +16,11 @@ export const useDeleteVehicleSpecs = (vehicleId: number) => {
     }
   })
 }
+
+export const useRemoveSpecValueFromVehicle = (vehicleSpecId: number) => {
+  return useMutation({
+    mutationFn: ({ id }: { id: number }) => {
+      return axiosInstance.delete(`vehicle-specs/${vehicleSpecId}/values/${id}`)
+    }
+  })
+}
