@@ -28,6 +28,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/specifications',
       icon: 'tabler:file-text'
     },
+    {
+      title: 'Articles',
+      path: '/articles',
+      icon: 'tabler:article'
+    },
 
 
     // {
