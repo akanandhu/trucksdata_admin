@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material'
+import { Box,  Grid } from '@mui/material'
 import React, { useState } from 'react'
 import ErrorBox from 'src/components/ErrorBox'
 import DrawerActions from 'src/components/drawers/DrawerActions'
@@ -32,15 +32,13 @@ const ManufacturersForm = ({
     setDisplay(display + 1)
     handleClose()
   }
-
-  console.log(vehicle_types?.data?.data, 'enerySaveee')
-
+  
   return (
     <Box key={display} sx={{ p: theme => theme.spacing(0, 6, 6) }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
           <Grid item xs={12}>
-            <FileInput control={control} id='logo' multiple />
+            <FileInput control={control} id='logo' multiple label={'Logo'} />
           </Grid>
           <Grid item xs={12}>
             <TextFormField id='name' label='Manufacturer Brand Name' size='medium' required control={control} />
@@ -53,7 +51,6 @@ const ManufacturersForm = ({
               data={vehicle_types?.data?.data ?? []}
               label={<RequiredLabel text='Vehicle Types' />}
               isName
-
             />
             {errors?.vehicle_types && <ErrorBox error={errors?.vehicle_types} />}
           </Grid>
@@ -68,6 +65,9 @@ const ManufacturersForm = ({
               control={control}
             />
             {errors?.description && <ErrorBox error={errors?.description} />}
+          </Grid>
+          <Grid item xs={12}>
+            <FileInput control={control} id='banners' multiple label='Banner' />
           </Grid>
         </Grid>
         {apiError && <ErrorBox error={apiError} />}

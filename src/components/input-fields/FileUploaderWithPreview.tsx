@@ -24,10 +24,10 @@ interface Props {
   onChange: any
   multiple: boolean
   acceptFile?: boolean
+  label?: string
 }
 
 // const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
-
 
 const getPreviewImage = (value: any) => {
   let images: any[] = []
@@ -39,7 +39,7 @@ const getPreviewImage = (value: any) => {
 }
 
 const FileUploaderMultiple = (props: Props) => {
-  const { value, onChange, multiple} = props
+  const { value, onChange, multiple, label } = props
 
   // ** State
   const theme = useTheme()
@@ -81,8 +81,6 @@ const FileUploaderMultiple = (props: Props) => {
     }
   })
 
-
-
   const renderFilePreview = (file: any) => {
     const isFileArray = Boolean(file?.length)
     const fileToCheck = isFileArray ? file?.[0] : file
@@ -117,7 +115,7 @@ const FileUploaderMultiple = (props: Props) => {
       onChange(images)
     }
   }
-  console.log(value,'valueCheck')
+  console.log(value, 'valueCheck')
   const fileList = value?.map((file: any) => (
     <ListItem
       sx={{
@@ -166,7 +164,7 @@ const FileUploaderMultiple = (props: Props) => {
               backgroundColor: 'primary'
             }}
           >
-            <Typography fontWeight={700}>Upload File</Typography>
+            <Typography fontWeight={700}>Upload {label ?? 'File'}</Typography>
             {<Icon icon='tabler:upload' fontSize='1.75rem' />}
           </Box>
           <Typography sx={{ opacity: 30 }}>(Total allowed file size : 5mb)</Typography>

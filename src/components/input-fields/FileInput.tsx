@@ -9,9 +9,17 @@ interface FileInputProps {
   acceptFile?: boolean
   helperText?: string
   defaultValue?: any
+  label?: string
 }
 
-const FileInput = ({ control, id, multiple = true, acceptFile = false, defaultValue = [] }: FileInputProps) => {
+const FileInput = ({
+  control,
+  id,
+  multiple = true,
+  acceptFile = false,
+  defaultValue = [],
+  label = 'File'
+}: FileInputProps) => {
   return (
     <DropzoneWrapper>
       <Controller
@@ -20,7 +28,7 @@ const FileInput = ({ control, id, multiple = true, acceptFile = false, defaultVa
         defaultValue={defaultValue}
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         render={({ field: { ref, ...rest } }) => (
-          <FileUploaderMultiple {...rest} multiple={multiple} acceptFile={acceptFile} />
+          <FileUploaderMultiple {...rest} multiple={multiple} acceptFile={acceptFile} label={label} />
         )}
       />
     </DropzoneWrapper>

@@ -87,7 +87,7 @@ const Manufacturers = () => {
   const mutationFn: any = isEdit ? editManufacturer : addManufacturer
 
   function onSubmit(values: ManufacturersFields) {
-    const { name, description, vehicle_types: vehicleTypes, logo } = values
+    const { name, description, vehicle_types: vehicleTypes, logo, banners } = values
     const filteredObjects = vehicle_types?.data?.data?.filter((obj: { name: string }) =>
       vehicleTypes.includes(obj.name)
     )
@@ -95,6 +95,7 @@ const Manufacturers = () => {
       name,
       description,
       logo,
+      banners,
       vehicle_types: filteredObjects?.map((type: { id: string }) => type?.id)
     }
 
@@ -110,7 +111,6 @@ const Manufacturers = () => {
     setSelectedData(null)
     reset()
     mutationFn.reset()
-
   }
 
   return (
