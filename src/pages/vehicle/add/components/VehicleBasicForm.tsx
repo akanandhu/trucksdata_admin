@@ -1,9 +1,7 @@
 import { Button, FormLabel, Grid, IconButton } from '@mui/material'
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import SelectFormField from 'src/components/input-fields/SelectFormField'
 import TextFormField from 'src/components/input-fields/TextFormField'
-import { StatusRow } from 'src/fake-data/status'
-import { renderMenuItems } from 'src/components/renderStatusMenuItems'
 import FileInput from 'src/components/input-fields/FileInput'
 import { renderMenu } from 'src/components/renderMenuItemsName'
 import { renderMenuItemsTitle } from 'src/components/renderMenuItemsTitle'
@@ -13,6 +11,11 @@ import ErrorBox from 'src/components/ErrorBox'
 import CheckBoxFormField from 'src/components/CheckboxFormField'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import FaqField from 'src/components/input-fields/FaqField'
+import SearchableSelectControlled from 'src/components/input-fields/SearchableSelectField'
+import { useGetVehicleInfinite } from 'src/api/services/vehicle/get'
+import getFlatData from 'src/utils/get-data-flat'
+import { useReloadOnPageScroll } from 'src/hooks/useReloadOnScroll'
+import { useInView } from 'react-intersection-observer'
 
 const languageData = [
   {
@@ -47,13 +50,26 @@ const VehicleBasicForm = ({
     control
   })
 
-  // if (fields.length === 0) {
-  //   append({})
-  // }
-
   function handleDeleteItem(index: any) {
     remove(index)
   }
+
+  const [searchValue, setSearchValue] = useState('')
+
+  const { data, isFetched, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetVehicleInfinite({
+    doesnt_have_compare: true,
+    title: searchValue
+  })
+
+  const vehicleData = getFlatData(data)
+  const [ref, inView] = useInView()
+
+  useReloadOnPageScroll({
+    fetchNextPage,
+    inView,
+    isFetchingNextPage,
+    hasNextPage
+  })
 
   return (
     <Fragment>
@@ -106,18 +122,6 @@ const VehicleBasicForm = ({
       </Grid>
       <Grid item xs={12} sm={6}>
         <SelectFormField
-          label='Status'
-          data={StatusRow}
-          size={'medium'}
-          required
-          renderMenuItems={renderMenuItems}
-          control={control}
-          id='status'
-        />
-        {errors?.status && <ErrorBox error={errors?.status} />}
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <SelectFormField
           label='Fuel Type'
           data={energyData}
           size={'medium'}
@@ -128,6 +132,30 @@ const VehicleBasicForm = ({
         />
         {errors?.energy_source_id && <ErrorBox error={errors?.energy_source_id} />}
       </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextFormField
+          control={control}
+          id='category_name'
+          label='Category of Vehicle'
+          placeholder='Category of Vehicle'
+          size='medium'
+        />
+        {errors?.category_name && <ErrorBox error={errors?.category_name} />}
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <SearchableSelectControlled
+          control={control}
+          id={'compare_vehicle_id'}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          data={vehicleData ?? []}
+          renderMenuItems={renderMenuItemsTitle}
+          size={'medium'}
+          label='Compare To'
+          isDataFetched={isFetched}
+          refProp={ref}
+        />
+      </Grid>
       <Grid display={'flex'} flexDirection={'column'} gap={1} item xs={12}>
         <FormLabel>Images</FormLabel>
         <FileInput control={control} id='images' multiple />
@@ -136,14 +164,17 @@ const VehicleBasicForm = ({
         <FormLabel>Brochure</FormLabel>
         <FileInput control={control} id='brochure' multiple />
       </Grid>
-      <Grid mt={2} item xs={4}>
-        <CheckBoxFormField control={control as any} id='is_popular' labelAfterCheck='Is this a Popular Truck?' />
+      <Grid mt={2} item xs={6} display={'flex'} alignItems={'center'}>
+        <CheckBoxFormField control={control as any} id='visibility' labelAfterCheck='Is Visible ?' />
       </Grid>
-      <Grid mt={2} item xs={4}>
-        <CheckBoxFormField control={control as any} id='is_latest' labelAfterCheck='Is this a Latest Truck?' />
+      <Grid mt={2} item xs={6}>
+        <CheckBoxFormField control={control as any} id='is_popular' labelAfterCheck='Is this a Popular Vehicle?' />
       </Grid>
-      <Grid mt={2} item xs={4}>
-        <CheckBoxFormField control={control as any} id='is_upcoming' labelAfterCheck='Is this a Upcoming Truck?' />
+      <Grid mt={2} item xs={6}>
+        <CheckBoxFormField control={control as any} id='is_latest' labelAfterCheck='Is this a Latest Vehicle?' />
+      </Grid>
+      <Grid mt={2} item xs={6}>
+        <CheckBoxFormField control={control as any} id='is_upcoming' labelAfterCheck='Is this a Upcoming Vehicle?' />
       </Grid>
       <Grid mt={2} item xs={12}>
         {fields?.map((field, index) => {
@@ -179,8 +210,8 @@ const VehicleBasicForm = ({
         <TextFormField control={control} id='description' label='Description' multiline rows={10} size='medium' />
       </Grid>
 
-      <Grid mt={2} item xs={12}  >
-          <FaqField control={control}  />
+      <Grid mt={2} item xs={12}>
+        <FaqField control={control} />
       </Grid>
     </Fragment>
   )

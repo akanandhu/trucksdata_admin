@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { axiosInstance } from 'src/axios/axiosInstance'
 import { VehicleParamsTypes } from 'src/types/Vehicle'
 
@@ -46,5 +46,18 @@ export const useGetVehicleSpecData = (vehicleId: string, specId: number) => {
     queryKey: ['vehicle-spec-data', vehicleId, specId],
     queryFn: () => getVehicleSpecData(vehicleId, specId),
     enabled: !!specId
+  })
+}
+
+export const useGetVehicleInfinite = (params: VehicleParamsTypes | null) => {
+  return useInfiniteQuery<any>({
+    queryKey: ['vehicles-infinity', params],
+    queryFn: ({ pageParam }) => getVehicles({ ...params, page: pageParam }),
+    getNextPageParam: lastPage => {
+      const nextPage = lastPage?.data?.last_page || 1
+
+      return nextPage < lastPage?.data?.last_page ? nextPage + 1 : undefined
+    },
+    initialPageParam: 1
   })
 }

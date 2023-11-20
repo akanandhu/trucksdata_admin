@@ -33,6 +33,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/articles',
       icon: 'tabler:article'
     },
+    {
+      title: 'General Settings',
+      path: '/general-settings',
+      icon: 'tabler:settings'
+    },
 
 
     // {

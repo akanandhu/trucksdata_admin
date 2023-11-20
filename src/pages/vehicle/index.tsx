@@ -49,8 +49,19 @@ const Vehicle = () => {
     defaultValues
   })
   const [params, setParams] = useState<VehicleParamsTypes | null>({
-    title: ''
+    title: '',
+    page: 1,
+    pageSize: 15
   })
+
+  function handlePaginationModelChange(paginationModel: any) {
+    const { page, pageSize } = paginationModel
+
+    setParams({
+      page: page + 1, 
+      pageSize: pageSize,
+    });
+  }
 
   function onSubmit(values: any) {
     setParams({
@@ -64,7 +75,7 @@ const Vehicle = () => {
 
   const { data: vehicles, isLoading } = useGetVehicles(params)
   const vehicleData = vehicles?.data?.data
-
+  console.log(vehicles, 'vehicleData')
   if (isLoading) {
     return <FallbackSpinner />
   }
@@ -79,7 +90,16 @@ const Vehicle = () => {
 
         <TableHeader title='Vehicle' handleNew={handleAdd} paddingX={16} />
         <Box sx={{ height: '100%' }}>
-          <DataGrid disableRowSelectionOnClick columns={columns} pageSizeOptions={[]} rows={vehicleData ?? []} />
+          <DataGrid
+            disableRowSelectionOnClick
+            columns={columns}
+            rows={vehicleData ?? []}
+            rowCount={vehicles?.data?.total ?? 0}
+            paginationMode='server'
+            paginationModel={{ page: params?.page - 1, pageSize: params?.pageSize }}
+            onPaginationModelChange={handlePaginationModelChange}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 15 } } }}
+          />
         </Box>
       </Card>
       <DeleteConfirmModal

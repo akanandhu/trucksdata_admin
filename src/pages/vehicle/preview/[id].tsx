@@ -29,14 +29,20 @@ const defaultValues: VehicleSubmitTypes = {
   max_price: 0,
   price_unit: 'Rs',
   title: '',
-  status: '',
   video_links: [
     {
       url: '',
       language: ''
     }
   ],
-  series_id: ''
+  series_id: '',
+  visibility: true,
+  category_name: '',
+  compare_vehicle_id: '',
+  faq: [],
+  is_latest: false,
+  is_popular: false,
+  is_upcoming: false
 }
 
 const VehiclePreview = () => {
@@ -109,7 +115,6 @@ const VehiclePreview = () => {
     setPrefillId(row)
     setOpenSpec(!openSpec)
   }
-
 
   const [openDelete, setOpenDelete] = useState(false)
   const [idToRemove, setIdToRemove] = useState<any>('')

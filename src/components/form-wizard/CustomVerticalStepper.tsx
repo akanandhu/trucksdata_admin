@@ -94,9 +94,12 @@ const defaultValues: VehicleSubmitTypes = {
   max_price: 0,
   price_unit: 'Rs',
   title: '',
-  status: '',
   video_links: [],
-  series_id: ''
+  series_id: '',
+  visibility: true,
+  faq: [],
+  category_name: '',
+  compare_vehicle_id: ''
 }
 
 const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
@@ -175,11 +178,14 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         is_latest,
         is_upcoming,
         vehicle_specs,
-        status,
+        faq,
+        visibility,
+        category_name,
+        compare_vehicle_id,
         ...rest
       } = values
 
-      console.log(price_unit, vehicle_specs, status, is_latest, is_upcoming)
+      console.log(price_unit, vehicle_specs, is_latest, is_upcoming, rest, 'restCheck')
 
       const specificationData = getSpecValues(rest, specs)
 
@@ -196,8 +202,11 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         description,
         video_links,
         brochure,
-        price_unit: 'Lakh',
-        status,
+        price_unit: 'Rs',
+        faq,
+        visibility,
+        category_name,
+        compare_vehicle_id,
         vehicle_specs: specificationData
       }
 

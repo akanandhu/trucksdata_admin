@@ -8,7 +8,6 @@ export interface VehicleSubmitTypes {
   max_price?: any
   price_unit: string
   images: string[]
-  status: string
   is_popular?: boolean
   is_latest?: boolean
   is_upcoming?: boolean
@@ -16,6 +15,11 @@ export interface VehicleSubmitTypes {
   video_links: Videolink[]
   brochure: Brochure | []
   vehicle_specs?: Vehiclespec[]
+  visibility: boolean
+  faq: []
+  category_name: string
+  compare_vehicle_id: string
+
 }
 
 export interface Vehiclespec {
