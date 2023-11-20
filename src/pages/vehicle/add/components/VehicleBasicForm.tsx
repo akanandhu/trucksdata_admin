@@ -12,6 +12,7 @@ import { VehicleSubmitTypes } from 'src/types/VehicleSubmitTypes'
 import ErrorBox from 'src/components/ErrorBox'
 import CheckBoxFormField from 'src/components/CheckboxFormField'
 import { GridCloseIcon } from '@mui/x-data-grid'
+import FaqField from 'src/components/input-fields/FaqField'
 
 const languageData = [
   {
@@ -46,9 +47,9 @@ const VehicleBasicForm = ({
     control
   })
 
-  if (fields.length === 0) {
-    append({ language: '', url: '' })
-  }
+  // if (fields.length === 0) {
+  //   append({})
+  // }
 
   function handleDeleteItem(index: any) {
     remove(index)
@@ -170,12 +171,16 @@ const VehicleBasicForm = ({
           )
         })}
         <Button sx={{ marginTop: 4 }} variant='outlined' onClick={() => append({ url: '', language: '' })}>
-          Add Link
+          Add Youtube Link
         </Button>
       </Grid>
 
       <Grid mt={2} item xs={12}>
         <TextFormField control={control} id='description' label='Description' multiline rows={10} size='medium' />
+      </Grid>
+
+      <Grid mt={2} item xs={12}  >
+          <FaqField control={control}  />
       </Grid>
     </Fragment>
   )

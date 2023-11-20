@@ -8,6 +8,7 @@ import { Control, UseFormHandleSubmit } from 'react-hook-form'
 import { ManufacturersFields } from 'src/types/Manufacturers'
 import RequiredLabel from 'src/components/RequiredLable'
 import FileInput from 'src/components/input-fields/FileInput'
+import FaqField from 'src/components/input-fields/FaqField'
 
 const ManufacturersForm = ({
   handleClose,
@@ -32,7 +33,7 @@ const ManufacturersForm = ({
     setDisplay(display + 1)
     handleClose()
   }
-  
+
   return (
     <Box key={display} sx={{ p: theme => theme.spacing(0, 6, 6) }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -68,6 +69,9 @@ const ManufacturersForm = ({
           </Grid>
           <Grid item xs={12}>
             <FileInput control={control} id='banners' multiple label='Banner' />
+          </Grid>
+          <Grid item xs={12}>
+            <FaqField control={control} isManufacturer />
           </Grid>
         </Grid>
         {apiError && <ErrorBox error={apiError} />}

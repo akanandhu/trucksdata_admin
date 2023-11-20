@@ -95,12 +95,7 @@ const defaultValues: VehicleSubmitTypes = {
   price_unit: 'Rs',
   title: '',
   status: '',
-  video_links: [
-    {
-      url: '',
-      language: ''
-    }
-  ],
+  video_links: [],
   series_id: ''
 }
 

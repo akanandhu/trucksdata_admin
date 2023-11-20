@@ -38,7 +38,7 @@ const ManufacturersDrawer = ({
       variant='temporary'
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <HeaderWithClose title='Add Manufacturer' handleClose={handleClose} />
       <ManufacturersForm
