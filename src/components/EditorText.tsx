@@ -12,8 +12,9 @@ const EditorText = ({ text, setText }: { text: string; setText: React.Dispatch<S
       [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
       ['link', 'image'],
       ['clean'],
-      [{ color: ['black'] }, { background: [] }]
-    ]
+      [{ color: [] }, { background: [] }]
+    ],
+   
   }
 
   const formats = [

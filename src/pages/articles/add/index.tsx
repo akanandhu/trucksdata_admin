@@ -9,7 +9,7 @@ const ArticlesAdd = () => {
   console.log(value, 'valueCheck')
 
   return (
-    <Grid sx={{ p: 6, minHeight: '50vh', backgroundColor: 'white' }}>
+    <Grid sx={{ p: 6, minHeight: '50vh', backgroundColor:'white', color: 'black'  }}>
       <EditorText text={value} setText={setValue} />
     </Grid>
   )
