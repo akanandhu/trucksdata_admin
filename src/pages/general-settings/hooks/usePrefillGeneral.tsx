@@ -13,7 +13,7 @@ const usePrefillGeneral = ({
 }) => {
   useEffect(() => {
     if (isFetched) {
-      const { banners, contact_number, email, faq, heading, logo, subheading } = data
+      const { banners, contact_number, email, faq, heading, logo, subheading } = data || {}
 
       reset({
         banners,

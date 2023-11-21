@@ -11,6 +11,7 @@ import { useGetSpecCategories } from 'src/api/services/specifications/category/g
 import ArrayTextField from 'src/components/ArrayTextField'
 import { renderSpecMenuItems } from 'src/components/renderSpecCategoryMenu'
 import NestedArrayField from 'src/components/NestedArrayField'
+import CheckBoxFormField from 'src/components/CheckboxFormField'
 
 const dataTypes = [
   {
@@ -118,6 +119,9 @@ const SpecForm = ({
               <NestedArrayField append={append} control={control} fields={fields} remove={remove} />
             </Grid>
           )}
+          <Grid item xs={12}>
+            <CheckBoxFormField control={control as any} id='is_key_feature' labelAfterCheck='Show as Highlights?' />
+          </Grid>
         </Grid>
         {apiError && <ErrorBox error={apiError} />}
         <DrawerActions addDisabled={mutationLoading} handleClose={handleClose} />

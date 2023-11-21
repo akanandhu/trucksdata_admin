@@ -22,7 +22,8 @@ const defaultValues: SpecFields = {
   name: '',
   data_type: 'text',
   options: null,
-  specification_category_id: ''
+  specification_category_id: '',
+  is_key_feature: false
 }
 
 const Specifications = () => {
@@ -86,7 +87,8 @@ const Specifications = () => {
       data_type: 'text',
       name: '',
       options: null,
-      specification_category_id: ''
+      specification_category_id: '',
+      is_key_feature: false
     })
     mutationFn.reset()
     setDeleteIds([])
@@ -147,11 +149,12 @@ const Specifications = () => {
   }
 
   function onSubmit(values: SpecFields) {
-    const { name, data_type, options, specification_category_id } = values
+    const { name, data_type, options, specification_category_id, is_key_feature } = values
     const specData = {
       name,
       data_type,
       specification_category_id,
+      is_key_feature, 
       ...((data_type === 'drop_down' || data_type === 'nested_drop_down') && { options: options })
     }
     const queryParams: any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }

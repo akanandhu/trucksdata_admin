@@ -33,6 +33,7 @@ export interface SpecFields {
   specification_category_id: number | string
   data_type: FieldDataTypes
   options: Options[] | null
+  is_key_feature: boolean
 }
 
 export interface SpecObject {
