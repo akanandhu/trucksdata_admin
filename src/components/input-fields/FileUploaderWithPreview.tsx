@@ -115,8 +115,7 @@ const FileUploaderMultiple = (props: Props) => {
       onChange(images)
     }
   }
-  console.log(value, 'valueCheck')
-  const fileList = value?.map((file: any) => (
+  const fileList = Array.isArray(value) && value?.map((file: any) => (
     <ListItem
       sx={{
         marginTop: theme.spacing(3.5),

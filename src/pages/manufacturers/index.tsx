@@ -21,7 +21,10 @@ import { useGetVehicleClasses } from 'src/api/services/vehicle-class/get'
 const defaultValues = {
   name: '',
   vehicle_types: [],
-  description: ''
+  description: '',
+  logo: '',
+  faq: [],
+  banners: ''
 }
 
 const schema = yup.object().shape({
@@ -109,7 +112,15 @@ const Manufacturers = () => {
   function handleClose() {
     setOpenDrawer(!openDrawer)
     setSelectedData(null)
-    reset()
+    reset({
+      banners: '',
+      logo: '',
+      description: '',
+      id: '',
+      name: '',
+      vehicle_types: [],
+      faq: ''
+    })
     mutationFn.reset()
   }
 

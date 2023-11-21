@@ -57,6 +57,7 @@ const ArticlesAdd = () => {
     })
     formData.append('heading', values?.heading)
     formData.append('html_content', value)
+    isEdit && formData.append('_method', 'put')
 
     const mutationData:any = isEdit ? { id: articleId, data: formData } : formData
     mutateFn.mutate(mutationData, {

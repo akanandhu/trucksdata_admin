@@ -13,4 +13,5 @@ export type ManufacturersFields = {
     banners: any
     vehicle_types: any[]
     description: string
+    faq: any
 }
