@@ -50,6 +50,7 @@ import getSpecValues from 'src/pages/vehicle/add/functions/getSpecValue'
 import { useAddVehicle } from 'src/api/services/vehicle/post'
 import { useRouter } from 'next/router'
 import { useQueryClient } from '@tanstack/react-query'
+import { errorMessageParser } from 'src/utils/error-message-parser'
 
 const StepperHeaderContainer = styled(CardContent)<CardContentProps>(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -205,13 +206,14 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         price_unit: 'Rs',
         faq,
         visibility,
-        category_name,
+        ...(category_name !== '' && { category_name }),
         compare_vehicle_id,
         vehicle_specs: specificationData
       }
 
       mutationFn.mutate(vehicle, {
-        onSuccess: () => handleSuccess()
+        onSuccess: () => handleSuccess(),
+        onError: err => toast.error(errorMessageParser(err))
       })
     }
   }
