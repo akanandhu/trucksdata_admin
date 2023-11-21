@@ -44,7 +44,7 @@ const VehicleSearchHeader = ({ control, handleSubmit, onSubmit, onClear }: any) 
               size={'small'}
               renderMenuItems={renderMenu}
               control={control}
-              id='vehicle_class'
+              id='vehicle_type'
             />
           </FormControl>
         </Grid>
