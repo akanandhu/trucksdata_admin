@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import { format } from 'date-fns'
 import React from 'react'
 import BasicTableActions from 'src/components/BasicTableActions'
 
@@ -22,12 +23,12 @@ const useGetArticleCols = ({
       minWidth: 220,
       headerName: 'Article Heading',
       renderCell: ({ row }: any) => {
-        const { title } = row
+        const { heading } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
-              {title}
+              {heading}
             </Typography>
           </Box>
         )
@@ -35,15 +36,16 @@ const useGetArticleCols = ({
     },
     {
       flex: 0.1,
-      field: 'author',
+      field: 'created_at',
       minWidth: 50,
-      headerName: 'Author',
+      headerName: 'Published On',
       renderCell: ({ row }: any) => {
-        const { vehicle_type } = row || {}
+        const { created_at } = row || {}
+        console.log(row, 'rowCheck')
 
         return (
           <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
-            {vehicle_type?.name}
+            {format(new Date(created_at), 'dd/MM/yyyy')}
           </Typography>
         )
       }

@@ -1,25 +1,30 @@
 import { Box, Card, CardHeader, Divider, Grid } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import React from 'react'
+import React, { useState } from 'react'
 import TableHeader from 'src/components/TableHeader'
 import useGetArticleCols from './hooks/useGetArticleCols'
 import { useRouter } from 'next/router'
+import { useGetArticles } from 'src/api/services/articles/get'
+import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
+import { useRemoveArticle } from 'src/api/services/articles/delete'
 
 const Articles = () => {
-
-    const router = useRouter()
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const [idToRemove, setIdToRemove] = useState<any>('')
+  const remove = useRemoveArticle()
 
   function handleAdd() {
-    console.log('')
     router.push('/articles/add')
   }
 
   function handleDelete(id: number) {
-    console.log(id)
+    setIdToRemove(id)
+    setOpen(!open)
   }
 
   function handleEdit(id: number) {
-    console.log(id)
+    router.push(`articles/add?id=${id}`)
   }
 
   const columns = useGetArticleCols({
@@ -27,28 +32,40 @@ const Articles = () => {
     handleEdit
   })
 
-  return (
-    <Grid>
-      <Card>
-        <CardHeader title='Articles' />
-        <Divider />
-        <Divider />
+  const { data: articles } = useGetArticles()
+  const articleList = articles?.data || []
 
-        <TableHeader title='Article' handleNew={handleAdd} paddingX={7.5} />
-        <Box sx={{ height: '100%' }}>
-          <DataGrid
-            autoHeight
-            pagination
-            disableRowSelectionOnClick
-            rows={[]}
-            columns={columns}
-            rowCount={0}
-            paginationMode='server'
-            pageSizeOptions={[]}
-          />
-        </Box>
-      </Card>
-    </Grid>
+  return (
+    <Card>
+      <Grid>
+        <Card>
+          <CardHeader title='Articles' />
+          <Divider />
+          <Divider />
+
+          <TableHeader title='Article' handleNew={handleAdd} paddingX={7.5} />
+          <Box sx={{ height: '100%' }}>
+            <DataGrid
+              autoHeight
+              pagination
+              disableRowSelectionOnClick
+              rows={articleList ?? []}
+              columns={columns}
+              rowCount={0}
+              paginationMode='server'
+              pageSizeOptions={[]}
+            />
+          </Box>
+        </Card>
+      </Grid>
+      <DeleteConfirmModal
+        idToRemove={idToRemove}
+        open={open}
+        remove={remove}
+        routeToInvalidate='articles'
+        setOpen={setOpen}
+      />
+    </Card>
   )
 }
 

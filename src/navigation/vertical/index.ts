@@ -38,15 +38,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/general-settings',
       icon: 'tabler:settings'
     },
-
-
-    // {
-    //   path: '/acl',
-    //   action: 'read',
-    //   subject: 'acl-page',
-    //   title: 'Access Control',
-    //   icon: 'tabler:shield',
-    // }
+    {
+      title: 'User Data',
+      path: '/users',
+      icon: 'tabler:user'
+    }
   ]
 }
 
