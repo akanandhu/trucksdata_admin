@@ -13,7 +13,8 @@ const AddNewVehicleSpecForm = ({
   selectedOption,
   setSelectedOption,
   isEdit,
-  handleRemove
+  handleRemove,
+  arrayFields
 }: {
   control: any
   specs: any
@@ -21,7 +22,8 @@ const AddNewVehicleSpecForm = ({
   selectedOption: any
   setSelectedOption: any
   isEdit: boolean
-  handleRemove?: (val: any) => void
+  handleRemove?: (val: any, index: number) => void
+  arrayFields: any
 }) => {
   function handleSpecChange(spec: any) {
     const specId = spec.target.value
@@ -60,15 +62,17 @@ const AddNewVehicleSpecForm = ({
             valueKey='option'
             control={control}
             handleRemove={handleRemove}
+            arrayFields={arrayFields}
           />
         ) : type === 'text' ? (
-          <ArrayTextInput control={control} handleRemove={handleRemove} />
+          <ArrayTextInput control={control} arrayFields={arrayFields} handleRemove={handleRemove} />
         ) : type === 'nested_drop_down' ? (
           <ArraySelectFieldParent
             control={control}
             label={selectedOption?.specification.name}
             options={options}
             handleRemove={handleRemove}
+            arrayFields={arrayFields}
           />
         ) : null}
       </Grid>

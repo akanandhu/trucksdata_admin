@@ -2,13 +2,14 @@ import { Divider, Drawer, Grid } from '@mui/material'
 import React, { SetStateAction, useEffect, useState } from 'react'
 import HeaderWithClose from 'src/components/drawers/HeaderWithClose'
 import AddNewVehicleSpecForm from '../AddNewVehicleSpecForm'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useAddNewSpecToVehicle, useAddNewSpecValueToVehicle } from 'src/api/services/vehicle/post'
 import { useRouter } from 'next/router'
 import useCustomToast from 'src/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRemoveSpecValueFromVehicle } from 'src/api/services/vehicle/delete'
 import { useGetVehicleSpecData } from 'src/api/services/vehicle/get'
+import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 
 const defaultValues = {
   specification_id: '',
@@ -48,10 +49,17 @@ const AddNewVehicleSpec = ({
       )
     : specsData
 
-  const { control, reset, handleSubmit, setValue } = useForm<any>({
+  const { control, reset, handleSubmit, setValue, watch } = useForm<any>({
     defaultValues
   })
 
+  const arrayFields = useFieldArray({
+    name: 'values',
+    control
+  })
+
+  const [values] = watch(['values'])
+  console.log(values, 'valuessssssssss')
   const [refresh, setRefresh] = useState(0)
 
   const { data: prefillData, isFetched } = useGetVehicleSpecData(vehicleId, prefillId?.id)
@@ -61,7 +69,6 @@ const AddNewVehicleSpec = ({
       const specValues = prefillData?.values?.map((item: { value: string }) => {
         return { value: item?.value }
       })
-      console.log(prefillData, 'prefillData')
       setValue('specification_id', prefillData?.specification_id)
       setValue(`values`, specValues)
       setRefresh(refresh => refresh + 1)
@@ -87,14 +94,9 @@ const AddNewVehicleSpec = ({
     const { specification_id, values } = data || {}
 
     const specValues = prefillData?.values || []
+    const specLength = specValues?.length
+    const newlyAddedValues = values?.slice(specLength)
 
-    const newlyAddedValues = [...specValues, ...values].filter(item => {
-      return !(
-        specValues.some((model: { value: string }) => model.value === item.value) &&
-        values.some((model: { value: string }) => model.value === item.value)
-      )
-    })
-    
     const mapItem = isEdit ? newlyAddedValues : [1]
 
     mapItem?.map((item: { value: string }) => {
@@ -127,26 +129,33 @@ const AddNewVehicleSpec = ({
   const queryClient = useQueryClient()
 
   function handleSuccess() {
-    // delete options if any first
-    deleteIds?.map((id: number) => {
-      removeSpecValue.mutate({
-        id
-      })
-    })
     handleOnClose()
     queryClient.invalidateQueries({ queryKey: ['vehicle'] })
-    toast.success(`Specification added to vehicle`)
+    toast.success(`Specification ${isEdit ? 'updted' : 'added'} to vehicle`)
   }
 
   const [deleteIds, setDeleteIds] = useState<any>([])
+  const [openDelete, setOpenDelete] = useState(false)
+  const [indexToDelete, setIndexToDelete] = useState<any>('')
 
-  function handleRemove(obj: any) {
+  function handleRemove(obj: any, index: number) {
     if (isEdit) {
-      const objValue = obj.value
-      const addedValues = prefillData?.values || []
-      const idToDelete = addedValues?.find((item: { value: string }) => item.value === objValue)?.id
-      setDeleteIds((prevId: string[]) => [...prevId, idToDelete])
+      const addedSpecsLength = prefillData?.values?.length || 0
+      if (addedSpecsLength < index) {
+        arrayFields.remove(indexToDelete)
+      } else {
+        const idToDelete = prefillData?.values?.[index]?.id
+        setOpenDelete(!openDelete)
+        setDeleteIds(idToDelete)
+        setIndexToDelete(index)
+      }
+    } else {
+      arrayFields.remove(index)
     }
+  }
+  function handleDeleteSuccess() {
+    arrayFields.remove(indexToDelete)
+    queryClient.invalidateQueries({ queryKey: ['vehicle'] })
   }
 
   return (
@@ -170,9 +179,18 @@ const AddNewVehicleSpec = ({
             specs={specs ?? []}
             isEdit={isEdit}
             handleRemove={handleRemove}
+            arrayFields={arrayFields}
           />
         </Grid>
       </form>
+      <DeleteConfirmModal
+        idToRemove={deleteIds}
+        open={openDelete}
+        setOpen={setOpenDelete}
+        remove={removeSpecValue}
+        routeToInvalidate='vehicle-spec-data'
+        handleOnSuccess={handleDeleteSuccess}
+      />
     </Drawer>
   )
 }

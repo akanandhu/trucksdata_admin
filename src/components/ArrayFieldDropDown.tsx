@@ -1,5 +1,4 @@
 import React from 'react'
-import { useFieldArray } from 'react-hook-form'
 import { Grid, IconButton, Tooltip } from '@mui/material'
 import SelectFormField from './input-fields/SelectFormField'
 import { renderOptions } from './renderOptions'
@@ -14,19 +13,17 @@ interface Props {
   valueKey: string
   specialValueKey: string
   isSpec: boolean
-  handleRemove?: (field: any) => void
+  handleRemove?: (field: any, index: number) => void
+  arrayFields?: any
 }
 
 const ArrayFieldDropDown = (props: Props) => {
-  const { control, options, handleRemove } = props
-  const { fields, append, remove } = useFieldArray({
-    name: 'values',
-    control
-  })
+  const { control, options, handleRemove, arrayFields } = props
+
+  const { fields, append } = arrayFields || {}
 
   function handleDelete(index: number, field: any) {
-    remove(index)
-    handleRemove &&  handleRemove(field)
+    handleRemove && handleRemove(field, index)
   }
 
   if (fields.length === 0) {
@@ -35,7 +32,7 @@ const ArrayFieldDropDown = (props: Props) => {
 
   return (
     <div>
-      {fields?.map((field, index) => {
+      {fields?.map((field: any, index: any) => {
         return (
           <Grid display={'flex'} marginY={4} key={index}>
             <SelectFormField

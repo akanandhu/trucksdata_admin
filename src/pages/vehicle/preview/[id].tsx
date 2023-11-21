@@ -57,7 +57,7 @@ const VehiclePreview = () => {
     control,
     reset,
     watch,
-    handleSubmit,
+    handleSubmit, 
     formState: { errors }
   } = useForm({
     defaultValues,

@@ -19,7 +19,8 @@ const DeleteConfirmModal = ({
   idToRemove,
   optionalRouteToInvalidate,
   deleteLabel,
-  successMessage
+  successMessage,
+  handleOnSuccess
 }: {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -31,6 +32,7 @@ const DeleteConfirmModal = ({
   fourthOptionalInvalidate?: string
   deleteLabel?: string
   successMessage?: string
+  handleOnSuccess?: () => void
 }) => {
   // ** State
 
@@ -47,8 +49,9 @@ const DeleteConfirmModal = ({
       onSuccess: () => {
         toast.success(`${successMessage ?? 'Delete success'}`)
         handleClose()
-        queryClient.invalidateQueries({queryKey: [routeToInvalidate]})
-        queryClient.invalidateQueries({queryKey: [optionalRouteToInvalidate]})
+        queryClient.invalidateQueries({ queryKey: [routeToInvalidate] })
+        queryClient.invalidateQueries({ queryKey: [optionalRouteToInvalidate] })
+        handleOnSuccess && handleOnSuccess()
       },
       onError: (err: any) => {
         const errMsg = errorMessageParser(err)

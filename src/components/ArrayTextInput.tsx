@@ -1,24 +1,20 @@
 import React from 'react'
-import { useFieldArray } from 'react-hook-form'
 import { Grid, IconButton, Tooltip } from '@mui/material'
 import { GridAddIcon, GridCloseIcon } from '@mui/x-data-grid'
 import TextFormField from './input-fields/TextFormField'
 
 interface Props {
   control: any
-  handleRemove?: (field: any) => void
+  handleRemove?: (field: any, index: number) => void
+  arrayFields?: any
 }
 
 const ArrayTextInput = (props: Props) => {
-  const { control, handleRemove } = props
-  const { fields, append, remove } = useFieldArray({
-    name: 'values',
-    control
-  })
+  const { control, handleRemove, arrayFields } = props
+  const { fields, append } = arrayFields || {}
 
   function handleDelete(index: number, field: any) {
-    remove(index)
-    handleRemove && handleRemove(field)
+    handleRemove && handleRemove(field, index)
   }
 
   if (fields.length === 0) {
@@ -27,7 +23,7 @@ const ArrayTextInput = (props: Props) => {
 
   return (
     <div>
-      {fields?.map((field, index) => {
+      {fields?.map((field: any, index: number) => {
         return (
           <Grid display={'flex'} marginY={4} key={index}>
             <TextFormField
