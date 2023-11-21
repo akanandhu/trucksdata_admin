@@ -33,7 +33,8 @@ const Specifications = () => {
     name: '',
     data_type: 'text',
     options: null,
-    specification_category_id: ''
+    specification_category_id: '',
+    is_key_feature: false
   })
   const [openDrawer, setOpenDrawer] = useState(false)
   const [deleteIds, setDeleteIds] = useState<any>([])
