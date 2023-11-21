@@ -1,6 +1,5 @@
 import { Box, Card, CardHeader, Divider, Grid } from '@mui/material'
 import TableHeader from 'src/components/TableHeader'
-
 import VehicleSearchHeader from './components/VehicleSearchHeader'
 import { useRouter } from 'next/router'
 import { DataGrid } from '@mui/x-data-grid'
@@ -12,8 +11,6 @@ import { VehicleParamsTypes } from 'src/types/Vehicle'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import { useRemoveVehicle } from 'src/api/services/vehicle/delete'
 import FallbackSpinner from 'src/@core/components/spinner'
-
-// import { useState } from "react"
 
 const defaultValues = {
   title: ''
@@ -48,33 +45,26 @@ const Vehicle = () => {
   const { control, handleSubmit, reset } = useForm({
     defaultValues
   })
+
   const [params, setParams] = useState<VehicleParamsTypes | null>({
-    title: '',
     page: 1,
     pageSize: 15
   })
-
-  function handlePaginationModelChange(paginationModel: any) {
-    const { page, pageSize } = paginationModel
-
-    setParams({
-      page: page + 1, 
-      pageSize: pageSize,
-    });
-  }
+  const [filter, setFilter] = useState({})
 
   function onSubmit(values: any) {
-    setParams({
-      ...values
-    })
+    setFilter({...values})
   }
 
   function onClear() {
-    setParams(null)
     reset()
+    setFilter({
+      title: null,
+      vehicle_class_id: null
+    })
   }
 
-  const { data: vehicles, isLoading } = useGetVehicles(params)
+  const { data: vehicles, isLoading } = useGetVehicles({...params, ...filter})
   const vehicleData = vehicles?.data?.data
 
   if (isLoading) {
@@ -98,7 +88,7 @@ const Vehicle = () => {
             rowCount={vehicles?.data?.total || 0}
             paginationMode='server'
             paginationModel={{ page: params?.page - 1, pageSize: params?.pageSize }}
-            onPaginationModelChange={handlePaginationModelChange}
+            onPaginationModelChange={setParams}
             initialState={{ pagination: { paginationModel: { page: 0, pageSize: 15 } } }}
           />
         </Box>
