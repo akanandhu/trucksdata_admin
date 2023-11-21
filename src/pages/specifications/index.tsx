@@ -17,6 +17,8 @@ import { useDeleteSpec } from 'src/api/services/specifications/delete'
 import { useDeleteSpecOpts } from 'src/api/services/specifications/options/delete'
 import { useAddSpecOption } from 'src/api/services/specifications/options/post'
 import FallbackSpinner from 'src/@core/components/spinner'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 const defaultValues: SpecFields = {
   name: '',
@@ -25,6 +27,13 @@ const defaultValues: SpecFields = {
   specification_category_id: '',
   is_key_feature: false
 }
+
+const schema = yup.object().shape({
+  name: yup.string().required('Specification Name is required'),
+  data_type: yup.string().required('Data Type is required'),
+  specification_category_id: yup.string().required('Specification Category is required'),
+  is_key_feature: yup.boolean()
+})
 
 const Specifications = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(false)
@@ -47,9 +56,10 @@ const Specifications = () => {
     watch,
     reset
   } = useForm<SpecFields>({
-    defaultValues
+    defaultValues,
+    resolver: yupResolver(schema)
   })
-
+  console.log(errors, 'errorCheck')
   const [data_type] = watch(['data_type'])
 
   const options = useFieldArray({
@@ -155,7 +165,7 @@ const Specifications = () => {
       name,
       data_type,
       specification_category_id,
-      is_key_feature, 
+      is_key_feature,
       ...((data_type === 'drop_down' || data_type === 'nested_drop_down') && { options: options })
     }
     const queryParams: any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
