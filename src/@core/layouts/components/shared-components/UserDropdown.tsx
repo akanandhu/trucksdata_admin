@@ -53,9 +53,9 @@ const UserDropdown = (props: Props) => {
   // ** Hooks
   const router = useRouter()
   const { logout } = useAuth()
-  const {data: users } = useGetUser()
+  const { data: users } = useGetUser()
   const userData = users?.data?.user
-  const {name, email} = userData || {}
+  const { name, email } = userData || {}
 
   // ** Vars
   const { direction } = settings
@@ -90,6 +90,11 @@ const UserDropdown = (props: Props) => {
     handleDropdownClose()
   }
 
+  function handleSettings() {
+    router.push('/general-settings')
+    handleDropdownClose()
+  }
+
   return (
     <Fragment>
       <Badge
@@ -102,12 +107,7 @@ const UserDropdown = (props: Props) => {
           horizontal: 'right'
         }}
       >
-        <Avatar
-          alt={name}
-          onClick={handleDropdownOpen}
-          sx={{ width: 40, height: 40 }}
-          src='/'
-        />
+        <Avatar alt={name} onClick={handleDropdownOpen} sx={{ width: 40, height: 40 }} src='/' />
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -136,7 +136,7 @@ const UserDropdown = (props: Props) => {
           </Box>
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleSettings()}>
           <Box sx={styles}>
             <Icon icon='tabler:settings' />
             Settings

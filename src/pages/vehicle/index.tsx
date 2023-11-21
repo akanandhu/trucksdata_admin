@@ -45,7 +45,7 @@ const Vehicle = () => {
     router.push(`/vehicle/preview/${id}`)
   }
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     defaultValues
   })
   const [params, setParams] = useState<VehicleParamsTypes | null>({
@@ -71,11 +71,12 @@ const Vehicle = () => {
 
   function onClear() {
     setParams(null)
+    reset()
   }
 
   const { data: vehicles, isLoading } = useGetVehicles(params)
   const vehicleData = vehicles?.data?.data
-  console.log(vehicles, 'vehicleData')
+
   if (isLoading) {
     return <FallbackSpinner />
   }
@@ -93,8 +94,8 @@ const Vehicle = () => {
           <DataGrid
             disableRowSelectionOnClick
             columns={columns}
-            rows={vehicleData ?? []}
-            rowCount={vehicles?.data?.total ?? 0}
+            rows={vehicleData || []}
+            rowCount={vehicles?.data?.total || 0}
             paginationMode='server'
             paginationModel={{ page: params?.page - 1, pageSize: params?.pageSize }}
             onPaginationModelChange={handlePaginationModelChange}
