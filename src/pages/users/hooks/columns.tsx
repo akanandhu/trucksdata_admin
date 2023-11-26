@@ -1,11 +1,13 @@
 import { Box, Grid, Typography } from '@mui/material'
 import React from 'react'
-import { renderName } from 'src/utils/render-avatar'
 
 interface RowTypes {
   id: string
   name: string
-  vehicle_types: any[]
+  state: string
+  district: string
+  phone: string
+  email: string
 }
 
 interface ParamTypes {
@@ -14,7 +16,6 @@ interface ParamTypes {
 
 const useGetUserCols = () => {
   const columns = [
-   
     {
       flex: 0.1,
       field: 'name',
@@ -25,7 +26,6 @@ const useGetUserCols = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderName(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 700 }}>
                 {name}
@@ -41,13 +41,7 @@ const useGetUserCols = () => {
       minWidth: 50,
       headerName: 'State',
       renderCell: ({ row }: ParamTypes) => {
-        console.log(row, 'rowCheck')
-
-        return (
-          <Grid>
-           
-          </Grid>
-        )
+        return <Grid>{row?.state ?? ''}</Grid>
       }
     },
     {
@@ -56,28 +50,7 @@ const useGetUserCols = () => {
       minWidth: 50,
       headerName: 'District',
       renderCell: ({ row }: ParamTypes) => {
-        console.log(row, 'rowCheck')
-
-        return (
-          <Grid>
-           
-          </Grid>
-        )
-      }
-    },
-    {
-      flex: 0.1,
-      field: 'phone',
-      minWidth: 50,
-      headerName: 'Phone',
-      renderCell: ({ row }: ParamTypes) => {
-        console.log(row, 'rowCheck')
-
-        return (
-          <Grid>
-           
-          </Grid>
-        )
+        return <Grid>{row?.district}</Grid>
       }
     },
     {
@@ -86,13 +59,7 @@ const useGetUserCols = () => {
       minWidth: 50,
       headerName: 'Email',
       renderCell: ({ row }: ParamTypes) => {
-        console.log(row, 'rowCheck')
-
-        return (
-          <Grid>
-           
-          </Grid>
-        )
+        return <Grid>{row?.email}</Grid>
       }
     }
   ]

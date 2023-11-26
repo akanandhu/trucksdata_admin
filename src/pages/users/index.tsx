@@ -9,7 +9,6 @@ const Users = () => {
     const {columns} = useGetUserCols()
     const {data: users} = useGetUsers()
     const userData = users?.data?.data
-    console.log(users, 'usersData')
 
   return (
     <Card>

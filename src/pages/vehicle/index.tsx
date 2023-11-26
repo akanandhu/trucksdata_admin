@@ -11,6 +11,7 @@ import { VehicleParamsTypes } from 'src/types/Vehicle'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import { useRemoveVehicle } from 'src/api/services/vehicle/delete'
 import FallbackSpinner from 'src/@core/components/spinner'
+import ImportVehicleModal from 'src/components/modals/ImportModal'
 
 const defaultValues = {
   title: ''
@@ -53,7 +54,7 @@ const Vehicle = () => {
   const [filter, setFilter] = useState({})
 
   function onSubmit(values: any) {
-    setFilter({...values})
+    setFilter({ ...values })
   }
 
   function onClear() {
@@ -64,8 +65,13 @@ const Vehicle = () => {
     })
   }
 
-  const { data: vehicles, isLoading } = useGetVehicles({...params, ...filter})
+  const { data: vehicles, isLoading } = useGetVehicles({ ...params, ...filter })
   const vehicleData = vehicles?.data?.data
+
+  const [openImport, setOpenImport] = useState(false)
+  function handleImport() {
+    setOpenImport(!openImport)
+  }
 
   if (isLoading) {
     return <FallbackSpinner />
@@ -79,7 +85,7 @@ const Vehicle = () => {
         <VehicleSearchHeader control={control} handleSubmit={handleSubmit} onSubmit={onSubmit} onClear={onClear} />
         <Divider />
 
-        <TableHeader title='Vehicle' handleNew={handleAdd} paddingX={16} />
+        <TableHeader title='Vehicle' handleImport={handleImport} handleNew={handleAdd} paddingX={16} />
         <Box sx={{ height: '100%' }}>
           <DataGrid
             disableRowSelectionOnClick
@@ -87,9 +93,9 @@ const Vehicle = () => {
             rows={vehicleData || []}
             rowCount={vehicles?.data?.total || 0}
             paginationMode='server'
-            paginationModel={{ page: params?.page - 1, pageSize: params?.pageSize }}
+            paginationModel={{ page: params?.page, pageSize: params?.pageSize }}
             onPaginationModelChange={setParams}
-            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 15 } } }}
+            initialState={{ pagination: { paginationModel: { page: 1, pageSize: 15 } } }}
           />
         </Box>
       </Card>
@@ -100,6 +106,7 @@ const Vehicle = () => {
         idToRemove={deleteId as any}
         routeToInvalidate='vehicles'
       />
+      <ImportVehicleModal open={openImport} setOpen={setOpenImport} />
     </Grid>
   )
 }

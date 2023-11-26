@@ -1,4 +1,4 @@
-import { Button, Card, Grid } from '@mui/material'
+import { Button, Card, Grid, InputAdornment } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,6 +13,7 @@ import { GeneralSetting, HomePageSettings } from 'src/types/HomePageSettings'
 import usePrefillGeneral from './hooks/usePrefillGeneral'
 import FallbackSpinner from 'src/@core/components/spinner'
 import { useRouter } from 'next/router'
+import { Icon } from '@iconify/react'
 
 const defaultValues = {
   banners: [],
@@ -21,7 +22,21 @@ const defaultValues = {
   logo: [],
   faq: [],
   contact_number: '',
-  email: ''
+  email: '',
+  facebook_url: '',
+  instagram_url: '',
+  youtube_url: '',
+  twitter: ''
+}
+
+const getStartAdornment = (brand: string) => {
+  return {
+    startAdornment: (
+      <InputAdornment position='start'>
+        <Icon fontSize={'1.5rem'} icon={`tabler:brand-${brand}`} />
+      </InputAdornment>
+    )
+  }
 }
 
 const GeneralSettings = () => {
@@ -96,6 +111,42 @@ const GeneralSettings = () => {
             <TextFormField control={control as any} id='email' type='email' size='medium' label='Email' />
           </Grid>
           <Grid item xs={12}>
+            <TextFormField
+              control={control as any}
+              id='facebook_url'
+              InputProps={getStartAdornment('meta')}
+              size='medium'
+              label='Meta URL'
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextFormField
+              control={control as any}
+              id='instagram_url'
+              InputProps={getStartAdornment('instagram')}
+              size='medium'
+              label='Instagram URL'
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextFormField
+              control={control as any}
+              id='twitter'
+              InputProps={getStartAdornment('twitter')}
+              size='medium'
+              label='Twitter URL'
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextFormField
+              control={control as any}
+              id='youtube_url'
+              InputProps={getStartAdornment('youtube')}
+              size='medium'
+              label='YouTube URL'
+            />
+          </Grid>
+          <Grid item xs={12}>
             <FaqField control={control} />
           </Grid>
         </Grid>
@@ -103,7 +154,9 @@ const GeneralSettings = () => {
           <Button type='submit' variant='contained'>
             Save Changes
           </Button>
-          <Button onClick={() => router.back()} variant={'outlined'}>Cancel</Button>
+          <Button onClick={() => router.back()} variant={'outlined'}>
+            Cancel
+          </Button>
         </Grid>
       </form>
     </Card>

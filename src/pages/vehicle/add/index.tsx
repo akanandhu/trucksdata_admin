@@ -12,7 +12,8 @@ function getIcon(title: string) {
     'Steering & Braking': 'tabler:steering-wheel',
     'Tyre Size': 'tabler:aspect-ratio',
     'Cabin & Electrical': 'tabler:plug',
-    'Other Details': 'tabler:circle-letter-o'
+    'Other Details': 'tabler:circle-letter-o',
+    'Endurance' : 'tabler:brand-etsy'
   }
 
   return icons[title]

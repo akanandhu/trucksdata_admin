@@ -15,7 +15,8 @@ const TextFormField = ({
   label,
   placeholder,
   size,
-  isDisabled
+  isDisabled,
+  InputProps
 }: {
   id: string
   control: Control<any>
@@ -29,6 +30,7 @@ const TextFormField = ({
   placeholder?: string
   size?: 'small' | 'medium'
   isDisabled?: boolean
+  InputProps?: any
 }) => {
   return (
     <Controller
@@ -44,6 +46,7 @@ const TextFormField = ({
           inputProps={{
             maxLength: 250
           }}
+          InputProps={InputProps}
           value={value}
           onChange={e => {
             onChange(e)

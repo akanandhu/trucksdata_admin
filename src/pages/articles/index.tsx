@@ -43,7 +43,7 @@ const Articles = () => {
           <Divider />
           <Divider />
 
-          <TableHeader title='Article' handleNew={handleAdd} paddingX={7.5} />
+          <TableHeader title='Article' handleNew={handleAdd}  paddingX={7.5} />
           <Box sx={{ height: '100%' }}>
             <DataGrid
               autoHeight

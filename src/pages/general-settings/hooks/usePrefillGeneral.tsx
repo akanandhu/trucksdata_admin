@@ -1,4 +1,4 @@
-import  { useEffect } from 'react'
+import { useEffect } from 'react'
 import { UseFormReset } from 'react-hook-form'
 import { GeneralSetting, HomePageSettings } from 'src/types/HomePageSettings'
 
@@ -13,7 +13,19 @@ const usePrefillGeneral = ({
 }) => {
   useEffect(() => {
     if (isFetched) {
-      const { banners, contact_number, email, faq, heading, logo, subheading } = data || {}
+      const {
+        banners,
+        contact_number,
+        email,
+        faq,
+        heading,
+        logo,
+        subheading,
+        facebook_url,
+        instagram_url,
+        twitter,
+        youtube_url
+      } = data || {}
 
       reset({
         banners,
@@ -22,7 +34,11 @@ const usePrefillGeneral = ({
         faq,
         heading,
         logo,
-        subheading
+        subheading,
+        facebook_url,
+        instagram_url,
+        twitter,
+        youtube_url
       })
     }
   }, [data, isFetched, reset])

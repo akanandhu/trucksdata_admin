@@ -51,6 +51,7 @@ import { useAddVehicle } from 'src/api/services/vehicle/post'
 import { useRouter } from 'next/router'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessageParser } from 'src/utils/error-message-parser'
+import FormFields from '../FormFields'
 
 const StepperHeaderContainer = styled(CardContent)<CardContentProps>(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -257,6 +258,8 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         return <CabinForm step={activeStep} control={control} specs={specs} />
       case 8:
         return <OtherDetailsForm step={activeStep} control={control} specs={specs} />
+      case 9:
+        return <FormFields control={control} specs={specs} step={step} />
       default:
         return 'Unknown Step'
     }

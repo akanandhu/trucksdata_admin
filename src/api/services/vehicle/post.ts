@@ -10,8 +10,6 @@ export const useAddVehicle = () => {
   })
 }
 
-
-
 export const useAddNewSpecValueToVehicle = () => {
   return useMutation({
     mutationFn: ({ values, spec_id }: { values: any; spec_id: number }) => {
@@ -24,6 +22,14 @@ export const useAddNewSpecToVehicle = () => {
   return useMutation({
     mutationFn: ({ values, vehicle_id }: { values: any; vehicle_id: number }) => {
       return axiosInstance.post(`/vehicles/${vehicle_id}/vehicle-specs`, values)
+    }
+  })
+}
+
+export const useImportVehicle = () => {
+  return useMutation({
+    mutationFn: ({ values }: { values: any }) => {
+      return axiosInstance.post(`/import`, values)
     }
   })
 }

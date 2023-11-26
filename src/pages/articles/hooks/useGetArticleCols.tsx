@@ -35,7 +35,7 @@ const useGetArticleCols = ({
       }
     },
     {
-      flex: 0.1,
+      flex: 0.035,
       field: 'created_at',
       minWidth: 50,
       headerName: 'Published On',
@@ -51,7 +51,7 @@ const useGetArticleCols = ({
       }
     },
     {
-      flex: 0.05,
+      flex: 0.025,
       field: 'actions',
       minWidth: 40,
       headerName: 'Actions',
