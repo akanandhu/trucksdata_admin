@@ -48,6 +48,11 @@ export interface VehicleParamsTypes {
   pageSize?: any
 }
 
+export interface VehicleParamsTypesPaginate {
+  page?: any
+  pageSize?: any
+}
+
 export interface Vehicle {
   id: number
   title: string

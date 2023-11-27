@@ -1,14 +1,17 @@
 import { Box, Card, CardHeader, Divider } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import React from 'react'
+import React, { useState } from 'react'
 import useGetUserCols from './hooks/columns'
 import { useGetUsers } from 'src/api/services/user-data/get'
 
 const Users = () => {
-
-    const {columns} = useGetUserCols()
-    const {data: users} = useGetUsers()
-    const userData = users?.data?.data
+  const [params, setParams] = useState({
+    page: 0,
+    pageSize: 15
+  })
+  const { columns } = useGetUserCols()
+  const { data: users } = useGetUsers(params)
+  const userData = users?.data?.data
 
   return (
     <Card>
@@ -16,14 +19,14 @@ const Users = () => {
       <Divider />
       <Box sx={{ height: '100%' }}>
         <DataGrid
-          autoHeight
-          pagination
           disableRowSelectionOnClick
-          rows={userData ?? []}
           columns={columns}
-          rowCount={0}
+          rows={userData || []}
+          rowCount={users?.data?.total || 0}
           paginationMode='server'
-          pageSizeOptions={[]}
+          paginationModel={params}
+          onPaginationModelChange={setParams}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 15 } } }}
         />
       </Box>
     </Card>

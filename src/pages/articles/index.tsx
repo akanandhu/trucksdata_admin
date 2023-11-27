@@ -32,7 +32,11 @@ const Articles = () => {
     handleEdit
   })
 
-  const { data: articles } = useGetArticles()
+  const [params, setParams] = useState({
+    page: 0,
+    pageSize: 15
+  })
+  const { data: articles } = useGetArticles(params)
   const articleList = articles?.data || []
 
   return (
@@ -46,14 +50,14 @@ const Articles = () => {
           <TableHeader title='Article' handleNew={handleAdd}  paddingX={7.5} />
           <Box sx={{ height: '100%' }}>
             <DataGrid
-              autoHeight
-              pagination
-              disableRowSelectionOnClick
-              rows={articleList ?? []}
-              columns={columns}
-              rowCount={0}
-              paginationMode='server'
-              pageSizeOptions={[]}
+             disableRowSelectionOnClick
+             columns={columns}
+             rows={articleList?.data || []}
+             rowCount={articleList?.total || 0}
+             paginationMode='server'
+             paginationModel={params}
+             onPaginationModelChange={setParams}
+             initialState={{ pagination: { paginationModel: { page: 0, pageSize: 15 } } }}
             />
           </Box>
         </Card>

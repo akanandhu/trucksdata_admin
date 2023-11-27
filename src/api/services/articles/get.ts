@@ -1,16 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
 import { axiosInstance } from 'src/axios/axiosInstance'
 
-async function getArticles() {
-  const response = await axiosInstance.get(`blog`)
+async function getArticles(params: { page: number; pageSize: number }) {
+  const filterParams = {
+    ...params,
+    page: params?.page + 1
+  }
 
-  return response?.data
+  const response = await axiosInstance.get(`blog`, {
+    params: filterParams
+  })
+
+  return response
 }
 
-export const useGetArticles = () => {
+export const useGetArticles = (params: { page: number; pageSize: number }) => {
   return useQuery({
-    queryKey: ['articles'],
-    queryFn: () => getArticles()
+    queryKey: ['articles', params],
+    queryFn: () => getArticles(params)
   })
 }
 

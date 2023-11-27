@@ -4,7 +4,8 @@ import { VehicleParamsTypes } from 'src/types/Vehicle'
 
 function getVehicles(params: VehicleParamsTypes | null) {
   const filterParams = {
-    ...params
+    ...params,
+    page: params?.page + 1
   }
   const response = axiosInstance.get(`vehicles`, {
     params: filterParams

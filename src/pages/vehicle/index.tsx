@@ -2,12 +2,11 @@ import { Box, Card, CardHeader, Divider, Grid } from '@mui/material'
 import TableHeader from 'src/components/TableHeader'
 import VehicleSearchHeader from './components/VehicleSearchHeader'
 import { useRouter } from 'next/router'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridPaginationModel } from '@mui/x-data-grid'
 import useGetVehicleColumns from './hooks/useGetVehicleColumns'
 import { useGetVehicles } from 'src/api/services/vehicle/get'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
-import { VehicleParamsTypes } from 'src/types/Vehicle'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import { useRemoveVehicle } from 'src/api/services/vehicle/delete'
 import FallbackSpinner from 'src/@core/components/spinner'
@@ -47,8 +46,8 @@ const Vehicle = () => {
     defaultValues
   })
 
-  const [params, setParams] = useState<VehicleParamsTypes | null>({
-    page: 1,
+  const [params, setParams] = useState<GridPaginationModel | undefined>({
+    page: 0,
     pageSize: 15
   })
   const [filter, setFilter] = useState({})
@@ -93,9 +92,9 @@ const Vehicle = () => {
             rows={vehicleData || []}
             rowCount={vehicles?.data?.total || 0}
             paginationMode='server'
-            paginationModel={{ page: params?.page, pageSize: params?.pageSize }}
+            paginationModel={params}
             onPaginationModelChange={setParams}
-            initialState={{ pagination: { paginationModel: { page: 1, pageSize: 15 } } }}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 15 } } }}
           />
         </Box>
       </Card>
