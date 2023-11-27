@@ -18,6 +18,8 @@ const usePrefillManufacturer = ({
       setValue('description', selectedData?.description)
       setValue('logo', logo || null)
       setValue('banners', selectedData?.banners)
+      setValue('faq', selectedData?.faq)
+
     }
   }, [selectedData, setValue])
 }

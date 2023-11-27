@@ -7,7 +7,6 @@ import ManufacturersDrawer from './components/ManufacturersDrawer'
 import { useForm } from 'react-hook-form'
 import { ManufacturersFields } from 'src/types/Manufacturers'
 import { useRouter } from 'next/router'
-import ManufacturerSearchHeader from './preview/components/ManufacturerSearchHeader'
 import { useGetManufacturers } from 'src/api/services/manufacturers/get'
 import { useAddManufacturer } from 'src/api/services/manufacturers/post'
 import { useQueryClient } from '@tanstack/react-query'
@@ -90,7 +89,7 @@ const Manufacturers = () => {
   const mutationFn: any = isEdit ? editManufacturer : addManufacturer
 
   function onSubmit(values: ManufacturersFields) {
-    const { name, description, vehicle_types: vehicleTypes, logo, banners } = values
+    const { name, description, vehicle_types: vehicleTypes, logo, banners, faq } = values
     const filteredObjects = vehicle_types?.data?.data?.filter((obj: { name: string }) =>
       vehicleTypes.includes(obj.name)
     )
@@ -99,7 +98,8 @@ const Manufacturers = () => {
       description,
       logo,
       banners,
-      vehicle_types: filteredObjects?.map((type: { id: string }) => type?.id)
+      vehicle_types: filteredObjects?.map((type: { id: string }) => type?.id),
+      faq
     }
 
     const queryData = isEdit ? { id: selectedData?.id, data } : data
@@ -109,6 +109,7 @@ const Manufacturers = () => {
     })
   }
 
+  const [refresh, setRefresh] = useState(0)
   function handleClose() {
     setOpenDrawer(!openDrawer)
     setSelectedData(null)
@@ -118,10 +119,10 @@ const Manufacturers = () => {
       description: '',
       id: '',
       name: '',
-      vehicle_types: [],
-      faq: ''
+      vehicle_types: []
     })
     mutationFn.reset()
+    setRefresh(refresh => refresh + 1)
   }
 
   return (
@@ -129,8 +130,8 @@ const Manufacturers = () => {
       <Card>
         <CardHeader title='Manufacturers' />
         <Divider />
-        <ManufacturerSearchHeader />
-        <Divider />
+        {/* <ManufacturerSearchHeader />
+        <Divider /> */}
 
         <TableHeader title='Manufacturers' handleNew={handleAdd} paddingX={7.5} />
         <Box sx={{ height: '100%' }}>
@@ -158,6 +159,7 @@ const Manufacturers = () => {
         reset={reset}
         handleClose={handleClose}
         vehicle_types={vehicle_types}
+        key={`drawer_${refresh}`}
       />
     </Grid>
   )

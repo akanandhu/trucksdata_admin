@@ -9,7 +9,8 @@ const AddModelDrawer = ({
   control,
   handleSubmit,
   onSubmit,
-  handleClose
+  handleClose,
+  errors
 }: {
   open: boolean
   vehicle_classes: any
@@ -17,6 +18,7 @@ const AddModelDrawer = ({
   handleSubmit: any
   onSubmit: (values: any) => void
   handleClose: () => void
+  errors: any
 }) => {
 
   return (
@@ -29,7 +31,7 @@ const AddModelDrawer = ({
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <HeaderWithClose title='Add Model' handleClose={handleClose} />
-      <BrandModel handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} vehicle_classes={vehicle_classes} handleClose={handleClose} />
+      <BrandModel handleSubmit={handleSubmit} onSubmit={onSubmit} errors={errors} control={control} vehicle_classes={vehicle_classes} handleClose={handleClose} />
     </Drawer>
   )
 }

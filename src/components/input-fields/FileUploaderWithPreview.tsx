@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -46,6 +46,13 @@ const FileUploaderMultiple = (props: Props) => {
   const toast = useCustomToast()
   const { mutate: addFiles, isPending: loading } = useAddFiles()
   const [files, setFiles] = useState<any[]>(getPreviewImage(value))
+
+  useEffect(() => {
+    if (value) {
+      setFiles(getPreviewImage(value))
+    }
+  }, [value])
+
   const formData = new FormData()
   const { getRootProps, getInputProps } = useDropzone({
     multiple,
@@ -109,39 +116,42 @@ const FileUploaderMultiple = (props: Props) => {
   }
 
   const handleDelete = (image: { id: string }) => {
+    console.log(files, image, 'filesCheck')
     const images = files.filter(file => file.id !== image.id)
     setFiles(images)
     if (onChange) {
       onChange(images)
     }
   }
-  const fileList = Array.isArray(value) && value?.map((file: any) => (
-    <ListItem
-      sx={{
-        marginTop: theme.spacing(3.5),
-        display: 'flex',
-        justifyContent: 'space-between',
-        borderRadius: theme.shape.borderRadius,
-        padding: theme.spacing(2.5, 2.4, 2.5, 6),
-        border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(93, 89, 98, 0.14)' : 'rgba(247, 244, 254, 0.14)'}`
-      }}
-      key={file?.name || file?.id}
-    >
-      <div style={{ display: 'flex', alignItems: 'center' }} className='file-details'>
-        <div style={{ display: 'flex', marginRight: theme.spacing(3.75) }} className='file-preview'>
-          {renderFilePreview(file)}
+  const fileList =
+    Array.isArray(value) &&
+    value?.map((file: any, index: number) => (
+      <ListItem
+        sx={{
+          marginTop: theme.spacing(3.5),
+          display: 'flex',
+          justifyContent: 'space-between',
+          borderRadius: theme.shape.borderRadius,
+          padding: theme.spacing(2.5, 2.4, 2.5, 6),
+          border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(93, 89, 98, 0.14)' : 'rgba(247, 244, 254, 0.14)'}`
+        }}
+        key={file?.name || file?.id}
+      >
+        <div style={{ display: 'flex', alignItems: 'center' }} className='file-details'>
+          <div style={{ display: 'flex', marginRight: theme.spacing(3.75) }} className='file-preview'>
+            {renderFilePreview(file)}
+          </div>
+          <div>
+            <Typography fontWeight={600} className='file-name'>
+              {file?.name || `File  ${index + 1}`}
+            </Typography>
+          </div>
         </div>
-        <div>
-          <Typography fontWeight={600} className='file-name'>
-            {file?.name || 'Image'}
-          </Typography>
-        </div>
-      </div>
-      <IconButton onClick={() => handleDelete(file)}>
-        <Icon icon='tabler:x' fontSize={20} />
-      </IconButton>
-    </ListItem>
-  ))
+        <IconButton onClick={() => handleDelete(file)}>
+          <Icon icon='tabler:x' fontSize={20} />
+        </IconButton>
+      </ListItem>
+    ))
 
   if (loading) {
     return <FallbackSpinner />

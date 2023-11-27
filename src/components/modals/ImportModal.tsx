@@ -33,22 +33,26 @@ const ImportVehicleModal = ({
     setFiles([])
   }
 
-  const fd = new FormData()
+  const formData = new FormData()
   const queryClient = useQueryClient()
   const importVehicles = useImportVehicle()
 
   const handleSubmit = () => {
-    fd.append('file', files?.[0])
-    importVehicles.mutate(fd, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['vehicles'] })
-        handleClose()
-      },
-      onError: (err: any) => {
-        handleClose()
-        toast.error(errorMessageParser(err))
+    formData.append(`file`, files?.[0])
+    importVehicles.mutate(
+      { values: formData },
+      {
+        onSuccess: () => {
+          toast.success('Vehicle Imported Successfully')
+          queryClient.invalidateQueries({ queryKey: ['vehicles'] })
+          handleClose()
+        },
+        onError: (err: any) => {
+          handleClose()
+          toast.error(errorMessageParser(err))
+        }
       }
-    })
+    )
   }
 
   return (

@@ -13,13 +13,17 @@ import { useAddSeries } from 'src/api/services/manufacturers/series/post'
 import useCustomToast from 'src/lib/toast'
 import { useQueryClient } from '@tanstack/react-query'
 import usePrefillSeries from '../hooks/prefill'
-import  useSeriesColumns  from '../hooks/columns'
+import useSeriesColumns from '../hooks/columns'
 import { useEditSeries } from 'src/api/services/manufacturers/series/patch'
 import DeleteConfirmModal from 'src/components/modals/DeleteConfirmModal'
 import { useDeleteSeries } from 'src/api/services/manufacturers/series/delete'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useGetSeriesSchema } from 'src/hooks/schema/schema'
 
 const defaultValues = {
-  vehicle_class: 1
+  vehicle_class: '',
+  title: '',
+  description: ''
 }
 
 const ManufacturersPreview = () => {
@@ -33,7 +37,20 @@ const ManufacturersPreview = () => {
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [idsToDelete, setIdsToDelete] = useState('')
 
-  const { handleSubmit, control, setValue } = useForm()
+  const schema = useGetSeriesSchema()
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+    reset
+  } = useForm({
+    defaultValues,
+    resolver: yupResolver(schema)
+  })
+
+
   const { handleSubmit: handleSubmitForm, control: control1 } = useForm({
     defaultValues
   })
@@ -75,7 +92,7 @@ const ManufacturersPreview = () => {
   function handleSuccess() {
     toast.success(`Series ${isEdit ? 'Updated' : 'Created'} Successfully`)
     queryClient.invalidateQueries({ queryKey: ['series'] })
-    setOpen(!open)
+    handleClose()
   }
 
   function onSubmitDrawer(values: any) {
@@ -98,6 +115,7 @@ const ManufacturersPreview = () => {
       name: ''
     })
     mutationFn.reset()
+    reset()
   }
 
   usePrefillSeries({
@@ -149,7 +167,8 @@ const ManufacturersPreview = () => {
         handleSubmit={handleSubmit}
         onSubmit={onSubmitDrawer}
         handleClose={handleClose}
-      />  
+        errors={errors}
+      />
       <DeleteConfirmModal
         open={openConfirmation}
         setOpen={setOpenConfirmation}

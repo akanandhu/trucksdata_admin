@@ -1,5 +1,5 @@
 import { Button, Card, CardHeader, Divider, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useGetVehicleClass } from 'src/api/services/vehicle-class/get'
 import useCustomToast from 'src/lib/toast'
@@ -29,13 +29,14 @@ const VehicleClassPreview = () => {
   const [selectedData, setSelectedData] = useState<any>({})
   const [openConfirmation, setOpenConfirmation] = useState(false)
   const [idsToDelete, setIdsToDelete] = useState('')
+  const [refresh, setRefresh] = useState(0)
 
-  // const [energyId, setEnergyId] = useState('')
 
   const {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors }
   } = useForm()
 
@@ -52,6 +53,10 @@ const VehicleClassPreview = () => {
   const energyId = energySources?.[0]?.id
 
   const [selectedId, setSelectedId] = useState(energyId)
+
+  useEffect(() => {
+    setSelectedId(energyId)
+  },[energyId])
 
   const { data: classSpecs } = useGetVehicleClassSpecs({
     vehicle_type_id: id as string,
@@ -78,7 +83,7 @@ const VehicleClassPreview = () => {
   function handleSuccess() {
     toast.success(`Specifications ${isEdit ? 'Updated' : 'Created'} Successfully`)
     queryClient.invalidateQueries({ queryKey: ['vehicle-class-specs'] })
-    setOpen(!open)
+    handleClose()
   }
 
   function onSubmit(values: any) {
@@ -110,7 +115,9 @@ const VehicleClassPreview = () => {
       title: '',
       name: ''
     })
+    reset()
     mutationFn.reset()
+    setRefresh(refresh => refresh + 1)
   }
 
   usePrefillSeries({
@@ -152,7 +159,7 @@ const VehicleClassPreview = () => {
               </Grid>
               <Divider />
               <Grid display={'flex'} justifyContent={'flex-end'} padding={4} paddingX={5}>
-                <Select defaultValue={energyId} size={'small'} value={selectedId} onChange={e => handleEnergyChange(e)}>
+                <Select key={`refresh_${selectedId}`} defaultValue={energyId} size={'small'} value={selectedId} onChange={e => handleEnergyChange(e)}>
                   {energySources?.map((energy: { id: number; name: string }) => {
                     return (
                       <MenuItem key={energy.id} value={energy.id}>
@@ -175,7 +182,6 @@ const VehicleClassPreview = () => {
                 columns={columns as any}
                 rows={classSpecData ?? []}
                 pageSizeOptions={[]}
-
               />
             </Card>
           </Grid>
@@ -189,10 +195,11 @@ const VehicleClassPreview = () => {
         handleSubmit={handleSubmit}
         isLoading={mutationFn.isLoading}
         onSubmit={onSubmit}
-        apiError={mutationFn.errors}
+        apiError={mutationFn.error}
         control={control}
         specs={specData}
         ref={ref}
+        key={`drawer_${refresh}`}
       />
       <DeleteConfirmModal
         open={openConfirmation}
@@ -201,6 +208,7 @@ const VehicleClassPreview = () => {
         idToRemove={idsToDelete}
         routeToInvalidate='vehicle-class-specs'
         optionalRouteToInvalidate='energy-sources'
+        thirdRouteToInvalidate='specifications-paginated'
       />
     </Grid>
   )
