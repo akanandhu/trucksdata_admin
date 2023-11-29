@@ -15,10 +15,11 @@ interface Props {
   isSpec: boolean
   handleRemove?: (field: any, index: number) => void
   arrayFields?: any
+  isDisabled?: boolean
 }
 
 const ArrayFieldDropDown = (props: Props) => {
-  const { control, options, handleRemove, arrayFields } = props
+  const { control, options, handleRemove, arrayFields, isDisabled } = props
 
   const { fields, append } = arrayFields || {}
 
@@ -42,6 +43,7 @@ const ArrayFieldDropDown = (props: Props) => {
               data={options}
               label={`Option ${index + 1}`}
               size={'medium'}
+              isDisabled={isDisabled}
             />
             <IconButton onClick={() => handleDelete(index, field)} color='secondary'>
               <GridCloseIcon color='error' />

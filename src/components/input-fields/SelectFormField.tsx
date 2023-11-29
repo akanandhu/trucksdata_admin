@@ -2,6 +2,7 @@ import { FormControl, InputLabel, Select, SelectChangeEvent } from '@mui/materia
 import React from 'react'
 import { Control, Controller } from 'react-hook-form'
 import RequiredLabel from '../RequiredLable'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 const SelectFormField = ({
   id,
@@ -30,6 +31,9 @@ const SelectFormField = ({
   data?: any
   isMultiple?: boolean
 }) => {
+  const { settings } = useSettings()
+  const isDark = settings?.mode === 'dark'
+
   return (
     <FormControl fullWidth>
       <InputLabel id='input-label' size={size ?? 'normal'}>
@@ -54,7 +58,7 @@ const SelectFormField = ({
             sx={{
               '& .MuiFormLabel-asterisk': { color: 'red' },
               '& .MuiInputBase-input.Mui-disabled': {
-                WebkitTextFillColor: '#ffffff'
+                WebkitTextFillColor: isDark ? '#ffffff' : '#000000'
               }
             }}
             MenuProps={{
