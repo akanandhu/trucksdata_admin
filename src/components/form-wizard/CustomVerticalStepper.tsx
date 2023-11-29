@@ -200,6 +200,8 @@ const StepperCustomVertical = ({ steps }: { steps: any[] }) => {
         min_price,
         max_price,
         is_popular,
+        is_latest,
+        is_upcoming,
         images,
         description,
         video_links,
