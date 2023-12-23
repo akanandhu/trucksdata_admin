@@ -135,6 +135,8 @@ const LoginPage = () => {
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
+  
+  console.log('Home Page')
 
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
