@@ -6,7 +6,7 @@ interface RowTypes {
   name: string
   state: string
   district: string
-  phone: string
+  phone_number: string
   email: string
 }
 
@@ -55,11 +55,12 @@ const useGetUserCols = () => {
     },
     {
       flex: 0.1,
-      field: 'email',
+      field: 'phone',
       minWidth: 50,
-      headerName: 'Email',
+      headerName: 'Phone Number',
       renderCell: ({ row }: ParamTypes) => {
-        return <Grid>{row?.email}</Grid>
+        
+        return <Grid>{row?.phone_number}</Grid>
       }
     }
   ]
