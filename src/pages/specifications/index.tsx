@@ -125,12 +125,16 @@ const Specifications = () => {
     } else {
       handleDeleteSuccess()
     }
-    const specId = options?.[0]?.specification_id
+    const specId = options?.[0]?.specification_id  || selectedData?.id
     const specsOption = specsData?.filter((spec: { id: string }) => spec?.id === specId)
     const specOptionCollection = specsOption?.[0]?.options
+
     if (selectedData) {
       if (options?.length) {
-        if (options?.length !== specOptionCollection?.length) {
+        const hasNewOption = options?.some((option: { option: string }) =>
+          specsOption?.some((specOpt: { option: string }) => specOpt.option !== option.option )
+        )
+        if (hasNewOption || specsOption?.length === 0) {
           const nonAddedSpecs = options.filter(
             (obj1: { id: string; name: string }) =>
               !specOptionCollection?.some(
