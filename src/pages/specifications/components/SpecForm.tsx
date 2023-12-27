@@ -116,7 +116,7 @@ const SpecForm = ({
           )}
           {data_type === 'nested_drop_down' && (
             <Grid item xs={12}>
-              <NestedArrayField append={append} control={control} fields={fields} remove={remove} />
+              <NestedArrayField append={append} control={control} fields={fields} remove={remove} handleDeleteItem={handleDeleteOption} />
             </Grid>
           )}
           <Grid item xs={12}>

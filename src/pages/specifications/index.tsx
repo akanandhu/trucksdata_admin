@@ -112,7 +112,7 @@ const Specifications = () => {
   const { data: specs, isLoading } = useGetSpecsData()
   const { data: specsData } = specs?.data || {}
 
-  function handleSuccess(options: any) {
+  function handleSuccess(options: any, dataType: string) {
     if (deleteIds?.length) {
       deleteIds?.map((id: string) => {
         return deleteSpecOpt?.mutate(
@@ -125,15 +125,15 @@ const Specifications = () => {
     } else {
       handleDeleteSuccess()
     }
-    const specId = options?.[0]?.specification_id  || selectedData?.id
-    const specsOption = specsData?.filter((spec: { id: string }) => spec?.id === specId)
+    const specId = options?.[0]?.specification_id || selectedData?.id
+    const specsOption: any = specsData?.filter((spec: { id: string }) => spec?.id === specId)
     const specOptionCollection = specsOption?.[0]?.options
-
     if (selectedData) {
       if (options?.length) {
-        const hasNewOption = options?.some((option: { option: string }) =>
-          specsOption?.some((specOpt: { option: string }) => specOpt.option !== option.option )
+        const hasNewDropDown = options?.some((option: { option: string }) =>
+          specsOption?.some((specOpt: { option: string }) => specOpt.option !== option.option)
         )
+        const hasNewOption = hasNewDropDown
         if (hasNewOption || specsOption?.length === 0) {
           const nonAddedSpecs = options.filter(
             (obj1: { id: string; name: string }) =>
@@ -147,6 +147,31 @@ const Specifications = () => {
               options: nonAddedSpecs
             }
             addSpecOption.mutate(dataToAdd, {
+              onSuccess: () => handleDeleteSuccess()
+            })
+          }
+        }
+
+        // to add newly added children to existing options
+        if (dataType === 'nested_drop_down') {
+          const childOptions = options
+            ?.map((option: any) => {
+              if (option?.specification_id) {
+                return option?.child_options?.map((childOpt: any) => {
+                  return { ...childOpt, parent_option_id: option?.id }
+                })
+              }
+            })
+            ?.filter(Boolean)
+            ?.flat()
+
+          const newlyAddedChildren = childOptions?.filter((opt: { slug: string }) => !opt?.slug)
+          if (newlyAddedChildren?.length) {
+            const optionData = {
+              specification_id: specId,
+              options: newlyAddedChildren
+            }
+            addSpecOption.mutate(optionData, {
               onSuccess: () => handleDeleteSuccess()
             })
           }
@@ -174,7 +199,7 @@ const Specifications = () => {
     }
     const queryParams: any = isEdit ? { data: specData, id: selectedData?.id } : { ...specData }
     mutationFn.mutate(queryParams, {
-      onSuccess: () => handleSuccess(options)
+      onSuccess: () => handleSuccess(options, data_type)
     })
   }
   function handleDeleteOption(option: any) {

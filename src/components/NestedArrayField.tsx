@@ -8,10 +8,16 @@ interface NestedArrayProps {
   append: any
   remove: any
   control: any
+  handleDeleteItem?: any
 }
 
 const NestedArrayField = (props: NestedArrayProps) => {
-  const { fields, append, remove, control } = props
+  const { fields, append, remove, control, handleDeleteItem } = props
+
+  function handleDelete(index:any, option: any){
+      remove(index)
+    handleDeleteItem && handleDeleteItem(option)
+  }
 
   return (
     <div>
@@ -19,9 +25,9 @@ const NestedArrayField = (props: NestedArrayProps) => {
         <Grid key={item.id}>
           <TextFormField label='Parent Option' size='medium' control={control} id={`options[${index}].option`} />
 
-          <NestedFieldsChild nestIndex={index} control={control} />
+          <NestedFieldsChild nestIndex={index} control={control}  />
           <Grid marginTop={3} marginBottom={6} display={'flex'} gap={4}>
-            <Button color='error' variant='outlined' onClick={() => remove(index)}>
+            <Button color='error' variant='outlined' onClick={() => handleDelete(index, item)}>
               Delete
             </Button>
           </Grid>
