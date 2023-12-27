@@ -5,6 +5,7 @@ import { Grid, IconButton, Tooltip } from '@mui/material'
 import { GridAddIcon, GridCloseIcon } from '@mui/x-data-grid'
 import DeleteConfirmModal from './modals/DeleteConfirmModal'
 import { useDeleteSpecOpts } from 'src/api/services/specifications/options/delete'
+import { axiosInstance } from 'src/axios/axiosInstance'
 
 const NestedFieldsChild = ({ nestIndex, control }: { nestIndex: number; control: any }) => {
   const { fields, remove, append } = useFieldArray({
@@ -14,14 +15,27 @@ const NestedFieldsChild = ({ nestIndex, control }: { nestIndex: number; control:
 
   const [open, setOpen] = useState(false)
   const [idToRemove, setIdToRemove] = useState()
+  const [idToRemoveField, setIdToRemoveField] = useState<number | string>()
+
 
   function removeChildren(index: number, item: any) {
-    setOpen(!open)
-    setIdToRemove(item?.id)
+    if(item?.specification_id) {
+      axiosInstance.get(`specifications/${item?.specification_id}`).then(res => {
+        const childOptions = res?.data?.options?.map((obj: { child_options: any[] }) => obj.child_options)?.flat()
+        const selectedOpt = childOptions?.find((opt: { option: string }) => opt?.option === item?.option)
+        console.log(selectedOpt, item, 'selectedOpt')
+        setOpen(!open)
+        setIdToRemove(selectedOpt?.id)
+        setIdToRemoveField(index)
+      })
+    }
+    else {
+    remove(index)
+    }
   }
 
   function handleOnSuccess() {
-    remove(idToRemove)
+    remove(idToRemoveField as any)
   }
 
   const removeOpt = useDeleteSpecOpts()
