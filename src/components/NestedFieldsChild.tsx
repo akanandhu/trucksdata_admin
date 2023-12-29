@@ -23,7 +23,6 @@ const NestedFieldsChild = ({ nestIndex, control }: { nestIndex: number; control:
       axiosInstance.get(`specifications/${item?.specification_id}`).then(res => {
         const childOptions = res?.data?.options?.map((obj: { child_options: any[] }) => obj.child_options)?.flat()
         const selectedOpt = childOptions?.find((opt: { option: string }) => opt?.option === item?.option)
-        console.log(selectedOpt, item, 'selectedOpt')
         setOpen(!open)
         setIdToRemove(selectedOpt?.id)
         setIdToRemoveField(index)

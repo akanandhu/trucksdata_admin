@@ -34,8 +34,12 @@ const useGetIndivitualVehicleSpecs = ({
       headerName: 'Value',
       renderCell: ({ row }: any) => {
         const { values } = row
-        const displayValue = values?.map((value: { value: string }) => {
-          return value.value
+        const displayValue = values?.map((value: { value: string; child_values: any }) => {
+          if (!value?.child_values?.length) {
+            return value.value
+          } else {
+            return value?.child_values?.[0]?.value
+          }
         })
 
         return (

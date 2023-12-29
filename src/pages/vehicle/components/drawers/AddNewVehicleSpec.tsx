@@ -49,7 +49,7 @@ const AddNewVehicleSpec = ({
       )
     : specsData
 
-  const { control, reset, handleSubmit, setValue, watch } = useForm<any>({
+  const { control, reset, handleSubmit, setValue } = useForm<any>({
     defaultValues
   })
 
@@ -58,16 +58,18 @@ const AddNewVehicleSpec = ({
     control
   })
 
-  const [values] = watch(['values'])
-  console.log(values, 'valuessssssssss')
   const [refresh, setRefresh] = useState(0)
 
   const { data: prefillData, isFetched } = useGetVehicleSpecData(vehicleId, prefillId?.id)
 
   useEffect(() => {
     if (isFetched) {
-      const specValues = prefillData?.values?.map((item: { value: string }) => {
-        return { value: item?.value }
+      const specValues = prefillData?.values?.map((item: { value: string, child_values: any[] }) => {
+        if(!item?.child_values?.length) {
+          return { value: item?.value }
+        } else {
+          return { value: item?.child_values?.[0]?.value }
+        }
       })
       setValue('specification_id', prefillData?.specification_id)
       setValue(`values`, specValues)
@@ -90,9 +92,30 @@ const AddNewVehicleSpec = ({
     setDeleteIds([])
   }
 
-  function onSubmit(data: any) {
-    const { specification_id, values } = data || {}
+  function getParentId(itemValue: string, resultType: 'parentId' | 'parentName') {
+    let parentId
+    let parentName
+    const key = resultType === 'parentId' ? selectedOption : selectedOption?.specification
+    key?.options?.forEach((option: any) => {
+      const resultObj = option?.child_options?.find((child: { option: string; parent_option_id: number }) => {
+        return child?.option === itemValue
+      })
+      if (resultObj) {
+        parentId = resultObj.parent_option_id
+      }
+      option.child_options?.forEach((child: { option: string }) => {
+        if (child?.option === itemValue) {
+          parentName = option?.option
+        }
+      })
+    })
 
+    return resultType === 'parentId' ? parentId : parentName
+  }
+
+  function onSubmit(data: any) {
+    const isNested = selectedOption?.specification?.data_type === 'nested_drop_down'
+    const { specification_id, values } = data || {}
     const specValues = prefillData?.values || []
     const specLength = specValues?.length
     const newlyAddedValues = values?.slice(specLength)
@@ -100,10 +123,11 @@ const AddNewVehicleSpec = ({
     const mapItem = isEdit ? newlyAddedValues : [1]
 
     mapItem?.map((item: { value: string }) => {
+      const parentId = getParentId(item.value, 'parentId')
       const dataToSend = {
         specification_id,
         value: item.value,
-        parent_value_id: null
+        parent_value_id: isNested ? parentId : null
       }
 
       const dataToAdd = {
@@ -111,8 +135,25 @@ const AddNewVehicleSpec = ({
         spec_type: selectedOption?.specification?.data_type,
         is_key_feature: false,
         values: values?.map((item: { value: string }) => {
-          return {
-            value: item.value
+          const isParent = selectedOption?.specification?.options?.find(
+            (option: { option: string }) => option?.option === item?.value
+          )
+          const isChild = !isParent && isNested
+          if (isChild) {
+            const parentValue = getParentId(item.value, 'parentName')
+
+            return {
+              value: parentValue,
+              child_values: [
+                {
+                  value: item.value
+                }
+              ]
+            }
+          } else {
+            return {
+              value: item.value
+            }
           }
         })
       }
@@ -131,7 +172,7 @@ const AddNewVehicleSpec = ({
   function handleSuccess() {
     handleOnClose()
     queryClient.invalidateQueries({ queryKey: ['vehicle'] })
-    toast.success(`Specification ${isEdit ? 'updted' : 'added'} to vehicle`)
+    toast.success(`Specification ${isEdit ? 'updated' : 'added'} to vehicle`)
   }
 
   const [deleteIds, setDeleteIds] = useState<any>([])

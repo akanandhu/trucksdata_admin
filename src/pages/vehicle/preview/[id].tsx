@@ -65,7 +65,7 @@ const VehiclePreview = () => {
   })
 
   const [selectedOption, setSelectedOption] = useState<any>({})
-
+  
   // vehicle class
   const { data: vehicle_class_data } = useGetVehicleClasses()
   const vehicleClassData = vehicle_class_data?.data?.data
