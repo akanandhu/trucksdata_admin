@@ -53,7 +53,7 @@ export const useGetVehicleSpecData = (vehicleId: string, specId: number) => {
 export const useGetVehicleInfinite = (params: VehicleParamsTypes | null) => {
   return useInfiniteQuery<any>({
     queryKey: ['vehicles-infinity', params],
-    queryFn: ({ pageParam }) => getVehicles({ ...params, page: pageParam }),
+    queryFn: ({ pageParam }:{pageParam: any}) => getVehicles({ ...params, page: pageParam - 1 }),
     getNextPageParam: lastPage => {
       const nextPage = lastPage?.data?.last_page || 1
 

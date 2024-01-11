@@ -42,7 +42,7 @@ interface Videolink {
 }
 
 export interface VehicleParamsTypes {
-  title?: string
+  title?: string | null
   doesnt_have_compare?: boolean
   page?: any
   pageSize?: any

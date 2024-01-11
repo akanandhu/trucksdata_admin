@@ -58,7 +58,7 @@ const VehicleBasicForm = ({
 
   const { data, isFetched, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetVehicleInfinite({
     doesnt_have_compare: true,
-    title: searchValue
+    title: searchValue || null
   })
 
   const vehicleData = getFlatData(data)
