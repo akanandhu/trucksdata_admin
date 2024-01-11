@@ -44,7 +44,7 @@ const TextFormField = ({
           disabled={isDisabled}
           multiline={multiline ?? false}
           inputProps={{
-            maxLength: 250
+            maxLength: 1500
           }}
           InputProps={InputProps}
           value={value}
