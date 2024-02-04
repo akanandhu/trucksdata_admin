@@ -1,13 +1,13 @@
 const getSpecValues = (rest: any, specs: any) => {
   return Object.keys(rest).map(item => {
     const current = specs?.find(
-      (spec: { specification: { name: string } }) =>
-        spec?.specification?.name === item || spec?.specification?.name?.includes(item)
+      (spec: { specification: { slug: string } }) =>
+        spec?.specification?.slug === item || spec?.specification?.slug?.includes(item)
     )
     const value = typeof rest[item] === 'string' ? rest[item as string] : null
     const isValue = typeof rest[item] === 'string' ? true : false
 
-    if (current.specification.name === 'Applications') {
+    if (current.specification.slug === 'applications') {
       const appValue = findOption(current.specification.options, rest[item])
 
       return {

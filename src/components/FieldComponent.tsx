@@ -7,10 +7,10 @@ import { renderOptions } from './renderOptions'
 import { renderParentMenuItems } from './renderParentMenuItems'
 import { flattenOptions } from 'src/functions/flattenOptions'
 
-const TextFieldComponent = ({ name, control }: { name: string; control: any }) => {
+const TextFieldComponent = ({ name, control, label }: { name: string; control: any; label?: string }) => {
   return (
     <Grid item xs={12} sm={6}>
-      <TextFormField control={control} id={name} label={name} size='medium' />
+      <TextFormField control={control} id={name} label={label ?? name} size='medium' />
     </Grid>
   )
 }
@@ -19,19 +19,21 @@ const DropdownComponent = ({
   name,
   control,
   options,
-  isNested
+  isNested, 
+  label
 }: {
   name: string
   control: any
   options: OptionTypes[]
   isNested?: boolean
+  label?: string
 }) => {
   const data = isNested ? flattenOptions(options) : options
 
   return (
     <Grid item xs={12} sm={6}>
       <SelectFormField
-        label={name}
+        label={label ?? name}
         data={data ?? []}
         size={'medium'}
         renderMenuItems={isNested ? renderParentMenuItems : renderOptions}
@@ -43,9 +45,8 @@ const DropdownComponent = ({
 }
 
 const FieldComponent = ({ specification, control }: { specification: any; control: any }) => {
-  const { name, data_type, options } = specification || {}
-  const fieldProps = { control, name }
-
+  const { slug, data_type, options, name } = specification || {}
+  const fieldProps = { control, name: slug, label: name }
   const field: Fields = {
     text: <TextFieldComponent {...fieldProps} />,
     drop_down: <DropdownComponent {...fieldProps} options={options} />,
