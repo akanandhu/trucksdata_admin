@@ -7,13 +7,13 @@ function getIcon(title: string) {
     'Variant Details': 'tabler:tir',
     'Vehicle Dimensions': 'tabler:ruler',
     'Engine Specification': 'tabler:assembly',
-    Transmission: 'tabler:manual-gearbox',
+    'Transmission': 'tabler:manual-gearbox',
     'Chassis & Suspension': 'tabler:truck',
     'Steering & Braking': 'tabler:steering-wheel',
     'Tyre Size': 'tabler:aspect-ratio',
     'Cabin & Electrical': 'tabler:plug',
-    'Other Details': 'tabler:circle-letter-o',
-    'Endurance' : 'tabler:brand-etsy'
+    'Applications & Other Details': 'tabler:circle-letter-o',
+    'Endurance': 'tabler:brand-etsy'
   }
 
   return icons[title]
@@ -35,7 +35,7 @@ const VehiclePage = () => {
     icon: 'tabler:tir',
     title: 'Vehicle Details',
     subtitle: 'Enter Vehicle Details'
-  }) 
+  })
 
   return (
     <Grid>
