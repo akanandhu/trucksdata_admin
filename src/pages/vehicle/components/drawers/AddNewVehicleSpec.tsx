@@ -76,7 +76,7 @@ const AddNewVehicleSpec = ({
       setRefresh(refresh => refresh + 1)
     }
   }, [isFetched, prefillData, setRefresh, setValue])
-  console.log(prefillData, 'specification')
+
   const addNewSpecValue = useAddNewSpecValueToVehicle()
   const addNewSpec = useAddNewSpecToVehicle()
   const removeSpecValue = useRemoveSpecValueFromVehicle(prefillData?.id)
