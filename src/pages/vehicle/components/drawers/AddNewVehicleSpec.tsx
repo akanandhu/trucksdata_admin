@@ -64,8 +64,8 @@ const AddNewVehicleSpec = ({
 
   useEffect(() => {
     if (isFetched) {
-      const specValues = prefillData?.values?.map((item: { value: string, child_values: any[] }) => {
-        if(!item?.child_values?.length) {
+      const specValues = prefillData?.values?.map((item: { value: string; child_values: any[] }) => {
+        if (!item?.child_values?.length) {
           return { value: item?.value }
         } else {
           return { value: item?.child_values?.[0]?.value }
@@ -76,10 +76,10 @@ const AddNewVehicleSpec = ({
       setRefresh(refresh => refresh + 1)
     }
   }, [isFetched, prefillData, setRefresh, setValue])
-
+  console.log(prefillData, 'specification')
   const addNewSpecValue = useAddNewSpecValueToVehicle()
   const addNewSpec = useAddNewSpecToVehicle()
-  const removeSpecValue = useRemoveSpecValueFromVehicle(prefillData?.specification_id)
+  const removeSpecValue = useRemoveSpecValueFromVehicle(prefillData?.id)
 
   const mutateFn: any = isEdit ? addNewSpecValue : addNewSpec
 
